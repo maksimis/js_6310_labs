@@ -288,7 +288,6 @@ Learn Regex - https://github.com/ziishaned/learn-regex - учебник по reg
 
 Вычисление своего варианта:
 
-// 3 ВАРИАНТ
 
 Номер варианта = Ваш номер % Общее количество вариантов
 
@@ -314,10 +313,10 @@ Learn Regex - https://github.com/ziishaned/learn-regex - учебник по reg
  * - Хотя бы одна цифра
  * - Хотя бы один специальный символ: !@#$%^&*()
  */
-// function validatePassword(password) {
-//     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/;
-//     return passwordRegex.test(password);
-// }
+function validatePassword(password) {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/;
+    return passwordRegex.test(password);
+}
 
 /**
  * Вариант 3: Валидация номера телефона (российский формат)
@@ -450,11 +449,9 @@ function runTests() {
     console.assert(student.grades.math === 10, "Тест addGrade провален")
 
     // тест 9: Arrays
-    
     processArrays()
 
     // тест 10: taskManager
-    
     const newTask = taskManager.addTask("Новая задача", "low");
     console.assert(newTask.id === 4, "Тест addTask провален");
     console.assert(newTask.title === "Новая задача", "Тест addTask провален");
@@ -483,7 +480,20 @@ function runTests() {
     const deleteNotExistent = taskManager.deleteTask(999);
     console.assert(deleteNotExistent === false, "Тест deleteTask провален");
 
-    // тест 11: Регулярные выражения 3 вариант
+    // тест 11: регулярные выражения 2 вариант
+    console.assert(validatePassword('Password1!'), "Тест validatePassword с правильным паролем провален");
+    console.assert(validatePassword('ComplexPass123@'), "Тест validatePassword со сложным паролем провален");
+    console.assert(validatePassword('weak') === false, "Тест validatePassword со слабым паролем провален");
+    console.assert(validatePassword('Password!') === false, "Тест validatePassword без цифр провален");
+    console.assert(validatePassword('PASSWORD1!') === false, "Тест validatePassword без строчных букв провален");
+    console.assert(validatePassword('password1!') === false, "Тест validatePassword без заглавных букв провален");
+    console.assert(validatePassword('PassWorddd1') === false, "Тест validatePassword без спец символов провален");
+    console.assert(validatePassword('423523523532') === false, "Тест validatePassword с паролем из цифр провален");
+    console.assert(validatePassword('!!!!!!!!!!!!!!') === false, "Тест validatePassword с паролем из спец знаков провален");
+    console.assert(validatePassword(21321) === false, "Тест validatePassword с числом вместо строки провален");
+    console.assert(validatePassword('Pass Word1!') === false, "Тест validatePassword с пробелом провален");
+
+    // тест 12: Регулярные выражения 3 вариант
     console.assert(validatePhone('+7 (999) 123-45-67'), "Тест validatePhone с +7 провален");
     console.assert(validatePhone('8 (999) 123-45-67'), "Тест validatePhone с 8 провален");
     console.assert(validatePhone('89991234567'), "Тест validatePhone без пробелов провален");
