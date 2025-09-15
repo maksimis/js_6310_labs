@@ -2,20 +2,18 @@
 function simpleTask() {
     // 1.1 Объявите переменные разных типов (не менне 5)
     let numberVar = 123;
+    let bigNumberVar = 9007199254740991n;
     let stringVar = "Hello world!";
     let boolVar = true;
     let arrayVar = [1, 2, 3];
-    let objectVar = {username: "Admin", id: 1234}
-    let nullVar = null;
     let undefVar;
 
     // 1.2 Выведите типы всех переменных
     console.log("Тип numberVar:", typeof numberVar);
+    console.log("Тип bigNumberVar:", typeof bigNumberVar);
     console.log("Тип stringVar:", typeof stringVar);
     console.log("Тип boolVar:", typeof boolVar);
     console.log("Тип arrayVar:", typeof arrayVar);
-    console.log("Тип objectVar:", typeof objectVar);
-    console.log("Тип nullVar:", typeof nullVar);
     console.log("Тип undefVar:", typeof undefVar);
 
     return;
@@ -41,7 +39,7 @@ function calculate(a, b, operation) {
     // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
     if(typeof a !== 'number' || typeof b !== 'number')
     {
-        return "Переменные должны являться числами";
+        throw new Error("Переменные должны являться числами");
     }
     switch(operation)
     {
@@ -52,20 +50,12 @@ function calculate(a, b, operation) {
         case '*':
             return a * b;
         case '/':
-            if (b == 0) return "Деление на ноль не поддерживается";
+            if (b === 0) throw new Error("Деление на ноль не поддерживается");
             return a / b;
         default:
-            return "Операция не поддерживается";
+            throw new Error(`Операция '${operation}' не поддерживается`);
     }
 }
-console.log("5 + 3 =", calculate(5, 3, '+'));
-console.log("10 - 4 =", calculate(10, 4, '-'));
-console.log("7 * 6 =", calculate(7, 6, '*'));
-console.log("15 / 3 =", calculate(15, 3, '/'));
-console.log("8 / 0 =", calculate(8, 0, '/'));
-console.log("5 % 2 =", calculate(5, 2, '%'));
-console.log("а % 2 =", calculate('a', 2, '%'));
-console.log("5 % b =", calculate(5, 'b', '%'));
 
 
 function calculateArea(figure, ...params) {
@@ -76,26 +66,28 @@ function calculateArea(figure, ...params) {
             if(params.length === 1 && typeof(params[0]) === "number"){
                 return Math.PI*params[0]*params[0];
             }
-            return "Некорректные параметры";
+            throw new Error("Некорректные параметры");
         case 'rectangle':
             if(params.length === 2 && typeof(params[0]) === "number" && typeof(params[1]) === "number"){
                 return params[0] * params[1];
             }
-            return "Некорректные параметры";
+            throw new Error("Некорректные параметры");
         case 'triangle':
             if(params.length === 2 && typeof(params[0]) === "number" && typeof(params[1]) === "number"){
                 return params[0] * params[1] * 0.5;
             }
-            return "Некорректные параметры";
+            throw new Error("Некорректные параметры");
         default:
-            return "Фигура не поддерживается";
+            throw new Error("Фигура не поддерживается");
     }
 }
-console.log(calculateArea('circle', 5));
 
 // 2.5 Стрелочные функции
 const reverseString = (str) => {
     // Функция возвращает перевернутую строку
+    if (typeof str !== 'string') {
+    throw new Error('Входной параметр должен быть строкой');
+    }
     return str.split('').reverse().join('');
 };
 console.log(reverseString('ABCD'))
@@ -155,9 +147,16 @@ const student = {
     // Метод для добавления новой оценки
     addGrade(subject, grade) {
         // Ваш код здесь
+        if(grade > 100 || grade < 0){
+            return "Неверная оценка";
+        }
+        if(typeof subject !== "string"){
+            return "Несуществующий предмет";
+        }
+        this.grades[subject] = grade;
     }
 };
-
+student.addGrade("PS", 100);
 console.log(student.getAverageGrade());
 
 // ===== ЗАДАНИЕ 4: Массивы =====
@@ -173,31 +172,46 @@ function processArrays() {
     ];
     
     // 1. Используйте forEach для вывода всех чисел больше 50
+    let mas = [];
     console.log("Числа больше 50:");
-
+    numbers.forEach(element => {
+        if(element > 50){
+            mas.push(element);
+        }
+        
+    });
+    console.log(mas);
     // 2. Используйте map для создания массива квадратов чисел
     /*const squares =  ваш код */
-
+    const squares = numbers.map(number => number*number);
+    console.log(squares);
     // 3. Используйте filter для получения активных пользователей
     /*const activeUsers =  ваш код */
-
+    const activeUsers =  users.filter(user => user.isActive).map(user => user.name);
+    console.log(activeUsers);
     // 4. Используйте find для поиска пользователя с именем "Виктория"
     /*const victoria =  ваш код */
-
+    const victoria =  users.find(user => user.name === "Виктория");
+    console.log(victoria);
     // 5. Используйте reduce для подсчета суммы всех чисел
     /*const sum =  ваш код */
-
+    const sum =  numbers.reduce((accumulator, currentNumber) => accumulator + currentNumber, 0);
+    console.log(sum);
     // 6. Используйте sort для сортировки пользователей по возрасту (по убыванию)
     /*const sortedByAge =  ваш код */
-
+    const sortedByAge =  users.sort((a,b) => b.age-a.age).map(user => user.name);
+    console.log(sortedByAge);
     // 7. Используйте метод для проверки, все ли пользователи старше 18 лет
     /*const allAdults =  ваш код */
-
+    const allAdults =  users.filter(user => user.age > 18).map(user => user.name);
+    console.log(allAdults);
     // 8. Создайте цепочку методов: 
     //    - отфильтровать активных пользователей
     //    - преобразовать в массив имен
     //    - отсортировать по алфавиту
     /*const activeUserNames =  ваш код */
+    const activeUserNames =  users.filter(user => user.isActive).map(user => user.name).sort();
+    console.log(activeUserNames);
 }
 
 // ===== ЗАДАНИЕ 5: Менеджер задач =====
@@ -210,20 +224,30 @@ const taskManager = {
     
     addTask(title, priority = "medium") {
         // 5.1 Добавление задачи
+        const newTask = {id: this.tasks.length+1, title: title, completed: false, priority: priority}
+        this.tasks.push(newTask);
     },
     
     completeTask(taskId) {
         // 5.2 Отметка выполнения
+        const task = this.tasks.find(task => task.id === taskId);
+        task.completed = true;
     },
 
     // Удаление задачи
     deleteTask(taskId) {
         // 5.3 Ваш код здесь
+        this.tasks = this.tasks.filter(task => task.id !== taskId);
     },
 
     // Получение списка задач по статусу
     getTasksByStatus(completed) {
         // 5.4 Ваш код здесь
+        const mas = this.tasks.filter(task => task.completed === completed);
+         mas.forEach(element => {
+            console.log(element);
+        
+    });
     },
     
     getStats() {
@@ -233,9 +257,30 @@ const taskManager = {
         pending,
         completionRate
         */
-    }
-};
+        const total = this.tasks.length;
+        const completed =  this.tasks.filter(task => task.completed).length;
+        const pending = total - completed;
+        const completitionRate = Math.round(completed / total * 100);
+        console.log( stat = {total: total, 
+        completed: completed,
+        pending: pending,
+        completitionRate: completitionRate
+            
+    });
+    },
 
+    showAllTasks(){
+         this.tasks.forEach(element => {
+            console.log(element);
+        
+    });
+    } 
+};
+taskManager.addTask("Zmil'");
+taskManager.completeTask(4);
+taskManager.deleteTask(3);
+taskManager.getTasksByStatus(true);
+taskManager.getStats();
 
 // ===== ЗАДАНИЕ 6: Регулярные выражения =====
 /*
@@ -314,12 +359,86 @@ function runTests() {
     console.log("=== ТЕСТИРОВАНИЕ ===");
     
     // Тест 1: getReviewerNumber
+    console.log("Тест 1: getReviewerNumber");
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(1, 1) === 2, "Тест граничного значения (1, 1) провален");
+    console.assert(getReviewerNumber(23, 1) === 1, "Тест граничного значения (23, 1) провален");
+    console.log("Тест 1 пройден! ✅");
     
-    // Тест 2: calculate
-    console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора провален");
+    //Тест 2: getVariant
+    console.log("Тест 2: getVariant");
+    console.assert(getVariant(1, 5) === 1, "Тест граничного значения (1, 5) провален");
+    console.assert(getVariant(5, 5) === 5, "Тест граничного значения (5, 5) провален");
+    console.assert(getVariant(5, 1) === 1, "Тест граничного значения (5, 1) провален");
+    console.log("Тест 2 пройден! ✅");
+
+    // Тест 3: calculate
+    console.log("Тест 3: calculate");
+    try {
+    calculate("1", 2, "+");
+    console.assert(false, "Тест на обработку исключений (невалидные входные данные) провален: ошибка не выведена");
+    } catch (e) {
+    console.assert(e.message === "Переменные должны являться числами", "Тест на обработку исключений (невалидные входные данные) провален: выведена неверная ошибка");
+    }
+    try {
+    calculate(10, 0, "/");
+    console.assert(false, "Тест на обработку исключений (деление на ноль) провален: ошибка не выведена");
+    } catch (e) {
+    console.assert(e.message === "Деление на ноль не поддерживается", "Тест на обработку исключений (деление на ноль) провален: выведена неверная ошибка");
+    }
+    try {
+    calculate(1, 2, "%");
+    console.assert(false, "Тест на обработку исключений (неизвестная операция) провален: ошибка не выведена");
+    } catch (e) {
+    console.assert(e.message === "Операция '%' не поддерживается", "Тест на обработку исключений (неизвестная операция) провален: выведена неверная ошибка");
+    }
+    console.assert(calculate(10, 5, '+') === 15, "Тест сложения провален");
+    console.assert(calculate(10, 5, '-') === 5, "Тест вычитания провален");
+    console.assert(calculate(10, 5, '*') === 50, "Тест умножения провален");
+    console.assert(calculate(10, 5, '/') === 2, "Тест деления провален");
+    console.log("Тест 3 пройден! ✅");
+
+    // Тест 4: calculateArea
+    console.log("Тест 4: calculateArea");
+    try {
+    calculateArea('square', 5);
+    console.assert(false, "Тест на обработку исключений (неизвестная фигура) провален: ошибка не выведена");
+    } catch (e) {
+    console.assert(e.message === "Фигура не поддерживается", "Тест на обработку исключений (неизвестная фигура) провален: выведена неверная ошибка");
+    }
+    try {
+    calculateArea('circle');
+    console.assert(false, "Тест на обработку исключений (Некорректные параметры) провален: ошибка не выведена");
+    } catch (e) {
+    console.assert(e.message === "Некорректные параметры", "Тест на обработку исключений (Некорректные параметры) провален: выведена неверная ошибка");
+    }
+    console.assert(calculateArea('circle', 1) === Math.PI, "Тест круга провален");
+    console.assert(calculateArea('rectangle', 1, 2) === 2, "Тест прямоугольника провален");
+    console.assert(calculateArea('triangle', 6, 4) === 12, "Тест треугольник провален");
+    console.log("Тест 4 пройден! ✅");
     
+    // Тест 5: reverseString
+    console.log("Тест 5: reverseString");
+    try {
+    reverseString(123);
+    console.assert(false, 'Тест на обработку исключений (неверный тип данных) провален: ошибка не выведена');
+        } catch (e) {
+    console.assert(e.message === 'Входной параметр должен быть строкой', "Тест на обработку исключений (неверный тип данных) провален: выведена неверная ошибка");
+    }   
+    console.assert(reverseString('hello world') === 'dlrow olleh', 'Тест слова hello провален');
+    console.assert(reverseString('') === '', 'Тест пустой строки провален');
+    console.assert(reverseString('a') === 'a', 'Тест одного символа провален');
+    console.log("Тест 5 пройден! ✅");
     // Добавьте остальные тесты...
+    // Тест: reg
+    console.log("Тест reg");
+    console.assert(validatePassword("Pas1337$"), "Тест пароля (валидный пароль) провален");
+    console.assert(!validatePassword("short3$"), "Тест пароля (короткий пароль) провален");
+    console.assert(!validatePassword("nouppercase3$"), "Тест пароля (нет заглавной) провален");
+    console.assert(!validatePassword("NOLOWERCASE3$"), "Тест пароля (нет строчной) провален");
+    console.assert(!validatePassword("NoNumber$"), "Тест пароля (нет цифры) провален");
+    console.assert(!validatePassword("NoSpecial3"), "Тест пароля (нет спецсимвола) провален");
+    console.log("Тест reg пройден! ✅");
     
     console.log("Все тесты пройдены! ✅");
 }
