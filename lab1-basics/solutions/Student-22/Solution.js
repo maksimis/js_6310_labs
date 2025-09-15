@@ -60,20 +60,21 @@ function calculateArea(figure, ...params) {
             if (params.length === 1 && typeof(params[0]) === "number" && params[0] >= 0){
                 return Math.PI * params[0] * params[0];
             }
-            return "Неправильный ввод параметров";
+            break;
         case 'rectangle':
             if (params.length === 2 && typeof(params[0]) === "number" && typeof(params[1]) === "number" && params[0] >= 0 && params[1] >= 0){
                 return params[0] * params[1];
             }
-            return "Неправильный ввод параметров";
+            break;
         case 'triangle':
             if (params.length === 2 && typeof(params[0]) === "number" && typeof(params[1]) === "number" && params[0] >= 0 && params[1] >= 0){
                 return 0.5 * params[0] * params[1];
             }
-            return "Неправильный ввод параметров";
+            break;
         default:
             return "Неправильный ввод фигуры";
         }
+    return "Неправильный ввод параметров"
         
     // 2.4 Напишите функцию для определения площади фигур 'circle', 'rectangle', 'triangle'
     // Используйте switch.
@@ -155,6 +156,7 @@ const student = {
 
 // ===== ЗАДАНИЕ 4: Массивы =====
 function processArrays() {
+    console.log("Тестирование processArrays")
     const numbers = [12, 45, 23, 67, 34, 89, 56, 91, 27, 14];
     const words = ["JavaScript", "программирование", "массив", "функция", "объект"];
     const users = [
@@ -166,37 +168,43 @@ function processArrays() {
     ];
     
     // 1. Используйте forEach для вывода всех чисел больше 50
-    let mas = []
+    console.log("Числа больше 50:")
     numbers.forEach(element => {
         if(element > 50){
-            mas.push(element)
+            console.log(element)
         }
     });
 
     // 2. Используйте map для создания массива квадратов чисел
     const squares = numbers.map(number => number*number);
+    console.log(squares)
 
     // 3. Используйте filter для получения активных пользователей
     const activeUsers = users.filter(user => user.isActive).map(user => user.name);
+    console.log(activeUsers)
 
     // 4. Используйте find для поиска пользователя с именем "Виктория"
     const victoria = users.find(user => user.name === "Виктория");
+    console.log(victoria)
 
     // 5. Используйте reduce для подсчета суммы всех чисел
     const sum = numbers.reduce((accumulator, currentnumber) => accumulator + currentnumber, 0);
+    console.log(sum)
 
     // 6. Используйте sort для сортировки пользователей по возрасту (по убыванию)
     const sortedByAge = users.sort((a,b) => b.age - a.age).map(user => user.name);
+    console.log(sortedByAge)
 
     // 7. Используйте метод для проверки, все ли пользователи старше 18 лет
     const allAdults =  users.every(user => user.age > 18);
-
+    console.log(allAdults)
 
     // 8. Создайте цепочку методов: 
     //    - отфильтровать активных пользователей
     //    - преобразовать в массив имен
     //    - отсортировать по алфавиту
     const activeUserNames = users.filter(user => user.isActive).map(user => user.name).sort();
+    console.log(activeUserNames)
 }
 
 
@@ -348,8 +356,8 @@ function runTests() {
     console.assert(getReviewerNumber(23, 1) === 1, "Тест получения ревьювера провален");
     
     // Тест 2: getVariant
-    console.assert(getVariant(23, 4), "Тест getVariant провален")
-    console.assert(getVariant(20,21), "Тест getVariant провален")
+    console.assert(getVariant(22, 4) === 2, "Тест getVariant провален")
+    console.assert(getVariant(21, 21) === 21, "Тест getVariant провален")
 
     // Тест 3: calculate
     console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора провален");
@@ -358,7 +366,17 @@ function runTests() {
     console.assert(calculate(10, 5, '/') === 2, "Тест калькулятора провален");
     console.assert(calculate(10, 0, '/') === "Нельзя делить на ноль", "Тест калькулятора провален");
     console.assert(calculate(10, 5, '%') === "Неизвестная операция", "Тест калькулятора провален");
+    console.assert(calculate('w', 2, "-") === "Аргументы не являются числами!", "Тест калькулятора провален");
+    console.assert(calculate("", "", "-") === "Аргументы не являются числами!", "Тест калькулятора провален");
     console.assert(calculate(10, "3", '-') === "Аргументы не являются числами!", "Тест калькулятора провален");
+
+    console.assert(calculate(Number.MAX_VALUE, 1, '+') === Number.MAX_VALUE+1, "Тест калькулятора провален (переполнение)");
+    console.assert(calculate(Number.MAX_VALUE, Number.MAX_VALUE, '+') === Infinity, "Тест калькулятора провален (переполнение)");
+    console.assert(calculate(Number.MAX_VALUE, 2, '-') === Number.MAX_VALUE - 2, "Тест калькулятора провален (переполнение)");
+    console.assert(calculate(Number.MAX_VALUE, 1, '*') === Number.MAX_VALUE, "Тест калькулятора провален (переполнение)");
+    console.assert(calculate(1, Number.MAX_VALUE, '*') === Number.MAX_VALUE, "Тест калькулятора провален (переполнение)");
+    console.assert(calculate(Number.MAX_VALUE, 10, "*") === Infinity, "Тест калькулятора провален (переполнение)");
+    console.assert(calculate(Number.MAX_VALUE, 2, '/') === Number.MAX_VALUE / 2, "Тест калькулятора провален (переполнение)");
     
     // Тест 4: CalculateArea
     console.assert(calculateArea('circle', 5) === Math.PI * 25,  "Тест калькулятора площади провален");
@@ -366,24 +384,32 @@ function runTests() {
     console.assert(calculateArea('circle', -5) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
     console.assert(calculateArea('circle', 5, 10) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
     console.assert(calculateArea('circle', "5") === "Неправильный ввод параметров", "Тест калькулятора площади провален");
+
     console.assert(calculateArea('rectangle', 4, 6) === 24, "Тест калькулятора площади провален");
     console.assert(calculateArea('rectangle', 10, 5) === 50, "Тест калькулятора площади провален");
     console.assert(calculateArea('rectangle', 0, 5) === 0, "Тест калькулятора площади провален");
     console.assert(calculateArea('rectangle', -4, 6) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
+    console.assert(calculateArea('rectangle', -4, -6) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
     console.assert(calculateArea('rectangle', 4) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
     console.assert(calculateArea('rectangle', 4, 6, 8) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
     console.assert(calculateArea('rectangle', "4", 6) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
+    console.assert(calculateArea('rectangle', "4", "3") === "Неправильный ввод параметров", "Тест калькулятора площади провален");
+
     console.assert(calculateArea('triangle', 8, 4) === 16, "Тест калькулятора площади провален");
     console.assert(calculateArea('triangle', 12, 7) === 42, "Тест калькулятора площади провален");
     console.assert(calculateArea('triangle', 0, 5) === 0, "Тест калькулятора площади провален");
     console.assert(calculateArea('triangle', -8, 4) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
+    console.assert(calculateArea('triangle', -8, -4) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
     console.assert(calculateArea('triangle', 8) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
     console.assert(calculateArea('triangle', 8, 4, 5) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
     console.assert(calculateArea('triangle', 8, "4") === "Неправильный ввод параметров", "Тест калькулятора площади провален");
+    console.assert(calculateArea('triangle', "8", "4") === "Неправильный ввод параметров", "Тест калькулятора площади провален");
+
     console.assert(calculateArea('square', 5) === "Неправильный ввод фигуры", "Неправильная фигура 'square' должна возвращать ошибку");
     console.assert(calculateArea('', 5) === "Неправильный ввод фигуры", "Тест калькулятора площади провален");
     console.assert(calculateArea(123, 5) === "Неправильный ввод фигуры", "Тест калькулятора площади провален");
     console.assert(calculateArea() === "Неправильный ввод фигуры", "Тест калькулятора площади провален");
+
     console.assert(calculateArea('circle', 2.5) === Math.PI * 6.25, "Тест калькулятора площади провален");
     console.assert(calculateArea('rectangle', 3.5, 2.5) === 8.75, "Тест калькулятора площади провален");
     console.assert(calculateArea('triangle', 5.5, 4.5) === 12.375, "Тест калькулятора площади провален");
@@ -399,6 +425,7 @@ function runTests() {
     console.assert(reverseString(111) === "Аргумент не является строкой", "Тест reverseString провален");
 
     // тест 6: getRandomNumber
+    console.assert(typeof(getRandomNumber(10, 50)) === "number", "Тест getRandomNumber провален");
     const randNum1 = getRandomNumber(1, 5);
     const randNum2 = getRandomNumber(1, 1);
     console.assert(randNum1 >= 1 && randNum1 <= 5, "Тест getRandomNumber провален");
@@ -422,37 +449,54 @@ function runTests() {
     student.addGrade("math", 10)
     console.assert(student.grades.math === 10, "Тест addGrade провален")
 
-    // тест 9: taskManager
+    // тест 9: Arrays
+    
+    processArrays()
+
+    // тест 10: taskManager
     
     const newTask = taskManager.addTask("Новая задача", "low");
     console.assert(newTask.id === 4, "Тест addTask провален");
     console.assert(newTask.title === "Новая задача", "Тест addTask провален");
     console.assert(newTask.priority === "low", "Тест addTask провален");
     console.assert(taskManager.tasks.length === 4, "Тест addTask провален");
+
     const completedTask = taskManager.completeTask(1);
     console.assert(completedTask.completed === true, "Тест completeTask провален");
     console.assert(taskManager.tasks[0].completed === true, "Тест completeTask провален");
+
     const nonExistentTask = taskManager.completeTask(999);
     console.assert(nonExistentTask === "Задача не найдена", "Тест completeTask провален");
+
     const completedTasks = taskManager.getTasksByStatus(true);
     console.assert(completedTasks.length === 2, "тест getTasksByStatus провален");
+
     const stats = taskManager.getStats();
     console.assert(stats.total === 4, "Тест getStats провален");
     console.assert(stats.completed === 2, "Тест getStats провален");
+
     const deleteResult = taskManager.deleteTask(2);
     console.assert(deleteResult === true, "Тест deleteTask провален");
     console.assert(taskManager.tasks.length === 3, "Тест deleteTask провален");
     console.assert(taskManager.tasks.find(t => t.id === 2) === undefined, "Тест deleteTask провален");
+
     const deleteNotExistent = taskManager.deleteTask(999);
     console.assert(deleteNotExistent === false, "Тест deleteTask провален");
 
-    // тест 10: Регулярные выражения 3 вариант
+    // тест 11: Регулярные выражения 3 вариант
     console.assert(validatePhone('+7 (999) 123-45-67'), "Тест validatePhone с +7 провален");
     console.assert(validatePhone('8 (999) 123-45-67'), "Тест validatePhone с 8 провален");
     console.assert(validatePhone('89991234567'), "Тест validatePhone без пробелов провален");
     console.assert(validatePhone('+7(999)123-45-67'), "Тест validatePhone без пробелов с +7 провален");
-    console.assert(!validatePhone('1234567890'), "Тест validatePhone с неправильным номером провален");
-    console.assert(!validatePhone('+1 (999) 123-45-67'), "Тест validatePhone с неправильным кодом провален");
+    console.assert(validatePhone('1234567890') === false, "Тест validatePhone с неправильным номером провален");
+    console.assert(validatePhone('+1 (999) 123-45-67') === false, "Тест validatePhone с неправильным кодом провален");
+    console.assert(validatePhone('+7 (999) 123-45-7') === false, "Тест validatePhone с неправильным кодом провален");
+    console.assert(validatePhone('+8 (999) 123-45-67') === false, "Тест validatePhone с неправильным кодом провален");
+    console.assert(validatePhone('+7-999-123-45-67') === false, "Тест validatePhone с неправильным кодом провален");
+    console.assert(validatePhone("") === false, "Тест validatePhone с пустой строкой провален")
+    console.assert(validatePhone(" ") === false, "Тест validatePhone с пробелом провален")
+    console.assert(validatePhone("kekdhas") === false, "Тест validatePhone с неправильной строкой провален")
+    console.assert(validatePhone(111) === false, "Тест validatePhone с числами вместо строки провален")
 
 
 
