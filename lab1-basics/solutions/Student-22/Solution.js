@@ -1,12 +1,12 @@
 // ===== ЗАДАНИЕ 1: Базовые операции =====
 function simpleTask() {
-    let undef1;
-    let string1 = "A";
-    let Number1 = 123;
-    let bool1 = true;
-    let obj1 = {name: "1", notname: 2}
+    let undef;
+    let string = "A";
+    let Number = 123;
+    let bool = true;
+    let obj = {name: "1", notname: 2}
 
-    console.log(typeof(undef1), typeof(string1), typeof(Number1), typeof(bool1), typeof(obj1))
+    console.log(typeof(undef), typeof(string), typeof(Number), typeof(bool), typeof(obj))
     
     // 1.1 Объявите переменные разных типов (не менне 5)
     // 1.2 Выведите типы всех переменных
@@ -323,15 +323,6 @@ function validatePhone(phone) {
     const phoneRegex = /^(\+7|8)(\s?\(?\d{3}\)?\s?\d{3}[\s-]?\d{2}[\s-]?\d{2}|\d{10})$/;
     return phoneRegex.test(phone);
 }
-// Памятка:
-//   ^(\+7|8)  # Начинается с +7 или 8
-//   \s?\(?\d{3}\)?\s?  # Пробел (опц), открывающая скобка (опц), 3 цифры, закрывающая скобка (опц), пробел (опц)
-//   \d{3}               # 3 цифры
-//   [\s-]?              # Пробел или дефис (опц)
-//   \d{2}               # 2 цифры
-//   [\s-]?              # Пробел или дефис (опц)
-//   \d{2}               # 2 цифры
-//   | \d{10}            # Или просто 10 цифр подряд
 
 /**
  * Вариант 4: Валидация даты в формате DD.MM.YYYY
