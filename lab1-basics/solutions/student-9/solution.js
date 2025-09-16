@@ -29,21 +29,35 @@ function getVariant(number, variants) {
 }
 
 function calculate(a, b, operation) {
-    // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
-    if (typeof a !== 'number' || typeof b !== 'number') return 'Аргументы не являются числами';
+    if (typeof a !== 'number' || typeof b !== 'number' || Number.isNaN(a) || Number.isNaN(b)) {
+        return 'Аргументы не являются числами';
+    }
+
+    let result;
+
     switch (operation) {
         case '+':
-            return a + b;
+            result = a + b;
+            break;
         case '-':
-            return a - b;
+            result = a - b;
+            break;
         case '*':
-            return a * b;
+            result = a * b;
+            break;
         case '/':
-            if (b == 0) return 'Нельзя делить на ноль';
-            return a / b;
+            if (b === 0) return 'Нельзя делить на ноль';
+            result = a / b;
+            break;
         default:
             return 'Неизвестная операция';
     }
+
+    if (!Number.isFinite(result)) {
+        return 'Ошибка: переполнение';
+    }
+
+    return result;
 }
 
 function calculateArea(figure, ...params) {
@@ -348,6 +362,8 @@ function runTests() {
     console.assert(calculate(10, 5, '-') === 5, 'Тест калькулятора (-) провален');
     console.assert(calculate(10, 5, '*') === 50, 'Тест калькулятора (*) провален');
     console.assert(calculate(10, 5, '/') === 2, 'Тест калькулятора (/) провален');
+    console.assert(calculate(1e308, 1e308, '*') === 'Ошибка: переполнение', 'Тест переполнения провален');
+    console.assert(calculate(Number.MAX_VALUE, Number.MAX_VALUE, '+') === 'Ошибка: переполнение', 'Тест переполнения провален');
     console.assert(calculate(2, 's', '-') === 'Аргументы не являются числами', 'Тест калькулятора (аргументы не числа) провален');
     console.assert(calculate('b', 2, '+') === 'Аргументы не являются числами', 'Тест калькулятора (аргументы не числа) провален');
     console.assert(calculate(10, 5, '^') === 'Неизвестная операция', 'Тест калькулятора (неверная операция) провален');
