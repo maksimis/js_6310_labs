@@ -118,6 +118,8 @@ const createVehicleFactory = (vehicleType) => (make, model, year, ...args) => {
 function runTests() {
     console.log('Запуск тестов...');
 
+    Vehicle.vehicleCount = 0;
+
     // Расширьте тесты для полного покрытия задания.
     
     // Проверка наследования
@@ -132,7 +134,8 @@ function runTests() {
     const electricCar = new ElectricCar('Tesla', 'Model 3', 2020, 4, 75);
     electricCar.displayInfo();
     console.log(`Запас хода: ${electricCar.calculateRange()} км`);
-    
+    console.assert(electricCar.calculateRange() === 450, 'Тест вычисления запаса хода провален')
+
     // Проверка возраста
     const testVehicle = new Vehicle('Test', 'Model', 2010);
     console.assert(testVehicle.age === (new Date().getFullYear() - 2010), 'Тест возраста провален');
@@ -141,10 +144,13 @@ function runTests() {
     const currentYear = new Date().getFullYear();
     testVehicle.year = currentYear - 1;
     console.assert(testVehicle.year === currentYear - 1, 'Тест сеттера года провален');
+    testVehicle.displayInfo()
 
     // Попытка установить будущий год
     testVehicle.year = currentYear + 1;
     console.assert(testVehicle.year === currentYear - 1, 'Тест валидации года провален');
+    // Выдаёт в консоль ошибку "Новый год выпуска не должен быть больше нынешнего года выпуска". Не меняет год у testVehicle
+    testVehicle.displayInfo()
 
     // Проверка сравнения возраста
     const vehicle1 = new Vehicle('1', '2', 2000)
@@ -153,13 +159,17 @@ function runTests() {
     console.assert(ageDiff === 10, 'Тест сравнения возраста провален')
 
     // Проверка каррирования
-
     const createCarFactory = createVehicleFactory(Car);
     const myNewCar = createCarFactory('BMW', 'X5', 2022);
     console.log('Создан новый автомобиль:');
     myNewCar.displayInfo();
-    
+    console.assert(myNewCar instanceof Car, 'Тест каррирования провален')
+    console.assert(myNewCar.make === 'BMW', 'Тест каррирования провален')
+
+    // Проверка счётчика транспортных средств
     console.log('Всего создано транспортных средств:', Vehicle.getTotalVehicles());
+    console.assert(Vehicle.getTotalVehicles() === 7)
+    
     
     console.log('Все тесты пройдены! ✅');
 }
