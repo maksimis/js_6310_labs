@@ -94,9 +94,16 @@ console.log(reverseString('ABCD'))
 
 const getRandomNumber = (min, max) => {
     // Функция возвращает случайное число между min и max
+    if (typeof min !== 'number' || typeof max !== 'number') {
+    throw new Error('Входные параметры должены быть числом');
+    }
+    if (max < min) {
+        throw new Error('Первый параметр должен быть меньше второго');
+    }
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
-console.log(getRandomNumber(2, 50));
+console.log(getRandomNumber(1, 5));
+console.log(getRandomNumber(1, 1));
 
 // ===== ЗАДАНИЕ 3: Объекты =====
 const book = {
@@ -357,7 +364,19 @@ function validateDate(date) {
 // ===== ТЕСТИРОВАНИЕ =====
 function runTests() {
     console.log("=== ТЕСТИРОВАНИЕ ===");
-    
+    //Функция тестирования ошибок
+    function testThrowsError(func, expectedMessage) {
+    try {
+        func();
+        console.log(`Ожидалось исключение: "${expectedMessage}", но его не было`);
+    } catch (e) {
+        if (e.message !== expectedMessage) {
+            console.log(`Ожидалось: "${expectedMessage}", но получено: "${e.message}"`);
+        }
+        return;
+    }
+}
+
     // Тест 1: getReviewerNumber
     console.log("Тест 1: getReviewerNumber");
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
@@ -425,10 +444,29 @@ function runTests() {
         } catch (e) {
     console.assert(e.message === 'Входной параметр должен быть строкой', "Тест на обработку исключений (неверный тип данных) провален: выведена неверная ошибка");
     }   
-    console.assert(reverseString('hello world') === 'dlrow olleh', 'Тест слова hello провален');
+    console.assert(reverseString('hello world') === 'dlrow olleh', 'Тест слова hello world провален');
     console.assert(reverseString('') === '', 'Тест пустой строки провален');
     console.assert(reverseString('a') === 'a', 'Тест одного символа провален');
     console.log("Тест 5 пройден! ✅");
+
+    //Тест 6: getRandomNumber
+    console.log("Тест 6: getRandomNumber");
+    try {
+    getRandomNumber(10, 'abc');
+    console.assert(false, 'Тест на обработку исключений (неверный тип данных) провален: ошибка не выведена');
+        } catch (e) {
+    console.assert(e.message === 'Входные параметры должены быть числом', "Тест на обработку исключений (неверный тип данных) провален: выведена неверная ошибка");
+    } 
+    try {
+    getRandomNumber(10, 1);
+    console.assert(false, 'Тест на обработку исключений (неверный порядок параметров) провален: ошибка не выведена');
+        } catch (e) {
+    console.assert(e.message === 'Первый параметр должен быть меньше второго', "Тест на обработку исключений (неверный порядок параметров) провален: выведена неверная ошибка");
+    } 
+    console.assert(getRandomNumber(1, 1) === 1, "Тест на одинаковые параметры провален");
+    //testThrowsError(getRandomNumber(), 'Входные параметры должены быть числом');
+    //починить testThrowsError! Он, как будто, вызывает функцию до трая
+
     // Добавьте остальные тесты...
     // Тест: reg
     console.log("Тест reg");
