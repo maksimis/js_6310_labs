@@ -456,7 +456,7 @@ function validatePassword(password) {
  * Поддерживает форматы:
  * - +7 (999) 123-45-67
  * - 8 (999) 123-45-67  
- * - 89991234567
+ * - 89991234567  
  * - +7(999)123-45-67
  */
 function validatePhone(phone) {
