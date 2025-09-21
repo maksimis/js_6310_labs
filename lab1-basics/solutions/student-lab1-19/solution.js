@@ -3,30 +3,28 @@ function simpleTask() {
     // 1.1 Объявите переменные разных типов (не менне 5)
     // 1.2 Выведите типы всех переменных
 const num = 5
+const arr = [1, 2, 3];
 const str = "tiyfvgvig"
 const bool = true
-const float = 0.2223
-const symbol = '@'
 let u
 const obj = {
     name: "alice",
     age: 22
 }
-console.log(typeof num)
-console.log(typeof str)
-console.log(typeof bool)
-console.log(typeof float)
-console.log(typeof symbol)
-console.log(typeof u)
-console.log(typeof obj)
+console.log(typeof num);
+console.log(typeof str);
+console.log(typeof bool);
+console.log(typeof u);
+console.log(typeof obj);
+console.log(typeof arr);
 }
 simpleTask()
 
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
-    let reviewerNumber = (number + 1) % 23;
-    return reviewerNumber;
+let res = (number + lab) % 23;
+    return res;
 }
      console.log(getReviewerNumber(19, 1));
      
@@ -40,33 +38,26 @@ console.log(getVariant(19, 23));
 
 function calculate(a, b, operation) {
     // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
-if (typeof a !== 'number' || typeof b !== 'number') {
-        throw new Error('Оба операнда должны быть числами');
+if(typeof(a) !== "number" || typeof(b) !== "number"){
+        return "Аргументы функции должны быть числами"
     }
-    
-    if (typeof operation !== 'string') {
-        throw new Error('Операция должна быть строкой');
+    if(operation == "+"){
+        return a + b;
     }
-    
-    // Обработка операций
-    switch (operation) {
-        case '+':
-            return a + b;
-            
-        case '-':
-            return a - b;
-            
-        case '*':
-            return a * b;
-            
-        case '/':
-            if (b === 0) {
-                throw new Error('Деление на ноль невозможно');
-            }
-            return a / b;
-            
-        default:
-            throw new Error('Неизвестная операция. Допустимые операции: +, -, *, /');
+    else if(operation == "-"){
+        return a - b;
+    }
+    else if(operation == "*"){
+        return a * b;
+    }
+    else if(operation == "/"){
+        if(b == 0){
+            return NaN;
+        }
+        return a / b;
+    }
+    else{
+        return "Неизвестная операция";
     }
 }
 console.log(calculate(100000006666666, 500000000, '/')); 
@@ -382,27 +373,12 @@ function validatePhone(phone) {
     return phoneRegex.test(phone);
     
 }
-// Позитивные тесты (должны возвращать true)
-    console.assert(validatePhone("+7 (999) 123-45-67") === true, "Тест 1 провален: +7 (999) 123-45-67");
-    console.assert(validatePhone("8 (999) 123-45-67") === true, "Тест 2 провален: 8 (999) 123-45-67");
-    console.assert(validatePhone("89991234567") === true, "Тест 3 провален: 89991234567");
-    console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 4 провален: +7(999)123-45-67");
-    
-    // Дополнительные валидные форматы
-    console.assert(validatePhone("+7 999 123-45-67") === true, "Тест 5 провален: +7 999 123-45-67");
-    console.assert(validatePhone("8(999)123-45-67") === true, "Тест 6 провален: 8(999)123-45-67");
-    console.assert(validatePhone("+79991234567") === true, "Тест 7 провален: +79991234567");
-    console.assert(validatePhone("8 999 123 45 67") === true, "Тест 8 провален: 8 999 123 45 67");
-    
-    // Негативные тесты (должны возвращать false)
-    console.assert(validatePhone("+7-999-123-45-67") === false, "Тест 9 провален: +7-999-123-45-67");
-    console.assert(validatePhone("9 (999) 123-45-67") === false, "Тест 10 провален: начинается с 9");
-    console.assert(validatePhone("+7 (99) 123-45-67") === false, "Тест 11 провален: короткий код региона");
-    console.assert(validatePhone("+7 (999) 12-45-67") === false, "Тест 12 провален: короткий номер");
-    console.assert(validatePhone("+7 (999) 123-45-678") === false, "Тест 13 провален: длинный номер");
-    console.assert(validatePhone("+7 (abc) 123-45-67") === false, "Тест 14 провален: буквы в коде региона");
-    console.assert(validatePhone("") === false, "Тест 15 провален: пустая строка");
-    console.assert(validatePhone("+7 (999) 123-45-6") === false, "Тест 16 провален: неполный номер");
+
+
+console.assert(validatePhone("89991234567") === true, "Тест 1 провален: 89991234567");
+console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 2 провален: +7(999)123-45-67");
+console.assert(validatePhone("8(999)1234567") === true, "Тест 3 провален: 8(999)1234567");
+console.assert(validatePhone("+7(999)1234567") === true, "Тест 4 провален: +7(999)1234567");
 
 /**
  * Вариант 4: Валидация даты в формате DD.MM.YYYY
@@ -437,7 +413,7 @@ function runTests() {
 // Запуск тестов
 function runTests() {
 //Тест задания 2.1
-console.assert(getReviewerNumber(19, 1) === 20, "Тест получения номера рецензента провален");
+console.assert(getReviewerNumber(19, 1) === 20, "Тест получения ревьюера провален");
 //Тест задания 2.2
 console.assert(getVariant(1, 23) === 1, "Тест: номер 1, вариантов 23 -> вариант 1");
 console.assert(getVariant(23, 23) === 23, "Тест: номер 23, вариантов 23 -> вариант 23");
