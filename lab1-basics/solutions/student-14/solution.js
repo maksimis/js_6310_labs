@@ -230,15 +230,15 @@ const book = {
     year: 2024,
     numofpages: 576,
     access: "да",
-};
 
-function getInfo() {
-    return `${book.name} ${book.author} ${book.year} ${book.numofpages}`;
-}
+    getInfo() {
+        return `${book.name} ${book.author} ${book.year} ${book.numofpages}`;
+    },
 
-function toggleAvailability() {
-    this.access = "нет";
-    return this.access;
+    toggleAvailability() {
+        this.access = false;
+        return this.access;
+    },
 };
 
 const student = {
@@ -300,7 +300,8 @@ function processArrays() {
    
     // 2. Используйте map для создания массива квадратов чисел
     console.log("Квадраты чисел:");
-    const squares = numbers.map(number => console.log(number ** 2));
+    const squares = numbers.map(number => (number ** 2));
+    console.log(squares);
 
     // 3. Используйте filter для получения активных пользователей
     const activeUsers = users.filter(user => user.isActive === true);
@@ -544,8 +545,8 @@ function runTests() {
     console.assert(getRandomNumber(50, 25) === "Ошибка: min не может быть больше max", "Тест случайного числа провален");
 
     // Тест 7: book
-    console.assert(getInfo() === "Peaches for Monsieur le Curé Joanne Harris 2024 576", "Тест книги провален1");
-    console.assert(toggleAvailability() === "нет", "Тест книги провален");
+    console.assert(book.getInfo() === "Peaches for Monsieur le Curé Joanne Harris 2024 576", "Тест книги провален1");
+    console.assert(book.toggleAvailability() === false, "Тест книги провален");
 
     // Тест 8: student
     console.assert(student.getAverageGrade() === 90, "Тест студента провален1");
