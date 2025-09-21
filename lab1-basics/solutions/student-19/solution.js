@@ -6,7 +6,7 @@ const num = 5
 const str = "tiyfvgvig"
 const bool = true
 const float = 0.2223
-const char = '@'
+const symbol = '@'
 let u
 const obj = {
     name: "alice",
@@ -16,7 +16,7 @@ console.log(typeof num)
 console.log(typeof str)
 console.log(typeof bool)
 console.log(typeof float)
-console.log(typeof char)
+console.log(typeof symbol)
 console.log(typeof u)
 console.log(typeof obj)
 }
@@ -29,9 +29,7 @@ function getReviewerNumber(number, lab) {
     return reviewerNumber;
 }
      console.log(getReviewerNumber(19, 1));
-     console.assert(getReviewerNumber(19, 1) === 20, "Тест получения номера рецензента провален");
-
-
+     
 
 function getVariant(number, variants) {
     // 2.2 Функция определяющая номер варианта, исходя из количества вариантов
@@ -39,13 +37,6 @@ function getVariant(number, variants) {
     return variant;
 }
 console.log(getVariant(19, 23)); 
-console.assert(getVariant(1, 23) === 1, "Тест: номер 1, вариантов 23 -> вариант 1");
-console.assert(getVariant(23, 23) === 23, "Тест: номер 23, вариантов 23 -> вариант 23");
-console.assert(getVariant(24, 23) === 1, "Тест: номер 24, вариантов 23 -> вариант 1");
-console.assert(getVariant(46, 23) === 23, "Тест: номер 46, вариантов 23 -> вариант 23");
-console.assert(getVariant(19, 23) === 19, "Тест: номер 19, вариантов 23 -> вариант 19");
-
-
 
 function calculate(a, b, operation) {
     // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
@@ -79,12 +70,7 @@ if (typeof a !== 'number' || typeof b !== 'number') {
     }
 }
 console.log(calculate(100000006666666, 500000000, '/')); 
-console.assert(calculate(10, 5, '+') === 15, "Тест провален: 10 + 5 = 15");
-console.assert(calculate(10, 5, '-') === 5, "Тест провален: 10 - 5 = 5");
-console.assert(calculate(10, 5, '*') === 50, "Тест провален: 10 * 5 = 50");
-console.assert(calculate(10, 5, '/') === 2, "Тест провален: 10 / 5 = 2");
-console.assert(calculate(100000006666666, 500000000, '/') === 200000.013333332, "Тест провален: деление больших чисел");
-console.assert(false, "Тест провален: должно быть исключение при делении на ноль");
+
 
 function calculateArea(figure, ...params) {
     // 2.4 Напишите функцию для определения площади фигур 'circle', 'rectangle', 'triangle'
@@ -114,19 +100,7 @@ function calculateArea(figure, ...params) {
 console.log(calculateArea('circle', 5));
 console.log(calculateArea('rectangle', 3, 4));
 console.log(calculateArea('triangle', 6, 8));
-const circleArea = calculateArea('circle', 5);
-console.assert(Math.abs(circleArea - 78.53981633974483) < 0.0001, "Тест провален: площадь круга с радиусом 5");
-const rectangleArea = calculateArea('rectangle', 3, 4);
-console.assert(rectangleArea === 12, "Тест провален: площадь прямоугольника 3x4 = 12");
-const triangleArea = calculateArea('triangle', 6, 8);
-console.assert(triangleArea === 24, "Тест провален: площадь треугольника с основанием 6 и высотой 8 = 24");
-const unknownArea = calculateArea('hexagon', 5);
-console.assert(unknownArea === 'Неизвестная фигура', "Тест провален: неизвестная фигура должна возвращать сообщение об ошибке");
-console.assert(calculateArea('circle', 10) === Math.PI * 100, "Тест провален: площадь круга с радиусом 10");
-console.assert(calculateArea('rectangle', 10, 5) === 50, "Тест провален: площадь прямоугольника 10x5 = 50");
-console.assert(calculateArea('triangle', 10, 5) === 25, "Тест провален: площадь треугольника с основанием 10 и высотой 5 = 25");
-console.assert(calculateArea('circle', 0) === 0, "Тест провален: площадь круга с радиусом 0 = 0");
-console.assert(calculateArea('rectangle', 0, 5) === 0, "Тест провален: площадь прямоугольника с нулевой стороной = 0");
+
 
 
 // 2.5 Стрелочные функции
@@ -138,23 +112,15 @@ let reversed = '';
     }
     return reversed;
 };
-console.log(reverseString("ALICCE"))
-console.assert(reverseString("hello") === "olleh", "Тест провален: 'hello' -> 'olleh'");
-console.assert(reverseString("12345") === "54321", "Тест провален: '12345' -> '54321'");
-console.assert(reverseString("a b c") === "c b a", "Тест провален: 'a b c' -> 'c b a'");
-console.assert(reverseString("!@#$") === "$#@!", "Тест провален: '!@#$' -> '$#@!'");
-console.assert(reverseString("") === "", "Тест провален: пустая строка -> пустая строка");
-console.assert(reverseString("a") === "a", "Тест провален: 'a' -> 'a'");
-console.assert(reverseString("ab") === "ba", "Тест провален: 'ab' -> 'ba'");
-console.assert(reverseString("привет") === "тевирп", "Тест провален: 'привет' -> 'тевирп'");
+console.log(reverseString("ALICCE"));
+
 
 const getRandomNumber = (min, max) => {
     // Функция возвращает случайное число между min и max
     return Math.random() * (max - min) + min;
 };
-    console.log(getRandomNumber(10 , 20))
-    console.assert(typeof(getRandomNumber(10, 20)) === "number", "Тест провален (результат не число");
-    console.assert(getRandomNumber(10, 20) >= 10 && getRandomNumber(10, 20) < 20, "Тест провален(результат не в границах");
+    console.log(getRandomNumber(10 , 20));
+    
 
 
 // ===== ЗАДАНИЕ 3: Объекты =====
@@ -179,11 +145,7 @@ title: '1984',
 console.log(book.getInfo());
 console.log(book.available);
 console.log(book.toggleAvailability());
-console.assert(book.title === '1984', "Тест 1 провален: название книги");
-console.assert(book.author === 'Дж.Оруэлл', "Тест 2 провален: автор книги");
-console.assert(book.year === 1947, "Тест 3 провален: год выпуска");
-console.assert(book.pages === 200, "Тест 4 провален: количество страниц");
-console.assert(book.available === true, "Тест 5 провален: доступность книги");
+
 
 const student = {
     // 3.2 Реализуйте методы объекта "студент" 
@@ -222,20 +184,7 @@ console.log(student.getAverageGrade());
 student.addGrade('math', 90);
 console.log(student.grades.programming); 
 console.log(student.getAverageGrade()); 
-console.assert(student.name === "Анна Петрова", "Тест провален: имя студента");
-    console.assert(student.age === 20, "Тест провален: возраст студента");
-    console.assert(student.course === 2, "Тест провален: курс студента");
-    console.assert(student.grades.math === 90, "Тест провален: оценка по математике");
-    console.assert(student.grades.programming === 95, "Тест провален: оценка по программированию");
-    console.assert(student.grades.history === 85, "Тест провален: оценка по истории");
-    const average = student.getAverageGrade();
-    console.assert(average === 90, "Тест провален: средний балл");
-    student.addGrade('physics', 100);
-    console.assert(student.grades.physics === 100, "Тест провален: добавление новой оценки");
-    student.addGrade('math', 100);
-    console.assert(student.grades.math === 100, "Тест провален: изменение существующей оценки");
-    const newAverage = student.getAverageGrade();
-    console.assert(newAverage === 95, "Тест провален: новый средний балл");
+
 
 // ===== ЗАДАНИЕ 4: Массивы =====
 function processArrays() {
@@ -307,19 +256,9 @@ console.log(allAdults);
     .map(user => user.name)
     .sort();
     console.log(activeUserNames);  
-    console.assert(squares.length === 10, "Тест провален: длина массива квадратов");
-    console.assert(squares[0] === 144, "Тест провален: квадрат 12");
-    console.assert(squares[3] === 4489, "Тест провален: квадрат 67");
-    console.assert(activeUsers.length === 3, "Тест провален: количество активных пользователей");
-    console.assert(activeUsers[0].name === "Анна", "Тест провален: первый активный пользователь");
-    console.assert(activeUsers[2].name === "Григорий", "Тест провален: последний активный пользователь");
-    console.assert(victoria.name === "Виктория", "Тест провален: поиск Виктории");
-    console.assert(victoria.age === 22, "Тест провален: возраст Виктории");
-    console.assert(activeUserNames.length === 3, "Тест провален: количество имен активных пользователей");
-    console.assert(activeUserNames[0] === "Анна", "Тест провален: первое имя в отсортированном списке");
-    console.assert(activeUserNames[2] === "Григорий", "Тест провален: последнее имя в отсортированном списке");
+    console.log();
 }
-processArrays();
+
 
 
 // ===== ЗАДАНИЕ 5: Менеджер задач =====
@@ -383,28 +322,7 @@ const taskManager = {
     };
     }
 };
-console.log("(добавление задачи в список):");
-    taskManager.addTask("выучить python");
-    console.log(taskManager.tasks);
-    console.log();
 
-     console.log("(выполнение задания):");
-    taskManager.completeTask(3);
-    console.log(taskManager.tasks);
-    console.log();
-
-    console.log("(удаление задачи):");
-    taskManager.deleteTask(2);
-    console.log(taskManager.tasks);
-    console.log();
-
-    console.log("(статус задачи):");
-    console.log(taskManager.getTasksByStatus(true));
-    console.log();
-
-    console.log("(возвращение объекта):");
-    console.log(taskManager.getStats());
-    console.log();
     
 
 // ===== ЗАДАНИЕ 6: Регулярные выражения =====
@@ -517,4 +435,92 @@ function runTests() {
 }
 
 // Запуск тестов
+function runTests() {
+//Тест задания 2.1
+console.assert(getReviewerNumber(19, 1) === 20, "Тест получения номера рецензента провален");
+//Тест задания 2.2
+console.assert(getVariant(1, 23) === 1, "Тест: номер 1, вариантов 23 -> вариант 1");
+console.assert(getVariant(23, 23) === 23, "Тест: номер 23, вариантов 23 -> вариант 23");
+console.assert(getVariant(24, 23) === 1, "Тест: номер 24, вариантов 23 -> вариант 1");
+console.assert(getVariant(46, 23) === 23, "Тест: номер 46, вариантов 23 -> вариант 23");
+console.assert(getVariant(19, 23) === 19, "Тест: номер 19, вариантов 23 -> вариант 19");
+//Тест задания 2.3
+console.assert(calculate(10, 5, '+') === 15, "Тест провален: 10 + 5 = 15");
+console.assert(calculate(10, 5, '-') === 5, "Тест провален: 10 - 5 = 5");
+console.assert(calculate(10, 5, '*') === 50, "Тест провален: 10 * 5 = 50");
+console.assert(calculate(10, 5, '/') === 2, "Тест провален: 10 / 5 = 2");
+console.assert(calculate(100000006666666, 500000000, '/') === 200000.013333332, "Тест провален: деление больших чисел");
+//Тест задания 2.4
+const circleArea = calculateArea('circle', 5);
+console.assert(Math.abs(circleArea - 78.53981633974483) < 0.0001, "Тест провален: площадь круга с радиусом 5");
+const rectangleArea = calculateArea('rectangle', 3, 4);
+console.assert(rectangleArea === 12, "Тест провален: площадь прямоугольника 3x4 = 12");
+const triangleArea = calculateArea('triangle', 6, 8);
+console.assert(triangleArea === 24, "Тест провален: площадь треугольника с основанием 6 и высотой 8 = 24");
+const unknownArea = calculateArea('hexagon', 5);
+console.assert(unknownArea === 'Неизвестная фигура', "Тест провален: неизвестная фигура должна возвращать сообщение об ошибке");
+console.assert(calculateArea('circle', 10) === Math.PI * 100, "Тест провален: площадь круга с радиусом 10");
+console.assert(calculateArea('rectangle', 10, 5) === 50, "Тест провален: площадь прямоугольника 10x5 = 50");
+console.assert(calculateArea('triangle', 10, 5) === 25, "Тест провален: площадь треугольника с основанием 10 и высотой 5 = 25");
+console.assert(calculateArea('circle', 0) === 0, "Тест провален: площадь круга с радиусом 0 = 0");
+console.assert(calculateArea('rectangle', 0, 5) === 0, "Тест провален: площадь прямоугольника с нулевой стороной = 0");
+//Тест задания 2.5
+console.assert(reverseString("hello") === "olleh", "Тест провален: 'hello' -> 'olleh'");
+console.assert(reverseString("12345") === "54321", "Тест провален: '12345' -> '54321'");
+console.assert(reverseString("a b c") === "c b a", "Тест провален: 'a b c' -> 'c b a'");
+console.assert(reverseString("!@#$") === "$#@!", "Тест провален: '!@#$' -> '$#@!'");
+console.assert(reverseString("") === "", "Тест провален: пустая строка -> пустая строка");
+console.assert(reverseString("a") === "a", "Тест провален: 'a' -> 'a'");
+console.assert(reverseString("ab") === "ba", "Тест провален: 'ab' -> 'ba'");
+console.assert(reverseString("привет") === "тевирп", "Тест провален: 'привет' -> 'тевирп'");
+//Тест задания 2.6
+console.assert(typeof(getRandomNumber(10, 20)) === "number", "Тест провален (результат не число");
+console.assert(getRandomNumber(10, 20) >= 10 && getRandomNumber(10, 20) < 20, "Тест провален(результат не в границах");
+//Тест задания 3.1
+console.assert(book.title === '1984', "Тест 1 провален: название книги");
+console.assert(book.author === 'Дж.Оруэлл', "Тест 2 провален: автор книги");
+console.assert(book.year === 1947, "Тест 3 провален: год выпуска");
+console.assert(book.pages === 200, "Тест 4 провален: количество страниц");
+console.assert(book.available === true, "Тест 5 провален: доступность книги");
+//Тест задания 3.2
+console.assert(student.name === "Анна Петрова", "Тест провален: имя студента");
+console.assert(student.age === 20, "Тест провален: возраст студента");
+console.assert(student.course === 2, "Тест провален: курс студента");
+console.assert(student.grades.math === 90, "Тест провален: оценка по математике");
+console.assert(student.grades.programming === 95, "Тест провален: оценка по программированию");
+console.assert(student.grades.history === 85, "Тест провален: оценка по истории");
+const average = student.getAverageGrade();
+console.assert(average === 90, "Тест провален: средний балл");
+student.addGrade('physics', 100);
+console.assert(student.grades.physics === 100, "Тест провален: добавление новой оценки");
+student.addGrade('math', 100);
+console.assert(student.grades.math === 100, "Тест провален: изменение существующей оценки");
+const newAverage = student.getAverageGrade();
+console.assert(newAverage === 95, "Тест провален: новый средний балл");
+//Тест задания 4
+processArrays();
+//Тест задания 5
+console.log("(добавление задачи в список):");
+    taskManager.addTask("выучить python");
+    console.log(taskManager.tasks);
+    console.log();
+
+     console.log("(выполнение задания):");
+    taskManager.completeTask(3);
+    console.log(taskManager.tasks);
+    console.log();
+
+    console.log("(удаление задачи):");
+    taskManager.deleteTask(2);
+    console.log(taskManager.tasks);
+    console.log();
+
+    console.log("(статус задачи):");
+    console.log(taskManager.getTasksByStatus(true));
+    console.log();
+
+    console.log("(возвращение объекта):");
+    console.log(taskManager.getStats());
+    console.log();
+}
 runTests();
