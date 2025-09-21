@@ -118,10 +118,10 @@ function calculateArea(figure, ...params) {
     switch(figure) {
         case "circle":
             if (params.length === 1) {
-                if (params <= 0){
+                if (params[0] <= 0){
                     return " неверный радиус"
                 }
-                const r = params
+                const r = params[0]
                 return (Math.PI * r ** 2).toFixed(2)
             } 
             return " у круга может быть только один параметр"
@@ -143,7 +143,7 @@ function calculateArea(figure, ...params) {
                 const [a, b, c] = params
                 if (a > 0 && b > 0 && c > 0) {
                     if ( ( a + b > c) && ( a + c > b) && ( c + b > a) ) {
-                        const p = (a + b + c)
+                        const p = (a + b + c) / 2
                         return Math.sqrt (p * (p - a) * (p - b) * (p - c))
                     } else {
                         return " не удовлетворяет условию тругольника"
@@ -265,10 +265,9 @@ function processArrays() {
 
     // 2. Используйте map для создания массива квадратов чисел
     /*const squares =  ваш код */
-    const squares = numbers.map(function(number){
-        const a = number * number
-        console.log(a)
-    })
+    const squares = numbers.map(number => number**2)
+    console.log(squares)
+    
     
 
     // 3. Используйте filter для получения активных пользователей
@@ -339,8 +338,9 @@ const taskManager = {
             task.completed = true ;
             return task
         }
-        return "задача уже выполнена"
+        return "такой задачи нет"
     },
+    
     
     // Удаление задачи
     deleteTask(taskId) {
@@ -349,7 +349,7 @@ const taskManager = {
         if(index !== -1 ){
             return this.tasks.splice(index,1)[0];
         }
-        return "индекс не найден"
+        return "такой задачи нет"
 
     },
 
@@ -384,7 +384,6 @@ const taskManager = {
 
 
 
-
 // ===== ЗАДАНИЕ 6: Регулярные выражения =====
 /*
 Дополнительные материалы:
@@ -411,7 +410,7 @@ Learn Regex - https://github.com/ziishaned/learn-regex - учебник по reg
  * - Минимальная длина 5 символов
  */
 function validateEmail(email) {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
 }
 
@@ -520,8 +519,8 @@ function runTests() {
     //тест 3.2
     console.log(student.getAverageGrade());
     console.assert(student.addGrade("hist", 10)=== `"новый предмет и новая оценка:" hist: 10`, "тест добавления новой оценки добавлен, неверно" )
-    console.assert(student.addGrade(10, "hist")=== " неправильный тип данных", "тест добавления новой оценки добавлен, неправильный тип данных" )
-    console.assert(student.addGrade("hist", 10)=== " неправильный тип данных", "тест добавления новой оценки добавлен, неправильный тип данных" )
+    console.assert(student.addGrade(10, 10)=== " неправильный тип данных", "тест добавления новой оценки добавлен, неправильный тип данных" )
+    console.assert(student.addGrade("hist", "hist")=== " неправильный тип данных", "тест добавления новой оценки добавлен, неправильный тип данных" )
 
     // тест 5
     console.log(taskManager.addTask("сделать js", "low")),
