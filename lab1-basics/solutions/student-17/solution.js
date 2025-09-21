@@ -19,17 +19,16 @@ function simpleTask() {
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
     const reviewers = 23;
-    return ((number + lab) % reviewers);
+    return ((number + lab - 1) % reviewers + 1);
 
 }
-
-// console.log(getReviewerNumber(17, 1));
+ // console.log(getReviewerNumber(22, 1));
 function getVariant(number, variants) {
     // 2.2 Функция определяющая номер варианта, исходя из количества вариантов
-    return ((number - 1) % variants +1);
+    return ((number - 1) % variants + 1);
 }
 
-// console.log(getVariant(17, 4));
+// console.log(getVariant(22, ));
 function calculate(a, b, operation) {
     // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
     if (typeof (a) !== "number" || typeof (b) !== "number") {
