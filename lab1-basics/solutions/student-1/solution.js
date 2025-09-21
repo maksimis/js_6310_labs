@@ -69,7 +69,7 @@ const reverseString = (str) => {
 
 const getRandomNumber = (min, max) => {
     // Случайное целое в диапазоне [min, max)
-    return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min+1)) + min;
     // +min — сдвиг в нужный интервал
 };
 
@@ -166,6 +166,7 @@ function processArrays() {
 
 // ===== ЗАДАНИЕ 5: Менеджер задач =====
 const taskManager = {
+    nextId: 1,
     tasks: [
         { id: 1, title: "Изучить JavaScript", completed: false, priority: "high" },
         { id: 2, title: "Сделать лабораторную работу", completed: true, priority: "high" },
@@ -175,7 +176,7 @@ const taskManager = {
     addTask(title, priority = "medium") {
         // 5.1 Добавление задачи
         const newTask = {
-            id: this.tasks.length + 1,
+            id: this.nextId++,
             title: title,
             completed: false,
             priority: priority
