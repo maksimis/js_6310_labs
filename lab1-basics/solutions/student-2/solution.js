@@ -22,12 +22,24 @@ function simpleTask() {
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
+    if(typeof number !== "number" || typeof lab !== "number"){
+        throw new Error('Входные параметры должены быть числом');
+    }
+    if(number <= 0 || lab <= 0){
+        throw new Error('Входные параметры не должны быть отрицательными');
+    }
     let revNum = (number + lab - 1) % 23 + 1;
     return(revNum);
 }
 
 function getVariant(number, variants) {
     // 2.2 Функция определяющая номер варианта, исходя из количества вариантов
+    if(typeof number !== "number" || typeof variants !== "number"){
+        throw new Error('Входные параметры должены быть числом');
+    }
+    if(number <= 0 || variants <= 0){
+        throw new Error('Входные параметры не должны быть отрицательными');
+    }
     let variantNum = ((number - 1) % variants) + 1;
     return(variantNum);
 }
@@ -113,7 +125,7 @@ const book = {
     isAvailable: true,
 
     getInfo() {
-        console.log(`${this.title} под авторством ${this.author}, ${this.year} год, ${this.pages} страниц`);
+        return(`${this.title} под авторством ${this.author}, ${this.year} год, ${this.pages} страниц`);
     },
 
     toggleAvailability()
@@ -147,6 +159,9 @@ const student = {
     // Метод для добавления новой оценки
     addGrade(subject, grade) {
         // Ваш код здесь
+        if(typeof grade !== "number"){
+            throw new Error("Оценка должна быть числом");
+        }
         if(grade > 100 || grade < 0){
             throw new Error("Неверная оценка");
         }
@@ -206,8 +221,8 @@ function processArrays() {
     console.log(sortedByAge);
     // 7. Используйте метод для проверки, все ли пользователи старше 18 лет
     /*const allAdults =  ваш код */
-    console.log("Проверка 18+:");
-    const allAdults =  users.filter(user => user.age > 18).map(user => user.name);
+    console.log("Все ли пользователи старше 18 лет?");
+    const allAdults = users.every(user => user.age > 18);
     console.log(allAdults);
     // 8. Создайте цепочку методов: 
     //    - отфильтровать активных пользователей
@@ -229,7 +244,18 @@ const taskManager = {
     
     addTask(title, priority = "medium") {
         // 5.1 Добавление задачи
-        const newTask = {id: this.tasks.length+1, title: title, completed: false, priority: priority}
+        if (typeof title !== 'string') {
+        throw new Error("название задачи должно быть строкой");
+        }
+        const maxId = this.tasks.length > 0 
+        ? Math.max(...this.tasks.map(task => task.id)) 
+        : 0;
+        const newTask = {
+            id: maxId + 1,
+            title: title,
+            completed: false,
+            priority: priority
+        };
         this.tasks.push(newTask);
     },
     
@@ -250,17 +276,24 @@ const taskManager = {
     // Удаление задачи
     deleteTask(taskId) {
         // 5.3 Ваш код здесь
+        if (typeof taskId !== 'number') {
+        throw new Error("ID задачи должно быть числом");
+        }
+        const taskExists = this.tasks.some(task => task.id === taskId);
+        if (!taskExists) {
+        throw new Error("Задача с таким ID не найдена");
+        }
         this.tasks = this.tasks.filter(task => task.id !== taskId);
     },
 
     // Получение списка задач по статусу
     getTasksByStatus(completed) {
         // 5.4 Ваш код здесь
-        const mas = this.tasks.filter(task => task.completed === completed);
-         mas.forEach(element => {
-            console.log(element);
+        if (typeof completed !== 'boolean') {
+        throw new Error("Параметр completed должен быть булевым значением (true/false)");
+        }
+        return this.tasks.filter(task => task.completed === completed);
         
-    });
     },
     
     getStats() {
@@ -274,7 +307,7 @@ const taskManager = {
         const completed =  this.tasks.filter(task => task.completed).length;
         const pending = total - completed;
         const completitionRate = Math.round(completed / total * 100);
-        console.log( stat = {total: total, 
+        return( stat = {total: total, 
         completed: completed,
         pending: pending,
         completitionRate: completitionRate
@@ -384,6 +417,19 @@ function runTests() {
     simpleTask();
     // Тест 1: getReviewerNumber
     console.log("Тест 1: getReviewerNumber");
+    console.assert(testThrowsError(() => getReviewerNumber("a", 1), "Входные параметры должены быть числом"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+    console.assert(testThrowsError(() => getReviewerNumber(1, "a"), "Входные параметры должены быть числом"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+    console.assert(testThrowsError(() => getReviewerNumber("a", "b"), "Входные параметры должены быть числом"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+    console.assert(testThrowsError(() => getReviewerNumber(-1, 1), "Входные параметры не должны быть отрицательными"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+    console.assert(testThrowsError(() => getReviewerNumber(1, -1), "Входные параметры не должны быть отрицательными"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+    console.assert(testThrowsError(() => getReviewerNumber(-1, -1), "Входные параметры не должны быть отрицательными"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
     console.assert(getReviewerNumber(1, 1) === 2, "Тест граничного значения (1, 1) провален");
     console.assert(getReviewerNumber(23, 1) === 1, "Тест граничного значения (23, 1) провален");
@@ -391,6 +437,19 @@ function runTests() {
     
     //Тест 2: getVariant
     console.log("Тест 2: getVariant");
+    console.assert(testThrowsError(() => getVariant("a", 1), "Входные параметры должены быть числом"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+    console.assert(testThrowsError(() => getVariant(1, "a"), "Входные параметры должены быть числом"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+    console.assert(testThrowsError(() => getVariant("a", "b"), "Входные параметры должены быть числом"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+    console.assert(testThrowsError(() => getVariant(-1, 1), "Входные параметры не должны быть отрицательными"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+    console.assert(testThrowsError(() => getVariant(1, -1), "Входные параметры не должны быть отрицательными"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+    console.assert(testThrowsError(() => getVariant(-1, -1), "Входные параметры не должны быть отрицательными"), 
+    "Тест на обработку исключений (невалидные входные данные) провален");
+
     console.assert(getVariant(1, 5) === 1, "Тест граничного значения (1, 5) провален");
     console.assert(getVariant(5, 5) === 5, "Тест граничного значения (5, 5) провален");
     console.assert(getVariant(5, 1) === 1, "Тест граничного значения (5, 1) провален");
@@ -431,11 +490,17 @@ function runTests() {
     console.log("Тест 4: calculateArea");
     console.assert(testThrowsError(() => calculateArea('square', 5), "Фигура не поддерживается"), 
     "Тест на обработку исключений (неизвестная фигура) провален");
+    console.assert(testThrowsError(() => calculateArea(5, 5), "Фигура не поддерживается"), 
+    "Тест на обработку исключений (некорректные входные данные) провален");
     console.assert(testThrowsError(() => calculateArea('circle'), "Некорректные параметры"), 
     "Тест на обработку исключений (Некорректные параметры) провален");
     console.assert(testThrowsError(() => calculateArea('circle', 2, 5), "Некорректные параметры"), 
     "Тест на обработку исключений (Некорректные параметры) провален");
     console.assert(testThrowsError(() => calculateArea("rectangle", "w", 5), "Некорректные параметры"), 
+    "Тест на обработку исключений (Некорректные параметры) провален");
+    console.assert(testThrowsError(() => calculateArea("rectangle", 5, "w"), "Некорректные параметры"), 
+    "Тест на обработку исключений (Некорректные параметры) провален");
+    console.assert(testThrowsError(() => calculateArea("rectangle", "w", "w"), "Некорректные параметры"), 
     "Тест на обработку исключений (Некорректные параметры) провален");
     console.assert(testThrowsError(() => calculateArea("rectangle", -2, 5), "Некорректные параметры"), 
     "Тест на обработку исключений (Некорректные параметры) провален");
@@ -482,12 +547,12 @@ function runTests() {
     console.assert(testThrowsError(() => getRandomNumber(10, 1), "Первый параметр должен быть меньше второго"), 
     "Тест на обработку исключений (неверный порядок параметров) провален");
     console.assert(getRandomNumber(1, 1) === 1, "Тест на одинаковые параметры провален");
-    console.assert(getRandomNumber(10, 50) >= 10 && getRandomNumber(10, 50) < 50, "Тест на диапозон провален");
+    console.assert(getRandomNumber(10, 50) >= 10 && getRandomNumber(10, 50) <= 50, "Тест на диапозон провален");
     console.log("Тест 6 пройден! ✅");
 
     //Тест 7: задание 3.1
     console.log("Тест 7: задание 3.1: getInfo и toggleAvailability");
-    book.getInfo();
+    console.log(book.getInfo());
     console.log(book.toggleAvailability());
     console.log(book.toggleAvailability());
     console.log("Тест 7 пройден! ✅");
@@ -501,6 +566,10 @@ function runTests() {
     "Тест на обработку исключений (отрицательная оценка) провален");
     console.assert(testThrowsError(() =>  student.addGrade(123, 100), "Предмет должен быть строкой"), 
     "Тест на обработку исключений (неверный тип данных) провален");
+    console.assert(testThrowsError(() =>  student.addGrade(100, "spanish"), "Оценка должна быть числом"), 
+    "Тест на обработку исключений (неверный тип данных) провален");
+    console.assert(testThrowsError(() =>  student.addGrade("spanish", "spanish"), "Оценка должна быть числом"), 
+    "Тест на обработку исключений (неверный тип данных) провален");
     student.addGrade("spanish", 100);
     console.log(student.grades);
     console.log("Тест 8 пройден! ✅");
@@ -512,6 +581,8 @@ function runTests() {
 
     //Тест 10: задание 5.1
     console.log("Тест 10: задание 5.1: addTask");
+    console.assert(testThrowsError(() =>  taskManager.addTask(123), "название задачи должно быть строкой"), 
+    "Тест на обработку исключений (неверный тип данных) провален");
     taskManager.addTask("Изучить Next.js");
     taskManager.showAllTasks();
     console.log("Тест 10 пройден! ✅");
@@ -522,27 +593,35 @@ function runTests() {
     "Тест на обработку исключений (неверный тип данных) провален");
     console.assert(testThrowsError(() =>  taskManager.completeTask(12345), "Задача с таким ID не найдена"), 
     "Тест на обработку исключений (несуществующий ID) провален");
+    console.assert(testThrowsError(() =>  taskManager.completeTask(-12345), "Задача с таким ID не найдена"), 
+    "Тест на обработку исключений (несуществующий ID) провален");
     taskManager.completeTask(3);
     taskManager.showAllTasks();
     console.log("Тест 11 пройден! ✅");
 
     //Тест 12: задание 5.3
     console.log("Тест 12: задание 5.3: deleteTask");
+    console.assert(testThrowsError(() =>  taskManager.deleteTask('w'), "ID задачи должно быть числом"), 
+    "Тест на обработку исключений (неверный тип данных) провален");
+    console.assert(testThrowsError(() =>  taskManager.deleteTask(12345), "Задача с таким ID не найдена"), 
+    "Тест на обработку исключений (несуществующий ID) провален");
+    console.assert(testThrowsError(() =>  taskManager.deleteTask(-12345), "Задача с таким ID не найдена"), 
+    "Тест на обработку исключений (несуществующий ID) провален");
     taskManager.deleteTask(3);
     taskManager.showAllTasks();
     console.log("Тест 12 пройден! ✅");
 
     //Тест 13: задание 5.4
     console.log("Тест 13: задание 5.4: getTasksByStatus");
-    taskManager.getTasksByStatus(true);
+    console.assert(testThrowsError(() =>  taskManager.getTasksByStatus(12345), "Параметр completed должен быть булевым значением (true/false)"), 
+    "Тест на обработку исключений (несуществующий ID) провален");
+    console.log(taskManager.getTasksByStatus(true));
     console.log("Тест 13 пройден! ✅");
 
     //Тест 14: задание 5.5
     console.log("Тест 14: задание 5.5: getStats");
-    taskManager.getStats();
+    console.log(taskManager.getStats());
     console.log("Тест 14 пройден! ✅");
-    //testThrowsError(getRandomNumber(), 'Входные параметры должены быть числом');
-    //починить testThrowsError! Он, как будто, вызывает функцию до трая
 
     // Добавьте остальные тесты...
     // Тест 15: reg
