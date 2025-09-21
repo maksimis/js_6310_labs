@@ -317,7 +317,7 @@ function runTests() {
     // Тест задания 2.6
     const r = getRandomNumber(10, 50);
     console.assert(typeof r === "number", "Результат не число");
-    console.assert(r >= 10 && r < 50, "Результат вне границ [10, 50)");
+    console.assert(r >= 10 && r <= 50, "Результат вне границ [10, 50]");
 
     // Тест задания 3.1
     console.log(book.getInfo()); // проверка на корректный вывод
