@@ -41,6 +41,12 @@ function calculate(a, b, operation) {
         return 'Ошибка: числа должны быть конечными';
     }
     
+    if (a === Number.MAX_VALUE || b === Number.MAX_VALUE) {
+        if (operation === '+' || operation === '*') {
+            return 'Ошибка: операция с MAX_VALUE приведет к переполнению';
+        }
+    }
+    
     switch(operation) {
         case '+':
             const sum = a + b;
@@ -404,6 +410,8 @@ function runTests() {
     console.assert(calculate(10, 0, '/') === 'Ошибка: деление на ноль', "Тест calculate: деление на 0 провален");
     console.assert(calculate('10', 5, '+') === 'Ошибка: оба параметра должны быть числами', "Тест calculate: не число провален");
     console.assert(calculate(10, 5, '%') === 'Ошибка: неизвестная операция', "Тест calculate: неизвестная операция провален");
+    console.assert(calculate(Number.MAX_VALUE, 1, '+') === 'Ошибка: операция с MAX_VALUE приведет к переполнению', "Тест calculate: MAX_VALUE сложение провален");
+    console.assert(calculate(Number.MAX_VALUE, 2, '*') === 'Ошибка: операция с MAX_VALUE приведет к переполнению', "Тест calculate: MAX_VALUE умножение провален");
     
     // Тест 5: calculateArea - валидные данные
     console.assert(Math.abs(calculateArea('circle', 5) - 78.54) < 0.1, "Тест calculateArea: круг провален");
@@ -437,19 +445,25 @@ function runTests() {
     console.assert(student.addGrade(123, 88) === 'Ошибка: название предмета должно быть строкой', "Тест student.addGrade: не строка провален");
     console.assert(student.addGrade("chemistry", "90") === 'Ошибка: оценка должна быть числом', "Тест student.addGrade: не число провален");
     
-    // Тест 11: taskManager
+    // Тест 11: student.addGrade - обновление существующей оценки
+    const oldMathGrade = student.grades.math;
+    student.addGrade("math", 70);
+    console.assert(student.grades.math === 70, "Тест student.addGrade: обновление оценки провален");
+    console.assert(student.grades.math !== oldMathGrade, "Тест student.addGrade: оценка должна измениться провален");
+    
+    // Тест 12: taskManager
     const initialLength = taskManager.tasks.length;
     taskManager.addTask("Новая задача", "low");
     console.assert(taskManager.tasks.length === initialLength + 1, "Тест taskManager.addTask провален");
     console.assert(taskManager.completeTask(999) === null, "Тест taskManager.completeTask: несуществующая задача провален");
     console.assert(taskManager.deleteTask(999) === false, "Тест taskManager.deleteTask: несуществующая задача провален");
     
-    // Тест 12: validateEmail (Вариант 1) - валидные
+    // Тест 13: validateEmail (Вариант 1) - валидные
     console.assert(validateEmail("test@example.com") === true, "Тест email: валидный email провален");
     console.assert(validateEmail("user.name+tag@example.co.uk") === true, "Тест email: сложный валидный email провален");
     console.assert(validateEmail("a@b.co") === true, "Тест email: минимальный валидный email провален");
     
-    // Тест 13: validateEmail - невалидные
+    // Тест 14: validateEmail - невалидные
     console.assert(validateEmail("invalid.email@") === false, "Тест email: без домена провален");
     console.assert(validateEmail("@example.com") === false, "Тест email: без локальной части провален");
     console.assert(validateEmail("test@.com") === false, "Тест email: неверный домен провален");
