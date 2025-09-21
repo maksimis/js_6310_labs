@@ -22,27 +22,42 @@ function simpleTask() {
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
-    return number + lab;
+    const groupSize = 23;
+    return ((number + lab - 1) % groupSize) + 1;
 }
 
 function getVariant(number, variants) {
     // 2.2 Функция определяющая номер варианта, исходя из количества вариантов
-    return number % variants;
+    return ((number - 1) % variants) + 1;
 }
 
 function calculate(a, b, operation) {
     // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
+    if (typeof a !== 'number' || typeof b !== 'number') {
+        return 'Ошибка: оба параметра должны быть числами';
+    }
+    
+    if (!isFinite(a) || !isFinite(b)) {
+        return 'Ошибка: числа должны быть конечными';
+    }
+    
     switch(operation) {
         case '+':
-            return a + b;
+            const sum = a + b;
+            return isFinite(sum) ? sum : 'Ошибка: переполнение';
         case '-':
-            return a - b;
+            const diff = a - b;
+            return isFinite(diff) ? diff : 'Ошибка: переполнение';
         case '*':
-            return a * b;
+            const product = a * b;
+            return isFinite(product) ? product : 'Ошибка: переполнение';
         case '/':
+            if (b === 0) {
+                return 'Ошибка: деление на ноль';
+            }
             return a / b;
         default:
-            return null;
+            return 'Ошибка: неизвестная операция';
     }
 }
 
@@ -51,24 +66,63 @@ function calculateArea(figure, ...params) {
     // Используйте switch.
     switch(figure) {
         case 'circle':
+            if (params.length !== 1) {
+                return 'Ошибка: для круга нужен 1 параметр (радиус)';
+            }
+            if (typeof params[0] !== 'number' || !isFinite(params[0])) {
+                return 'Ошибка: радиус должен быть числом';
+            }
+            if (params[0] <= 0) {
+                return 'Ошибка: радиус должен быть положительным';
+            }
             return Math.PI * params[0] * params[0];
         case 'rectangle':
+            if (params.length !== 2) {
+                return 'Ошибка: для прямоугольника нужно 2 параметра (ширина, высота)';
+            }
+            if (typeof params[0] !== 'number' || typeof params[1] !== 'number' || !isFinite(params[0]) || !isFinite(params[1])) {
+                return 'Ошибка: параметры должны быть числами';
+            }
+            if (params[0] <= 0 || params[1] <= 0) {
+                return 'Ошибка: параметры должны быть положительными';
+            }
             return params[0] * params[1];
         case 'triangle':
+            if (params.length !== 2) {
+                return 'Ошибка: для треугольника нужно 2 параметра (основание, высота)';
+            }
+            if (typeof params[0] !== 'number' || typeof params[1] !== 'number' || !isFinite(params[0]) || !isFinite(params[1])) {
+                return 'Ошибка: параметры должны быть числами';
+            }
+            if (params[0] <= 0 || params[1] <= 0) {
+                return 'Ошибка: параметры должны быть положительными';
+            }
             return 0.5 * params[0] * params[1];
         default:
-            return null;
+            return 'Ошибка: неизвестная фигура';
     }
 }
 
 // 2.5 Стрелочные функции
 const reverseString = (str) => {
     // Функция возвращает перевернутую строку
+    if (typeof str !== 'string') {
+        return 'Ошибка: параметр должен быть строкой';
+    }
     return str.split('').reverse().join('');
 };
 
 const getRandomNumber = (min, max) => {
     // Функция возвращает случайное число между min и max
+    if (typeof min !== 'number' || typeof max !== 'number') {
+        return 'Ошибка: параметры должны быть числами';
+    }
+    if (!isFinite(min) || !isFinite(max)) {
+        return 'Ошибка: параметры должны быть конечными числами';
+    }
+    if (min > max) {
+        return 'Ошибка: минимум не может быть больше максимума';
+    }
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
@@ -116,7 +170,17 @@ const student = {
     // Метод для добавления новой оценки
     addGrade(subject, grade) {
         // Ваш код здесь
+        if (typeof subject !== 'string') {
+            return 'Ошибка: название предмета должно быть строкой';
+        }
+        if (typeof grade !== 'number' || !isFinite(grade)) {
+            return 'Ошибка: оценка должна быть числом';
+        }
+        if (grade < 0 || grade > 100) {
+            return 'Ошибка: оценка должна быть от 0 до 100';
+        }
         this.grades[subject] = grade;
+        return true;
     }
 };
 
@@ -192,9 +256,10 @@ const taskManager = {
     completeTask(taskId) {
         // 5.2 Отметка выполнения
         const task = this.tasks.find(t => t.id === taskId);
-        if (task) {
-            task.completed = true;
+        if (!task) {
+            return null;
         }
+        task.completed = true;
         return task;
     },
 
@@ -202,11 +267,11 @@ const taskManager = {
     deleteTask(taskId) {
         // 5.3 Ваш код здесь
         const index = this.tasks.findIndex(t => t.id === taskId);
-        if (index !== -1) {
-            this.tasks.splice(index, 1);
-            return true;
+        if (index === -1) {
+            return false;
         }
-        return false;
+        this.tasks.splice(index, 1);
+        return true;
     },
 
     // Получение списка задач по статусу
@@ -263,6 +328,12 @@ Learn Regex - https://github.com/ziishaned/learn-regex - учебник по reg
  * - Минимальная длина 5 символов
  */
 function validateEmail(email) {
+    if (typeof email !== 'string') {
+        return false;
+    }
+    if (email.includes(' ')) {
+        return false;
+    }
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email);
 }
@@ -314,45 +385,78 @@ function runTests() {
     console.log("=== ТЕСТИРОВАНИЕ ===");
     
     // Тест 1: getReviewerNumber
-    console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(5, 1) === 6, "Тест getReviewerNumber: 5+1 провален");
+    console.assert(getReviewerNumber(23, 1) === 1, "Тест getReviewerNumber: 23+1=1 провален");
+    console.assert(getReviewerNumber(23, 2) === 2, "Тест getReviewerNumber: 23+2=2 провален");
     
-    // Тест 2: calculate
-    console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора провален");
+    // Тест 2: getVariant
+    console.assert(getVariant(10, 4) === 2, "Тест getVariant: 10%4 провален");
+    console.assert(getVariant(4, 4) === 4, "Тест getVariant: 4%4 провален");
+    console.assert(getVariant(1, 4) === 1, "Тест getVariant: 1%4 провален");
     
-    // Тест 3: getVariant
-    console.assert(getVariant(10, 4) === 2, "Тест getVariant провален");
+    // Тест 3: calculate - валидные операции
+    console.assert(calculate(10, 5, '+') === 15, "Тест calculate: сложение провален");
+    console.assert(calculate(10, 5, '-') === 5, "Тест calculate: вычитание провален");
+    console.assert(calculate(10, 5, '*') === 50, "Тест calculate: умножение провален");
+    console.assert(calculate(10, 5, '/') === 2, "Тест calculate: деление провален");
     
-    // Тест 4: calculateArea
-    console.assert(Math.abs(calculateArea('circle', 5) - 78.54) < 0.1, "Тест площади круга провален");
-    console.assert(calculateArea('rectangle', 5, 10) === 50, "Тест площади прямоугольника провален");
-    console.assert(calculateArea('triangle', 6, 8) === 24, "Тест площади треугольника провален");
+    // Тест 4: calculate - ошибки
+    console.assert(calculate(10, 0, '/') === 'Ошибка: деление на ноль', "Тест calculate: деление на 0 провален");
+    console.assert(calculate('10', 5, '+') === 'Ошибка: оба параметра должны быть числами', "Тест calculate: не число провален");
+    console.assert(calculate(10, 5, '%') === 'Ошибка: неизвестная операция', "Тест calculate: неизвестная операция провален");
     
-    // Тест 5: reverseString
+    // Тест 5: calculateArea - валидные данные
+    console.assert(Math.abs(calculateArea('circle', 5) - 78.54) < 0.1, "Тест calculateArea: круг провален");
+    console.assert(calculateArea('rectangle', 5, 10) === 50, "Тест calculateArea: прямоугольник провален");
+    console.assert(calculateArea('triangle', 6, 8) === 24, "Тест calculateArea: треугольник провален");
+    
+    // Тест 6: calculateArea - ошибки
+    console.assert(calculateArea('circle', -5) === 'Ошибка: радиус должен быть положительным', "Тест calculateArea: отрицательный радиус провален");
+    console.assert(calculateArea('circle', 5, 10) === 'Ошибка: для круга нужен 1 параметр (радиус)', "Тест calculateArea: много параметров провален");
+    console.assert(calculateArea('square', 5) === 'Ошибка: неизвестная фигура', "Тест calculateArea: неизвестная фигура провален");
+    console.assert(calculateArea('circle', '5') === 'Ошибка: радиус должен быть числом', "Тест calculateArea: не число провален");
+    
+    // Тест 7: reverseString
     console.assert(reverseString("hello") === "olleh", "Тест reverseString провален");
+    console.assert(reverseString(123) === 'Ошибка: параметр должен быть строкой', "Тест reverseString: не строка провален");
     
-    // Тест 6: book object
+    // Тест 8: getRandomNumber
+    const rand = getRandomNumber(1, 10);
+    console.assert(typeof rand === 'number' && rand >= 1 && rand <= 10, "Тест getRandomNumber провален");
+    console.assert(getRandomNumber('1', 10) === 'Ошибка: параметры должны быть числами', "Тест getRandomNumber: не число провален");
+    console.assert(getRandomNumber(10, 1) === 'Ошибка: минимум не может быть больше максимума', "Тест getRandomNumber: min>max провален");
+    
+    // Тест 9: book object
     console.assert(book.getInfo().includes("JavaScript"), "Тест book.getInfo провален");
     console.assert(book.toggleAvailability() === false, "Тест book.toggleAvailability провален");
     
-    // Тест 7: student object
+    // Тест 10: student object
     console.assert(student.getAverageGrade() === 90, "Тест student.getAverageGrade провален");
-    student.addGrade("physics", 88);
-    console.assert(student.grades.physics === 88, "Тест student.addGrade провален");
+    console.assert(student.addGrade("physics", 88) === true, "Тест student.addGrade провален");
+    console.assert(student.grades.physics === 88, "Тест student.addGrade: значение провален");
+    console.assert(student.addGrade(123, 88) === 'Ошибка: название предмета должно быть строкой', "Тест student.addGrade: не строка провален");
+    console.assert(student.addGrade("chemistry", "90") === 'Ошибка: оценка должна быть числом', "Тест student.addGrade: не число провален");
     
-    // Тест 8: taskManager
+    // Тест 11: taskManager
     const initialLength = taskManager.tasks.length;
     taskManager.addTask("Новая задача", "low");
     console.assert(taskManager.tasks.length === initialLength + 1, "Тест taskManager.addTask провален");
+    console.assert(taskManager.completeTask(999) === null, "Тест taskManager.completeTask: несуществующая задача провален");
+    console.assert(taskManager.deleteTask(999) === false, "Тест taskManager.deleteTask: несуществующая задача провален");
     
-    // Тест 9: validateEmail (Вариант 1)
+    // Тест 12: validateEmail (Вариант 1) - валидные
     console.assert(validateEmail("test@example.com") === true, "Тест email: валидный email провален");
     console.assert(validateEmail("user.name+tag@example.co.uk") === true, "Тест email: сложный валидный email провален");
+    console.assert(validateEmail("a@b.co") === true, "Тест email: минимальный валидный email провален");
+    
+    // Тест 13: validateEmail - невалидные
     console.assert(validateEmail("invalid.email@") === false, "Тест email: без домена провален");
     console.assert(validateEmail("@example.com") === false, "Тест email: без локальной части провален");
     console.assert(validateEmail("test@.com") === false, "Тест email: неверный домен провален");
     console.assert(validateEmail("test") === false, "Тест email: без @ провален");
     console.assert(validateEmail("test@example") === false, "Тест email: без точки в домене провален");
-    console.assert(validateEmail("a@b.co") === true, "Тест email: минимальный валидный email провален");
+    console.assert(validateEmail("test @example.com") === false, "Тест email: пробел провален");
+    console.assert(validateEmail(123) === false, "Тест email: не строка провален");
     
     console.log("Все тесты пройдены! ✅");
 }
