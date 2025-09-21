@@ -229,10 +229,10 @@ const taskManager = {
         { id: 2, title: "Сделать лабораторную работу", completed: true, priority: "high" },
         { id: 3, title: "Прочитать книгу", completed: false, priority: "medium" }
     ],
-    
+    newID: 4,
     addTask(title, priority = "medium") {
         // 5.1 Добавление задачи
-        const newTask = {id: this.tasks.length+1, title: title, completed: false, priority: priority}
+        const newTask = {id: this.newID++, title: title, completed: false, priority: priority}
         this.tasks.push(newTask);
     },
     
@@ -253,11 +253,9 @@ const taskManager = {
     // Получение списка задач по статусу
     getTasksByStatus(completed) {
         // 5.4 Ваш код здесь
-    const completedTasks = this.tasks.filter(task => task.completed === completed);
+    return this.tasks.filter(task => task.completed === completed).map(task => `id: ${task.id}, title: ${task.title}, priority: ${task.priority}`).join("\n");
 
-    completedTasks.forEach(task => {
-        console.log(task);
-    });
+
     },
     
     getStats() {
@@ -271,12 +269,13 @@ const taskManager = {
         const completed =  this.tasks.filter(task => task.completed).length;
         const pending = total - completed;
         const completitionRate = Math.round(completed / total * 100);
-        console.log( stat = {total: total, 
+
+        return {total: total, 
         completed: completed,
         pending: pending,
-        completitionRate: completitionRate
+        completitionRate: completitionRate};
         
-    });
+
 
     
 
@@ -470,10 +469,10 @@ function runTests() {
     });
     console.log(" ");
     console.log("5.4: ");
-    taskManager.getTasksByStatus(true); //5.4
+    console.log(taskManager.getTasksByStatus(true)); //5.4
     console.log(" ");
     console.log("5.5: ");
-    taskManager.getStats(); //5.5
+    console.log(taskManager.getStats()); //5.5
     console.log(" ");
 
     //Тест 3 варианта регулярных выражений
