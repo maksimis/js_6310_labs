@@ -22,7 +22,7 @@ function simpleTask() {
     console.log(typeof person);
 }
 
-simpleTask();
+
 
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
@@ -68,13 +68,13 @@ function calculateArea(figure, ...params) {
     // Используйте switch.
     switch(figure){
         case "circle":
-            if (params.length !== 1) return "некорректные входные данные";
+            if (params.length !== 1 || typeof(params[0]) !== "number") return "некорректные входные данные";
             return (Math.PI*params[0]*params[0]);
         case "rectangle":
-            if (params.length !== 2) return "некорректные входные данные";
+            if (params.length !== 2 || typeof(params[0]) !== "number" || typeof(params[1]) !== "number") return "некорректные входные данные";
             return params[0]* params[1];
         case "triangle":
-            if (params.length !== 2) return "некорректные входные данные";
+            if (params.length !== 2 || typeof(params[0]) !== "number" || typeof(params[1]) !== "number") return "некорректные входные данные";
             return 0.5* params[0]*params[1]
         default:
             return "неизвестная фигура";
@@ -89,7 +89,8 @@ const reverseString = (str) => {
 };
 
 const getRandomNumber = (min, max) => {
-    return Math.random()*(max-min)+ min
+    if (min > max) [min, max] = [max, min];
+    return Math.floor(Math.random()*(max-min+1))+ min
     // 2.6 Функция возвращает случайное число между min и max
 };
 
@@ -146,18 +147,7 @@ const student = {
 
     }
 };
-console.log("Проверка задания №3.1 :Создание объект книга с полями для хранения заголовка, автора, "); 
-console.log(book.getInfo());
-console.log("метод toggleAvailability - который меняет значение доступности и возвращает его ");
-console.log(book.toggleAvailability()); 
-console.log("Обьект книга после функции");
-console.log(book);
 
-console.log();
-console.log("Проверка задания №3.2"); 
-console.log("Расчета среднего балла:",student.getAverageGrade());
-student.addGrade("йцуу",29);
-console.log("После добавления новой оценки",student.grades);
 
 // ===== ЗАДАНИЕ 4: Массивы =====
 console.log("Задание 4");
@@ -213,7 +203,7 @@ function processArrays() {
     console.log("Сумма всех чисел:",sum);
 
     // 6. Используйте sort для сортировки пользователей по возрасту (по убыванию)
-    const sortedByAge = users.sort((user1,user2) => user1.age - user2.age);
+    const sortedByAge = users.sort((user1,user2) => user2.age - user1.age);
     console.log("Задание 4.6");
     console.log("после сортировки по возрасту:",sortedByAge);
 
@@ -298,24 +288,7 @@ const taskManager = {
        
     }
 };
-console.log();
-console.log("Задание №5.1");
-taskManager.addTask("погулять с собакой");
-console.log("После добавления погулять с собакой:",taskManager.tasks);
-console.log();
-console.log("Задание №5.2");
-taskManager.completeTask(3);
-console.log("После выполнения задачи 3:",taskManager.tasks);
-console.log();
-console.log("Задание №5.3");
-taskManager.deleteTask(3);
-console.log("после удаления 3",taskManager.tasks);
-console.log();
-console.log("Задание №5.4");
-console.log("задачи со статусом true:",taskManager.getTasksByStatus(true));
-console.log();
-console.log("Задание №5.5");
-console.log("Получаем статистику", taskManager.getStats());
+
 
 // ===== ЗАДАНИЕ 6: Регулярные выражения =====
 /*
@@ -343,6 +316,7 @@ function validatePhone(phone) {
 // ===== ТЕСТИРОВАНИЕ =====
 function runTests() {
     console.log("=== ТЕСТИРОВАНИЕ ===");
+    simpleTask();
     
     // Тест 1: getReviewerNumber
     console.log("Тест 1: getReviewerNumber ✅");
@@ -378,9 +352,11 @@ function runTests() {
     console.assert(calculateArea("rectangle", 5, 5) === 25, "Тест calculateArea провален - не соответсвует площадь прямоугольника");
     console.assert(calculateArea("triangle", 4, 5) === 10, "Тест calculateArea провален - не соответсвует площадь треугольника")
     console.assert(calculateArea("йцуке", 5, 5) === "неизвестная фигура", "Тест calculateArea провален)");
+    console.assert(calculateArea("rectangle", "a", 'b') === "некорректные входные данные", "Тест 2.4 провален не числа");
     console.assert(calculateArea("rectangle", 5) === "некорректные входные данные", "Тест calculateArea провален (недостаточно параметров)");
     console.assert(calculateArea("circle", 1, 2, 3) === "некорректные входные данные", "Тест calculateArea провален - слишком много параметров");
-    
+    console.assert(calculateArea("circle") === "некорректные входные данные", "Тест 2.4 провален (нет параметров для круга)")
+
     
     //Тест задания 2.5 - reverseString
     console.log("Тест 2.5 reverseString ✅");
@@ -393,6 +369,52 @@ function runTests() {
     console.log("Тест 2.6 getRandomNumber ✅");
     console.assert(getRandomNumber(1, 10) >= 1 && getRandomNumber(1, 10) < 10, "Тест 2.6 провален");
     console.assert(getRandomNumber(12, 100) >= 12  && getRandomNumber(12, 100) < 100, "Тест 2.6 провален");
+    
+
+    console.log("Тест 3 ✅");
+    
+    console.log("Проверка задания №3.1 :Создание объект книга с полями для хранения заголовка, автора, "); 
+    console.log(book.getInfo());
+    console.assert(
+    book.getInfo() === "Название: искупление, автор:Канаэ,год:2020,страницы 209","Тест 1 провален: getInfo возвращает неверную информацию");
+    console.log("метод toggleAvailability - который меняет значение доступности и возвращает его ");
+    console.log(book.toggleAvailability()); 
+    console.log("Обьект книга после функции");
+    console.log(book);
+
+    console.log();
+    console.log("Проверка задания №3.2"); 
+
+    console.assert(student.getAverageGrade() === (90 + 95 + 85) / 3, "Средний балл вычислен неверно");
+
+    console.log("Расчета среднего балла:",student.getAverageGrade());
+    student.addGrade("qyw",29);
+    console.assert(
+    student.grades.qyw === 29,
+    "Тест 6 провален: новая оценка не добавлена в объект grades"
+);
+    console.log("После добавления новой оценки",student.grades);
+
+
+    console.log();
+    console.log("Задание №5.1");
+    taskManager.addTask("погулять с собакой");
+    console.log("После добавления погулять с собакой:",taskManager.tasks);
+    console.log();
+    console.log("Задание №5.2");
+    taskManager.completeTask(3);
+    console.log("После выполнения задачи 3:",taskManager.tasks);
+    console.log();
+    console.log("Задание №5.3");
+    taskManager.deleteTask(3);
+    console.log("после удаления 3",taskManager.tasks);
+    console.log();
+    console.log("Задание №5.4");
+    console.log("задачи со статусом true:",taskManager.getTasksByStatus(true));
+    console.log();
+    console.log("Задание №5.5");
+    console.log("Получаем статистику", taskManager.getStats());
+
     // Добавьте остальные тесты...
     /**
  * Вариант 3: Валидация номера телефона (российский формат)
@@ -402,13 +424,11 @@ function runTests() {
  * - 89991234567
  * - +7(999)123-45-67
  * function validatePhone(phone) {
-    const phoneRegex = /^(\+7|8)[\s(-]?\d{3}[\s)-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/;
-[\s(-]? — Необязательный разделитель №1. Может присутствовать один из следующих символов:
-\s — пробел или пробельный символ.
-( — открывающая скобка.
-- — дефис.
-? — означает, что этот символ может отсутствовать (встречается 0 или 1 раз).
+    const phoneRegex = /^(\+7|8)(\s?\(?\d{3}\)?\s?|\d{3})\d{3}[\s-]?\d{2}[\s-]?\d{2}$/;
+
     return phoneRegex.test(phone);
+}
+
  */
     // Тест для задания 6.3
     console.log("Тест задания 6.3 ✅");
@@ -423,7 +443,14 @@ function runTests() {
     console.assert(validatePhone("") === false,"Тест провален: пустая строка");
     console.assert(validatePhone("8 999 1234545") === true,"Тест провален: проверка на отсуствие скобок и -");
 
-
+    console.assert(validatePhone("+7 999 123 45 67") === true, "Тест провален: формат только с пробелами должен проходить");
+    console.assert(validatePhone("8-999-123-45-67") === false, "Тест провален: формат только с дефисами не должен проходить");
+    console.assert(validatePhone("7 (999) 123-45-67") === false, "Тест провален: отсутствие + или 8 в начале");
+    console.assert(validatePhone("abc +7 (999) 123-45-67") === false, "Тест провален: наличие символов ");
+    console.assert(validatePhone("+7 (999) 123-45-67 def") === false, "Тест провален: посторонние символы в конце");
+    console.assert(validatePhone("8 (999) abc-45-67") === false, "Тест провален: символы в номере");
+    console.assert(validatePhone(" 8 (999) 123-45-67") === false, "Тест провален: пробел в начале");
+    console.assert(validatePhone("8 (999) 123-45-67 ") === false, "Тест провален: пробел в конце");
 
     console.log("Все тесты пройдены! ✅");
 }
