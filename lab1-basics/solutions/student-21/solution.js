@@ -212,21 +212,27 @@ function processArrays() {
 
     // 2. Используйте map для создания массива квадратов чисел
     const squares = numbers.map(num => num * num);
+    console.log(squares);
 
     // 3. Используйте filter для получения активных пользователей
     const activeUsers = users.filter(user => user.isActive);
+    console.log(activeUsers);
 
     // 4. Используйте find для поиска пользователя с именем "Виктория"
     const victoria = users.find(user => user.name === "Виктория");
+    console.log(victoria);
 
     // 5. Используйте reduce для подсчета суммы всех чисел
     const sum = numbers.reduce((acc, num) => acc + num, 0);
+    console.log(sum);
 
     // 6. Используйте sort для сортировки пользователей по возрасту (по убыванию)
     const sortedByAge = [...users].sort((a, b) => b.age - a.age);
+    console.log(sortedByAge);
 
     // 7. Используйте метод для проверки, все ли пользователи старше 18 лет
     const allAdults = users.every(user => user.age > 18);
+    console.log(allAdults);
 
     // 8. Создайте цепочку методов: 
     //    - отфильтровать активных пользователей
@@ -236,6 +242,7 @@ function processArrays() {
         .filter(user => user.isActive)
         .map(user => user.name)
         .sort();
+    console.log(activeUserNames);
 }
 
 // ===== ЗАДАНИЕ 5: Менеджер задач =====
@@ -457,19 +464,41 @@ function runTests() {
     console.assert(student.grades.math === 70, "Тест student.addGrade: обновление оценки провален");
     console.assert(student.grades.math !== oldMathGrade, "Тест student.addGrade: оценка должна измениться провален");
     
-    // Тест 13: taskManager
+    // Четвертое задание
+    processArrays();
+    
+    // Тест 13: taskManager - добавление задачи
     const initialLength = taskManager.tasks.length;
     taskManager.addTask("Новая задача", "low");
     console.assert(taskManager.tasks.length === initialLength + 1, "Тест taskManager.addTask провален");
+    
+    // Тест 14: taskManager - завершение существующей задачи
+    const taskToComplete = taskManager.tasks.find(t => t.id === 1);
+    console.assert(taskToComplete.completed === false, "Тест taskManager: задача 1 должна быть незавершенной провален");
+    const completedTask = taskManager.completeTask(1);
+    console.assert(completedTask !== null, "Тест taskManager.completeTask: должен вернуть задачу провален");
+    console.assert(completedTask.completed === true, "Тест taskManager.completeTask: задача должна быть завершена провален");
+    console.assert(taskManager.tasks.find(t => t.id === 1).completed === true, "Тест taskManager.completeTask: статус должен измениться провален");
+    
+    // Тест 15: taskManager - завершение несуществующей задачи
     console.assert(taskManager.completeTask(999) === null, "Тест taskManager.completeTask: несуществующая задача провален");
+    
+    // Тест 16: taskManager - удаление существующей задачи
+    const lengthBeforeDelete = taskManager.tasks.length;
+    const deleteResult = taskManager.deleteTask(3);
+    console.assert(deleteResult === true, "Тест taskManager.deleteTask: должен вернуть true провален");
+    console.assert(taskManager.tasks.length === lengthBeforeDelete - 1, "Тест taskManager.deleteTask: длина должна уменьшиться провален");
+    console.assert(taskManager.tasks.find(t => t.id === 3) === undefined, "Тест taskManager.deleteTask: задача должна быть удалена провален");
+    
+    // Тест 17: taskManager - удаление несуществующей задачи
     console.assert(taskManager.deleteTask(999) === false, "Тест taskManager.deleteTask: несуществующая задача провален");
     
-    // Тест 14: validateEmail (Вариант 1) - валидные
+    // Тест 18: validateEmail (Вариант 1) - валидные
     console.assert(validateEmail("test@example.com") === true, "Тест email: валидный email провален");
     console.assert(validateEmail("user.name+tag@example.co.uk") === true, "Тест email: сложный валидный email провален");
     console.assert(validateEmail("a@b.co") === true, "Тест email: минимальный валидный email провален");
     
-    // Тест 15: validateEmail - невалидные
+    // Тест 19: validateEmail - невалидные
     console.assert(validateEmail("invalid.email@") === false, "Тест email: без домена провален");
     console.assert(validateEmail("@example.com") === false, "Тест email: без локальной части провален");
     console.assert(validateEmail("test@.com") === false, "Тест email: неверный домен провален");
