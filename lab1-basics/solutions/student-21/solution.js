@@ -413,57 +413,63 @@ function runTests() {
     console.assert(calculate(Number.MAX_VALUE, 1, '+') === 'Ошибка: операция с MAX_VALUE приведет к переполнению', "Тест calculate: MAX_VALUE сложение провален");
     console.assert(calculate(Number.MAX_VALUE, 2, '*') === 'Ошибка: операция с MAX_VALUE приведет к переполнению', "Тест calculate: MAX_VALUE умножение провален");
     
-    // Тест 5: calculateArea - валидные данные
+    // Тест 5: calculate - MAX_VALUE с вычитанием и делением (допустимые операции)
+    console.assert(typeof calculate(Number.MAX_VALUE, 1, '-') === 'number', "Тест calculate: MAX_VALUE вычитание провален");
+    console.assert(typeof calculate(Number.MAX_VALUE, 2, '/') === 'number', "Тест calculate: MAX_VALUE деление провален");
+    console.assert(calculate(Number.MAX_VALUE, Number.MAX_VALUE, '-') === 0, "Тест calculate: MAX_VALUE - MAX_VALUE провален");
+    console.assert(typeof calculate(10, Number.MAX_VALUE, '/') === 'number', "Тест calculate: деление на MAX_VALUE провален");
+    
+    // Тест 6: calculateArea - валидные данные
     console.assert(Math.abs(calculateArea('circle', 5) - 78.54) < 0.1, "Тест calculateArea: круг провален");
     console.assert(calculateArea('rectangle', 5, 10) === 50, "Тест calculateArea: прямоугольник провален");
     console.assert(calculateArea('triangle', 6, 8) === 24, "Тест calculateArea: треугольник провален");
     
-    // Тест 6: calculateArea - ошибки
+    // Тест 7: calculateArea - ошибки
     console.assert(calculateArea('circle', -5) === 'Ошибка: радиус должен быть положительным', "Тест calculateArea: отрицательный радиус провален");
     console.assert(calculateArea('circle', 5, 10) === 'Ошибка: для круга нужен 1 параметр (радиус)', "Тест calculateArea: много параметров провален");
     console.assert(calculateArea('square', 5) === 'Ошибка: неизвестная фигура', "Тест calculateArea: неизвестная фигура провален");
     console.assert(calculateArea('circle', '5') === 'Ошибка: радиус должен быть числом', "Тест calculateArea: не число провален");
     
-    // Тест 7: reverseString
+    // Тест 8: reverseString
     console.assert(reverseString("hello") === "olleh", "Тест reverseString провален");
     console.assert(reverseString(123) === 'Ошибка: параметр должен быть строкой', "Тест reverseString: не строка провален");
     
-    // Тест 8: getRandomNumber
+    // Тест 9: getRandomNumber
     const rand = getRandomNumber(1, 10);
     console.assert(typeof rand === 'number' && rand >= 1 && rand <= 10, "Тест getRandomNumber провален");
     console.assert(getRandomNumber('1', 10) === 'Ошибка: параметры должны быть числами', "Тест getRandomNumber: не число провален");
     console.assert(getRandomNumber(10, 1) === 'Ошибка: минимум не может быть больше максимума', "Тест getRandomNumber: min>max провален");
     
-    // Тест 9: book object
+    // Тест 10: book object
     console.assert(book.getInfo().includes("JavaScript"), "Тест book.getInfo провален");
     console.assert(book.toggleAvailability() === false, "Тест book.toggleAvailability провален");
     
-    // Тест 10: student object
+    // Тест 11: student object
     console.assert(student.getAverageGrade() === 90, "Тест student.getAverageGrade провален");
     console.assert(student.addGrade("physics", 88) === true, "Тест student.addGrade провален");
     console.assert(student.grades.physics === 88, "Тест student.addGrade: значение провален");
     console.assert(student.addGrade(123, 88) === 'Ошибка: название предмета должно быть строкой', "Тест student.addGrade: не строка провален");
     console.assert(student.addGrade("chemistry", "90") === 'Ошибка: оценка должна быть числом', "Тест student.addGrade: не число провален");
     
-    // Тест 11: student.addGrade - обновление существующей оценки
+    // Тест 12: student.addGrade - обновление существующей оценки
     const oldMathGrade = student.grades.math;
     student.addGrade("math", 70);
     console.assert(student.grades.math === 70, "Тест student.addGrade: обновление оценки провален");
     console.assert(student.grades.math !== oldMathGrade, "Тест student.addGrade: оценка должна измениться провален");
     
-    // Тест 12: taskManager
+    // Тест 13: taskManager
     const initialLength = taskManager.tasks.length;
     taskManager.addTask("Новая задача", "low");
     console.assert(taskManager.tasks.length === initialLength + 1, "Тест taskManager.addTask провален");
     console.assert(taskManager.completeTask(999) === null, "Тест taskManager.completeTask: несуществующая задача провален");
     console.assert(taskManager.deleteTask(999) === false, "Тест taskManager.deleteTask: несуществующая задача провален");
     
-    // Тест 13: validateEmail (Вариант 1) - валидные
+    // Тест 14: validateEmail (Вариант 1) - валидные
     console.assert(validateEmail("test@example.com") === true, "Тест email: валидный email провален");
     console.assert(validateEmail("user.name+tag@example.co.uk") === true, "Тест email: сложный валидный email провален");
     console.assert(validateEmail("a@b.co") === true, "Тест email: минимальный валидный email провален");
     
-    // Тест 14: validateEmail - невалидные
+    // Тест 15: validateEmail - невалидные
     console.assert(validateEmail("invalid.email@") === false, "Тест email: без домена провален");
     console.assert(validateEmail("@example.com") === false, "Тест email: без локальной части провален");
     console.assert(validateEmail("test@.com") === false, "Тест email: неверный домен провален");
