@@ -229,14 +229,14 @@ const book = {
     author: "Joanne Harris",
     year: 2024,
     numofpages: 576,
-    access: "да",
+    access: true,
 
     getInfo() {
         return `${book.name} ${book.author} ${book.year} ${book.numofpages}`;
     },
 
     toggleAvailability() {
-        this.access = false;
+        this.access = !this.access;
         return this.access;
     },
 };
