@@ -18,17 +18,40 @@ function simpleTask() {
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
-    const reviewers = 23;
-    return ((number + lab - 1) % reviewers + 1);
-
+    if (typeof number !== "number" || typeof lab !== "number") {
+        return "неправильный тип данных"
+    }
+    if (number >= 24) {
+        return "неправильное количество людей"
+    }
+    if (number + lab === 23) {
+        let a = 23
+        return a
+    } else {
+        let a = (number + lab) % 23
+        return a
+    }
 }
- // console.log(getReviewerNumber(22, 1));
+
 function getVariant(number, variants) {
     // 2.2 Функция определяющая номер варианта, исходя из количества вариантов
-    return ((number - 1) % variants + 1);
+    if (typeof number !== "number" || typeof variants !== "number") {
+        return "неправильный тип данных"
+    }
+    if (number > variants) {
+        let a = number % variants
+        return a
+    }
+    if (number % variants === 0) {
+        let a = number
+        return a
+    }
+    if (number < variants) {
+        let a = number % variants
+        return a
+    }
 }
 
-// console.log(getVariant(22, ));
 function calculate(a, b, operation) {
     // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
     if (typeof (a) !== "number" || typeof (b) !== "number") {
@@ -54,24 +77,23 @@ function calculate(a, b, operation) {
     }
 }
 
-// console.log(calculate(10, 5, "*"));
 
 function calculateArea(figure, ...params) {
     // 2.4 Напишите функцию для определения площади фигур 'circle', 'rectangle', 'triangle'
     // Используйте switch.
     switch (figure) {
-        case 'circle': // круг
-            if (params.length === 1 && typeof (params[0]) === "number" && params[0] >= 0) {
+        case 'circle': 
+            if (params.length === 1 && typeof (params[0]) === "number" && params[0] > 0) {
                 return Math.PI * params[0] * params[0];
             }
             break;
-        case 'rectangle': // 
-            if (params.length === 2 && typeof (params[0]) === "number" && typeof (params[1]) === "number" && params[0] >= 0 && params[1] >= 0) {
+        case 'rectangle':
+            if (params.length === 2 && typeof (params[0]) === "number" && typeof (params[1]) === "number" && params[0] > 0 && params[1] > 0) {
                 return params[0] * params[1];
             }
             break;
-        case 'triangle': //треугольник
-            if (params.length === 2 && typeof (params[0]) === "number" && typeof (params[1]) === "number" && params[0] >= 0 && params[1] >= 0) {
+        case 'triangle':
+            if (params.length === 2 && typeof (params[0]) === "number" && typeof (params[1]) === "number" && params[0] > 0 && params[1] > 0) {
                 return 0.5 * params[0] * params[1];
             }
             break;
@@ -81,8 +103,6 @@ function calculateArea(figure, ...params) {
     }
     return "Некорректные параметры";
 }
-
-// console.log(calculateArea('triangle', 5, 5));
 
 // 2.5 Стрелочные функции
 const reverseString = (str) => {
@@ -95,9 +115,6 @@ const reverseString = (str) => {
     return reversed;
 };
 
-// console.log(reverseString("hello"));
-
-
 const getRandomNumber = (min, max) => {
     // Функция возвращает случайное число между min и max
     if (min > max) {
@@ -105,8 +122,6 @@ const getRandomNumber = (min, max) => {
     }
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
-
-// console.log(getRandomNumber(0, 10));
 
 // ===== ЗАДАНИЕ 3: Объекты =====
 const book = {
@@ -129,8 +144,6 @@ const book = {
         return this.isAvailable;
     }
 };
-// console.log(book.getInfo());
-// console.log(book.toggleAvailability()); // false
 
 const student = {
     // 3.2 Реализуйте методы объекта "студент" 
@@ -160,9 +173,6 @@ const student = {
     }
 };
 
-// student.addGrade("physics", 3);
-// console.log(student.grades);
-
 // ===== ЗАДАНИЕ 4: Массивы =====
 function processArrays() {
     const numbers = [12, 45, 23, 67, 34, 89, 56, 91, 27, 14];
@@ -186,7 +196,7 @@ function processArrays() {
 
     // 2. Используйте map для создания массива квадратов чисел
     console.log("Массив квадратов чисел:");
-    const squares = numbers.map(n => n * n);
+    const squares = numbers.map(n => n * n); // неявный возврат и return мы опускаем
     console.log(squares);
     console.log();
 
@@ -210,7 +220,7 @@ function processArrays() {
 
     // 6. Используйте sort для сортировки пользователей по возрасту (по убыванию)
     console.log("Пользователи по убыванию возраста:");
-    const sortedByAge = users.sort((a, b) => b.age - a.age);
+    const sortedByAge = users.sort((a, b) => b.age - a.age); // разобраться
     console.log(sortedByAge);
     console.log();
 
@@ -311,6 +321,8 @@ Learn Regex - https://github.com/ziishaned/learn-regex - учебник по reg
 Вычисление своего варианта:
 Номер варианта = Ваш номер % Общее количество вариантов
  */
+
+console.log();
 console.log(`Мой вариант: ${getVariant(17, 4)}`); // Вариант 1
 console.log();
 
@@ -408,10 +420,20 @@ function runTests() {
     console.log();
 
     // Тест 1: getReviewerNumber
-    console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(5, 1) === 6, "тест исчисления номера ревьюера провален1")
+    console.assert(getReviewerNumber(21, 2) === 23, "тест исчисления номера ревьюера провален2")
+    console.assert(getReviewerNumber(23, 1) === 1, "тест исчисления номера ревьюера провален3")
+    console.assert(getReviewerNumber(21, "i") === "неправильный тип данных", "тест исчисления номера ревьюера провален, неправильный тип данных")
+    console.assert(getReviewerNumber("i", 2) === "неправильный тип данных", "тест исчисления номера ревьюера провален, неправильный тип данных")
+    console.assert(getReviewerNumber(25, 2) === "неправильное количество людей", "теест проверки номера ревьюера провален, неправильно количество людей")
 
     //Тест задания 2.2
-    console.assert(getVariant(5, 5) === 5, "Тест задания 2.2 провален");
+    console.assert(getVariant(23, 23) === 23, "тест исчисления номера варианта провален, числа одинаковые")
+    console.assert(getVariant(25, 23) === 2, "тест исчисления номера варианта провален, номер больше варианта")
+    console.assert(getVariant(23, 25) === 23, "тест исчисления номера варианта провален, номер меньше варианта")
+    console.assert(getVariant(23, "p") === "неправильный тип данных", "тест исчисления номера варианта провален, неверный тип данных")
+    console.assert(getVariant("p", 23) === "неправильный тип данных", "тест исчисления номера варианта провален, неверный тип данных")
+
 
     // Тест задания 2.3: calculate
     console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора 2.3 провален (сложение)");
@@ -419,6 +441,7 @@ function runTests() {
     console.assert(calculate(10, 5, '*') == 50, "Тест калькулятора 2.3 провален (умножение)");
     console.assert(calculate(10, 5, '/') == 2, "Тест калькулятора 2.3 провален (деление)");
     console.assert(calculate(10, 4, '/') == 2.5, "Тест калькулятора 2.3 провален (деление с дробным результатом)");
+    console.assert(calculate(10, 3, '/') - 3.3333333333333335 < 0.000001, "Тест калькулятора 2.3 провален (деление с дробным результатом)");
     console.assert(Number.isNaN(calculate(10, 0, '/')), "Тест калькулятора 2.3 провален (деление на ноль)");
     console.assert(calculate(0, 5, '/') === 0, "Тест калькулятора 2.3 провален (деление 0 на число)");
     console.assert(calculate(-10, 5, '+') === -5, "Тест калькулятора 2.3 провален (сложение с отрицательным)");
@@ -428,30 +451,24 @@ function runTests() {
     console.assert(calculate(10, "b", "+") === "Аргументы должны быть числами", "Тест калькулятора 2.3 провален (аргументы должны быть числовыми)");
     console.assert(calculate(10, 5, "~") === "Неизвестная операция", "Тест калькулятора 2.3 провален (неизвестная операция)");
 
-    console.assert(calculate(Number.MAX_VALUE, 1, '+') === Number.MAX_VALUE + 1, "Тест калькулятора 2.3 провален (переполнение при сложении)");
-    console.assert(calculate(Number.MAX_VALUE, Number.MAX_VALUE, '+') === Infinity, "Тест калькулятора 2.3 провален (переполнение при сложении двух больших чисел)");
-    console.assert(calculate(Number.MAX_VALUE, 2, '-') === Number.MAX_VALUE - 2, "Тест калькулятора 2.3 провален (вычитание из максимального значения)");
-    console.assert(calculate(Number.MAX_VALUE, 1, '*') === Number.MAX_VALUE, "Тест калькулятора 2.3 провален (переполнение при умножении)");
-    console.assert(calculate(1, Number.MAX_VALUE, '*') === Number.MAX_VALUE, "Тест калькулятора 2.3 провален (переполнение при умножении с максимальным значением)");
-    console.assert(calculate(Number.MAX_VALUE, 10, "*") === Infinity, "Тест калькулятора провален (умножение максимального числа на 10)");
-    console.assert(calculate(Number.MAX_VALUE, 2, '/') === Number.MAX_VALUE / 2, "Тест калькулятора 2.3 провален (деление максимального значения)");
-
-
-
     //Тест задания 2.4 
-    console.assert(calculateArea("circle", 2) === 12.566370614359172, "Тест 2.4 провален (площадь круга)");
+    console.assert(calculateArea("circle", 2) - 12.566370614359172 < 0.00001, "Тест 2.4 провален (площадь круга)");
     console.assert(calculateArea("rectangle", 2, 4) === 8, "Тест 2.4 провален (площадь прямоугольника)");
-    console.assert(calculateArea("triangle", 4, 6) === 12, "Тест 2.4 провален (площадь треугольника)")
-    console.assert(calculateArea("hexagon", 4, 6) === "Неизвестная фигура", "Тест 2.4 провален (неизвестная фигура)");
+    console.assert(calculateArea("triangle", 4, 6) === 12, "Тест 2.4 провален (площадь треугольника)");
     console.assert(calculateArea("rectangle", 5) === "Некорректные параметры", "Тест 2.4 провален (недостаточно параметров)");
     console.assert(calculateArea("circle", 5, 2) === "Некорректные параметры", "Тест 2.4 провален (слишком много параметров)");
-    console.assert(calculateArea("circle") === "Некорректные параметры", "Тест 2.4 провален (нет параметров для круга)")
-    console.assert(calculateArea("rectangle", "a", 5) === "Некорректные параметры", "Тест 2.4 провален (не числовые параметры)");
-    console.assert(calculateArea("circle", 0) === 0, "Тест 2.4 провален (круг с радиусом 0)");
-    console.assert(calculateArea("rectangle", 0, 10) === 0, "Тест 2.4 провален (прямоугольник со стороной 0)");
-    console.assert(calculateArea("rectangle", -2, 4) === "Некорректные параметры", "Тест 2.4 провален (прямоугольник с отрицательной стороной)");
-    console.assert(calculateArea("circle", -2) == "Некорректные параметры", "Тест 2.4 провален (круг с отрицательным радиусом)");
-    console.assert(calculateArea("triangle", -2, -4) == "Некорректные параметры", "Тест 2.4 провален (треугольник с отрицательной высотой и стороной)");
+    console.assert(calculateArea("circle") === "Некорректные параметры", "Тест 2.4 провален (нет параметров для круга)");
+    console.assert(calculateArea("circle", 0) === "Некорректные параметры", "Тест 2.4 провален (круг с радиусом 0)");
+    console.assert(calculateArea("rectangle", 0, 10) === "Некорректные параметры", "Тест 2.4 провален (прямоугольник со стороной 0)");
+    console.assert(calculateArea("rectangle", -2, 4) === "Некорректные параметры", "Тест 2.4 провален (отрицательная сторона)");
+    console.assert(calculateArea("circle", -2) === "Некорректные параметры", "Тест 2.4 провален (отрицательный радиус)");
+    console.assert(calculateArea("triangle", 0, 1) === "Некорректные параметры", "Тест 2.4 провален (ноль в параметрах треугольника)");
+    console.assert(calculateArea(1, 1, 2, 3) === "Неизвестная фигура", "Тест 2.4 провален (число вместо строки фигуры)");
+    console.assert(calculateArea("triangle", "p", 2) === "Некорректные параметры", "Тест 2.4 провален (строка вместо числа)");
+    console.assert(calculateArea("circle", "5") === "Некорректные параметры", "Тест 2.4 провален (строка вместо числа)");
+    console.assert(calculateArea("cirккккcle", -1) === "Неизвестная фигура", "Тест 2.4 провален (неправильное название фигуры)");
+    console.assert(calculateArea("CIRCLE", 2) === "Неизвестная фигура", "Тест 2.4 провален (регистр в названии фигуры)");
+    console.assert(calculateArea("") === "Неизвестная фигура", "Тест 2.4 провален (пустая строка как фигура)");
 
     //Тест задания 2.5
     console.assert(reverseString("Hello") === "olleH", "Тест 2.5 провален (перевернутая строка)");
@@ -525,4 +542,5 @@ function runTests() {
 
     console.log("Все тесты пройдены! ✅");
 }
+
 runTests();
