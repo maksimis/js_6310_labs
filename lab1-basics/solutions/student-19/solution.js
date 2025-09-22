@@ -3,7 +3,6 @@ function simpleTask() {
     // 1.1 Объявите переменные разных типов (не менне 5)
     // 1.2 Выведите типы всех переменных
 const num = 5
-const arr = [1, 2, 3];
 const str = "tiyfvgvig"
 const bool = true
 let u
@@ -16,31 +15,32 @@ console.log(typeof str);
 console.log(typeof bool);
 console.log(typeof u);
 console.log(typeof obj);
-console.log(typeof arr);
 }
-simpleTask()
+
 
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
-let res = (number + lab) % 23;
+let res = (number + lab - 1 ) % 23 + 1 ;
     return res;
 }
-     console.log(getReviewerNumber(19, 1));
-     
 
+     
 function getVariant(number, variants) {
     // 2.2 Функция определяющая номер варианта, исходя из количества вариантов
-    const variant = ((number - 1) % variants) + 1;
+    const variant = ((number - 1) % variants + 1) ;
     return variant;
 }
-console.log(getVariant(19, 23)); 
+
 
 function calculate(a, b, operation) {
     // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
 if(typeof(a) !== "number" || typeof(b) !== "number"){
         return "Аргументы функции должны быть числами"
     }
+     if ((typeof a !== 'number') || (typeof b !== 'number')) {
+        return "Оба параметра должны быть числами"}
+
     if(operation == "+"){
         return a + b;
     }
@@ -60,7 +60,6 @@ if(typeof(a) !== "number" || typeof(b) !== "number"){
         return "Неизвестная операция";
     }
 }
-console.log(calculate(100000006666666, 500000000, '/')); 
 
 
 function calculateArea(figure, ...params) {
@@ -71,7 +70,12 @@ function calculateArea(figure, ...params) {
             // Площадь круга: π * r²
             const radius = params[0];
             return Math.PI * radius * radius;
-            
+             for (param of params)
+     {
+        if (typeof param !== 'number') {
+            return "Параметры фигуры должны быть числами"
+        }
+    }
         case 'rectangle':
             // Площадь прямоугольника: a * b
             const a = params[0];
@@ -88,11 +92,6 @@ function calculateArea(figure, ...params) {
             return 'Неизвестная фигура';
     }
 }
-console.log(calculateArea('circle', 5));
-console.log(calculateArea('rectangle', 3, 4));
-console.log(calculateArea('triangle', 6, 8));
-
-
 
 // 2.5 Стрелочные функции
 const reverseString = (str) => {
@@ -103,16 +102,14 @@ let reversed = '';
     }
     return reversed;
 };
-console.log(reverseString("ALICCE"));
+
 
 
 const getRandomNumber = (min, max) => {
     // Функция возвращает случайное число между min и max
-    return Math.random() * (max - min) + min;
+    return Math.random() * (max - min + 1) + min;
 };
-    console.log(getRandomNumber(10 , 20));
-    
-
+   
 
 // ===== ЗАДАНИЕ 3: Объекты =====
 const book = {
@@ -125,18 +122,16 @@ title: '1984',
     year: 1947,
     pages: 200,
     available: true,
-    getInfo: function() {
-        return this.title + ', ' + this.author + ', ' + this.year + ', ' + this.pages + ' стр.';
+
+    getInfo: function() { 
+        return `${this.title}, {this.author}, {this.year}, {this.pages}`;
     },
+
     toggleAvailability: function() {
         this.available = !this.available;
         return this.available;
     }
 };
-console.log(book.getInfo());
-console.log(book.available);
-console.log(book.toggleAvailability());
-
 
 const student = {
     // 3.2 Реализуйте методы объекта "студент" 
@@ -170,11 +165,6 @@ const student = {
     
     }
 };
-
-console.log(student.getAverageGrade()); 
-student.addGrade('math', 90);
-console.log(student.grades.programming); 
-console.log(student.getAverageGrade()); 
 
 
 // ===== ЗАДАНИЕ 4: Массивы =====
@@ -242,12 +232,7 @@ console.log(allAdults);
     //    - преобразовать в массив имен
     //    - отсортировать по алфавиту
     /*const activeUserNames =  ваш код */
-    const activeUserNames = users
-    .filter(user => user.isActive)
-    .map(user => user.name)
-    .sort();
-    console.log(activeUserNames);  
-    console.log();
+    const activeUserNames = users.filter(user => user.isActive).map(user => user.name).sort();
 }
 
 
@@ -379,6 +364,10 @@ console.assert(validatePhone("89991234567") === true, "Тест 1 провале
 console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 2 провален: +7(999)123-45-67");
 console.assert(validatePhone("8(999)1234567") === true, "Тест 3 провален: 8(999)1234567");
 console.assert(validatePhone("+7(999)1234567") === true, "Тест 4 провален: +7(999)1234567");
+console.assert(validatePhone('+7 (999) 123-45-67') === true, 
+    '+7 (999) 123-45-67 должен быть валидным');
+console.assert(validatePhone('8 (999) 123-45-67') === true, 
+    '8 (999) 123-45-67 должен быть валидным');
 
 /**
  * Вариант 4: Валидация даты в формате DD.MM.YYYY
@@ -414,12 +403,21 @@ function runTests() {
 function runTests() {
 //Тест задания 2.1
 console.assert(getReviewerNumber(19, 1) === 20, "Тест получения ревьюера провален");
+console.assert(typeof number === 'number', 'Первый параметр должен быть числом');
+console.assert(typeof lab === 'number', 'Второй параметр должен быть числом');
+
+
+//Тест задания 1
+simpleTask()
+
 //Тест задания 2.2
-console.assert(getVariant(1, 23) === 1, "Тест: номер 1, вариантов 23 -> вариант 1");
-console.assert(getVariant(23, 23) === 23, "Тест: номер 23, вариантов 23 -> вариант 23");
-console.assert(getVariant(24, 23) === 1, "Тест: номер 24, вариантов 23 -> вариант 1");
-console.assert(getVariant(46, 23) === 23, "Тест: номер 46, вариантов 23 -> вариант 23");
-console.assert(getVariant(19, 23) === 19, "Тест: номер 19, вариантов 23 -> вариант 19");
+console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
+console.assert(getReviewerNumber(22, 1) === 23, "Тест получения ревьюера провален");
+console.assert(getReviewerNumber('ff', 1) === "Оба аргумента должны быть числами", "Тест получения ревьюера провален");
+console.assert(getReviewerNumber(4, 'frf') === "Оба аргумента должны быть числами", "Тест получения ревьюера провален");
+console.assert(getReviewerNumber('jjj', 'frf') === "Оба аргумента должны быть числами", "Тест получения ревьюера провален");
+console.assert(getReviewerNumber(23, 1) === 1, "Тест получения ревьюера провален");
+console.assert(getReviewerNumber(24, 1)) === "В нашей группе 23 человека", "Тест получения ревьюера провален";
 //Тест задания 2.3
 console.assert(calculate(10, 5, '+') === 15, "Тест провален: 10 + 5 = 15");
 console.assert(calculate(10, 5, '-') === 5, "Тест провален: 10 - 5 = 5");
