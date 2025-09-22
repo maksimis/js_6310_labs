@@ -25,7 +25,7 @@ function getReviewerNumber(number, lab) {
     if(number <= 0 || lab <= 0){
         return "Число не может быть отрицательным!";
     }
-    return ((number + lab) % 23);
+    return ((number + lab - 1) % 23 + 1);
 }
 
 
@@ -108,6 +108,9 @@ const getRandomNumber = (min, max) => {
     if(typeof min !== "number" || typeof max  !== "number"){
         return "Введён неверный тип данных";
     }
+    if(max < min){
+        return "max не можкт быть меньше min";
+    }
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
@@ -162,7 +165,7 @@ const student = {
         if(grade > 100 || grade < 0){
             return "Неверная оценка";
         }
-        if(typeof subject !== "string"){
+        if(typeof subject !== "string" || typeof grade !== "number"){
             return "Неверный тип данных";
         }
         this.grades[subject] = grade;
@@ -211,7 +214,7 @@ function processArrays() {
     const sortedByAge =  users.sort((a,b) => b.age-a.age).map(user => user.name);
     console.log(sortedByAge);
     // 7. Используйте метод для проверки, все ли пользователи старше 18 лет
-    const allAdults =  users.filter(user => user.age > 18).map(user => user.name);
+    const allAdults =  users.every(user => user.age > 18);
     console.log(allAdults);
     // 8. Создайте цепочку методов: 
     //    - отфильтровать активных пользователей
@@ -232,27 +235,48 @@ const taskManager = {
     newID: 4,
     addTask(title, priority = "medium") {
         // 5.1 Добавление задачи
+        if(typeof title !== "string"){
+            return "Неверный тип данных";
+        }
         const newTask = {id: this.newID++, title: title, completed: false, priority: priority}
         this.tasks.push(newTask);
     },
     
     completeTask(taskId) {
         // 5.2 Отметка выполнения
+        if(typeof taskId !== "number"){
+            return "Неверный тип данных";
+        }
         const task = this.tasks.find(task => task.id === taskId);
-        task.completed = true;
+        if (task) {
+            task.completed = true;
+            return task;
+        } else {
+            return "Задачи с таким ID не существует";
+        }
     },
 
     // Удаление задачи
     deleteTask(taskId) {
         // 5.3 Ваш код здесь
-        this.tasks = this.tasks.filter(task => task.id !== taskId); 
-
+        if(typeof taskId !== "number"){
+            return "Неверный тип данных";
+        }
         
+        const taskExists = this.tasks.some(task => task.id === taskId);
+        if (!taskExists) {
+            return "Задачи с таким ID не существует";
+        }
+        this.tasks = this.tasks.filter(task => task.id !== taskId);
     },
+
 
     // Получение списка задач по статусу
     getTasksByStatus(completed) {
         // 5.4 Ваш код здесь
+        if(typeof completed !== "boolean"){
+            return "Неверный тип данных";
+        }
     return this.tasks.filter(task => task.completed === completed).map(task => `id: ${task.id}, title: ${task.title}, priority: ${task.priority}`).join("\n");
 
 
@@ -274,12 +298,13 @@ const taskManager = {
         completed: completed,
         pending: pending,
         completitionRate: completitionRate};
-        
-
-
-    
-
     },
+    showAllTasks(){
+        this.tasks.forEach(element => {
+            console.log(element);
+
+    });
+    } 
                         
 };
 
@@ -370,7 +395,11 @@ function runTests() {
     console.assert(getReviewerNumber("5", 1) === "Введено не число!", "Тест провален, т.к. введено не число");
     console.assert(getReviewerNumber("5", "1") === "Введено не число!", "Тест провален, т.к. введено не число");
     console.assert(getReviewerNumber(5, -1) === "Число не может быть отрицательным!", "Тест провален, т.к. введено отрицательное число");
+    console.assert(getReviewerNumber(-1, 5) === "Число не может быть отрицательным!", "Тест провален, т.к. введено отрицательное число");
+     console.assert(getReviewerNumber(-1, -1) === "Число не может быть отрицательным!", "Тест провален, т.к. введено отрицательное число");
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(22, 1) === 23, "Тест получения ревьюера провален");
+    
     // Тест 2: calculate
     console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора провален");
     console.assert(calculate("f", 4, "/") === "Введено не число!", "Тест провален, т.к. введено не число");
@@ -404,32 +433,49 @@ function runTests() {
     console.assert(getVariant("2", 4) === "Введено не число!", "Тест провален, т.к. введено не число");
     console.assert(getVariant(2, "4") === "Введено не число!", "Тест провален, т.к. введено не число");
     console.assert(getVariant(-1, 4) === "Число не может быть отрицательным!", "Тест провален, т.к. введно не число");
-
+    console.assert(getVariant(-1, -1) === "Число не может быть отрицательным!", "Тест провален, т.к. введно не число");
+    console.assert(getVariant(4, -1) === "Число не может быть отрицательным!", "Тест провален, т.к. введно не число");
 
     //Тест задания 2.4
- 
     console.assert(calculateArea("circle", 2) - 12.56637 < 0.0001, "Тест провален, т.к. площадь круга неверная");
-    console.assert(calculateArea("rectangle", 4, 8) === 32, "Тест провален, т.к. площадь прямоугольника неверная");
-    console.assert(calculateArea("triangle", 4, 8) === 16, "Тест провален, т.к. площадь треугольника неверная");
-    console.assert(calculateArea("square", 4, 8) === "Ни одна из фигур не найдена", "Тест провален, т.к. неизвестная фигура");
-    console.assert(calculateArea("triangle", 4) === "Неверные данные", "Тест провален, т.к. неверное число аргументов");
-    console.assert(calculateArea("rectangle", 4, 7, 5) === "Неверные данные", "Тест провален, т.к. неверное число аргументов");
     console.assert(calculateArea("circle", ) === "Неверные данные", "Тест провален, т.к. неверное число аргументов");
     console.assert(calculateArea("circle", -1) === "Неверные данные", "Тест провален, т.к. площадь не может быть отрицательной");
-    console.assert(calculateArea("triangle", 3, -6) === "Неверные данные", "Тест провален, т.к. площадь не может быть отрицательной");
+    console.assert(calculateArea("circle", "v") === "Неверные данные", "Тест провален, т.к. неверный тип данных");
+
+    console.assert(calculateArea("rectangle", 4, 8) === 32, "Тест провален, т.к. площадь прямоугольника неверная");
+    console.assert(calculateArea("rectangle", 4, 7, 5) === "Неверные данные", "Тест провален, т.к. неверное число аргументов");
     console.assert(calculateArea("rectangle", -1, 8) === "Неверные данные", "Тест провален, т.к. площадь не может быть отрицательной");
-    console.assert(calculateArea("rectangle", 4, "v") === "Неверные данные", "Тест провален, т.к. неизвестный аргумент");
-    console.assert(calculateArea("rectangle", 4, 0) === "Неверные данные", "Тест провален, т.к. сторона не может быть нулем");
+    console.assert(calculateArea("rectangle", 8, -1) === "Неверные данные", "Тест провален, т.к. площадь не может быть отрицательной");
+    console.assert(calculateArea("rectangle", -1, -1) === "Неверные данные", "Тест провален, т.к. площадь не может быть отрицательной");
+    console.assert(calculateArea("rectangle", 4, "v") === "Неверные данные", "Тест провален, т.к. неизвестный тип данных");
+    console.assert(calculateArea("rectangle", "v", "v") === "Неверные данные", "Тест провален, т.к. неизвестный тип данных");
+    console.assert(calculateArea("rectangle", "v", 4) === "Неверные данные", "Тест провален, т.к. неизвестный тип данных");
+
+    console.assert(calculateArea("triangle", 4, 8) === 16, "Тест провален, т.к. площадь треугольника неверная");
+    console.assert(calculateArea("triangle", 4) === "Неверные данные", "Тест провален, т.к. неверное число аргументов");
+    console.assert(calculateArea("triangle", 3, -6) === "Неверные данные", "Тест провален, т.к. площадь не может быть отрицательной");
+    console.assert(calculateArea("triangle", -6, 3) === "Неверные данные", "Тест провален, т.к. площадь не может быть отрицательной");
+    console.assert(calculateArea("triangle", -3, -6) === "Неверные данные", "Тест провален, т.к. площадь не может быть отрицательной");
+    console.assert(calculateArea("triangle", "v", 4) === "Неверные данные", "Тест провален, т.к. неизвестный тип данных");
+    console.assert(calculateArea("triangle", "v", "4") === "Неверные данные", "Тест провален, т.к. неизвестный тип данных");
+    console.assert(calculateArea("triangle", 4, "4") === "Неверные данные", "Тест провален, т.к. неизвестный тип данных");
+
+    console.assert(calculateArea("square", 4, 8) === "Ни одна из фигур не найдена", "Тест провален, т.к. неизвестная фигура");
+    console.assert(calculateArea(4, 4, 8) === "Ни одна из фигур не найдена", "Тест провален, т.к. неизвестная фигура");
 
     //Тест задания 2.5
-    console.assert(reverseString("Маша") === "ашаМ", "Тест провален, т.к. неверная перевернутая строка");
+    console.assert(reverseString('hello world') === 'dlrow olleh', 'Тест слова hello world провален');
     console.assert(reverseString("") === "", "Тест провален, т.к. неверная перевернутая строка");
     console.assert(reverseString("а") === "а", "Тест провален, т.к. неверная перевернутая строка");
     console.assert(reverseString(12) === "Введён неверный тип данных", "Тест провален, т.к. неверный тип данных");
     
 
-    console.assert(getRandomNumber("f", 4) === "Введён неверный тип данных", "Тест провален, т.к. неверный тип данных");
-    console.assert(getRandomNumber(-2, 1) >= -2 || getRandomNumber(-2, 1) <= 1, "Тест провален, т.к. рандомное число вышло из диапозона");
+    console.assert(getRandomNumber("3", 4) === "Введён неверный тип данных", "Тест провален, т.к. неверный тип данных");
+    console.assert(getRandomNumber("3", "4") === "Введён неверный тип данных", "Тест провален, т.к. неверный тип данных");
+    console.assert(getRandomNumber(3, "4") === "Введён неверный тип данных", "Тест провален, т.к. неверный тип данных");
+    console.assert(getRandomNumber(5, 1) === "max не можкт быть меньше min", "Тест провален, т.к. max не может быть меньше min");
+    const num1 = getRandomNumber(-2, 1);
+    console.assert(num1 >= -2 || num1 <= 1, "Тест провален, т.к. рандомное число вышло из диапозона");
     console.assert(getRandomNumber(5, 5) === 5, "Тест провален, т.к. рандомное число вышло из диапозона");
 
     //Тест задания 3.1
@@ -445,6 +491,8 @@ function runTests() {
     console.assert(student.addGrade(34, 95) === "Неверный тип данных", "Тест провален, т.к. введён неверный тип данных");
     console.assert(student.addGrade("PE", 101) === "Неверная оценка", "Тест провален, т.к. оценка вышла из диапозона");
     console.assert(student.addGrade("PE", -1) === "Неверная оценка", "Тест провален, т.к. оценка вышла из диапозона");
+    console.assert(student.addGrade(34, "100") === "Неверный тип данных", "Тест провален, т.к. оценка вышла из диапозона");
+    console.assert(student.addGrade("PE", "50") === "Неверный тип данных", "Тест провален, т.к. оценка вышла из диапозона");
     student.addGrade("PE", 100); // добавляем новый предмет
     console.log("92.5 === ", student.getAverageGrade()); // при добавлении нового предмета
     console.log(" ");
@@ -456,19 +504,21 @@ function runTests() {
 
     //Тест задания 5
     console.log("Задание 5:")
-    Object.entries(taskManager.tasks).forEach(([key, value]) => {
-    console.log(value); //изначальный
-    });
+    taskManager.showAllTasks();
     console.log(" ");
-    taskManager.addTask("Zmil'"); //5.1
+    console.assert(taskManager.addTask(123) === "Неверный тип данных", "Тест провален, т.к. введён неверный тип данных");
+    taskManager.addTask("Zmil'", "high"); //5.1
+    console.assert(taskManager.completeTask("w") === "Неверный тип данных", "Тест провален, т.к. введён неверный тип данных");
+    console.assert(taskManager.completeTask(123) === "Задачи с таким ID не существует", "Тест провален, т.к. введён неверный ID");
     taskManager.completeTask(1);  //5.2
+    console.assert(taskManager.deleteTask("w") === "Неверный тип данных", "Тест провален, т.к. введён неверный тип данных");
+    console.assert(taskManager.deleteTask(123) === "Задачи с таким ID не существует", "Тест провален, т.к. введён неверный ID");
     taskManager.deleteTask(3); //5.3
     console.log(" ");
-    Object.entries(taskManager.tasks).forEach(([key, value]) => {
-    console.log(value); //конечный
-    });
+    taskManager.showAllTasks(); //конечный
     console.log(" ");
     console.log("5.4: ");
+    console.assert(taskManager.completeTask("w") === "Неверный тип данных", "Тест провален, т.к. введён неверный тип данных");
     console.log(taskManager.getTasksByStatus(true)); //5.4
     console.log(" ");
     console.log("5.5: ");
