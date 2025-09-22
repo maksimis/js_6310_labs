@@ -238,7 +238,7 @@ const book = {
     toggleAvailability() {
         this.access = !this.access;
         return this.access;
-    },
+    }
 };
 
 const student = {
