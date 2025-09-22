@@ -430,6 +430,7 @@ function runTests() {
     console.assert(getReviewerNumber(5, 1) === 6, "getReviewerNumber: базовый кейс провален");
     console.assert(getReviewerNumber(22, 5) === (22 + 5) % 23, "getReviewerNumber: проверка модуля провалена");
     console.assert(getReviewerNumber(-1, 1) === null, "getReviewerNumber: должна вернуть null на отрицательных входах");
+    console.assert(getReviewerNumber(1, -1) === null, "getReviewerNumber: должна вернуть null на отрицательных входах");
 
     // --- Задание 2.2: getVariant (границы и корректность мод-арифметики)
     console.assert(getVariant(1, 5) === 1, "getVariant: 1 из 5 должно быть 1");
@@ -453,6 +454,8 @@ function runTests() {
     console.assert(calculateArea("circle", -1) === null, "circle: отрицательный радиус -> null");
     console.assert(calculateArea("rectangle", 3) === null, "rectangle: недостаточно параметров -> null");
     console.assert(calculateArea("hexagon", 1) === null, "default ветка: должна вернуть null");
+    console.assert(calculateArea("rectangle", -1, 1) === null, "отриц сторона у прямоугольника");
+    console.assert(calculateArea("rectangle", -1, -1) === null, "отриц стороны у прямоугольника");
 
     // --- Задание 2.5: стрелочные функции
     console.assert(reverseString("абв") === "вба", "reverseString: базовый кейс провален");
