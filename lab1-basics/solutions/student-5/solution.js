@@ -12,6 +12,8 @@ function simpleTask() {
         age: 73
     };
 
+    
+
     // 1.2 Выведите типы всех переменных
     console.log("type num:", typeof num)
     console.log("type str:", typeof str)
@@ -28,6 +30,9 @@ function getReviewerNumber(number, lab) {
     if (typeof number !== "number" || typeof lab !== "number"){
         return "неправильный тип данных"
     } 
+    if (number >= 24){
+        return "неправильное количество людей"
+    }
     if (number + lab === 23){
         let a = 23
         return a
@@ -35,9 +40,11 @@ function getReviewerNumber(number, lab) {
         let a = (number + lab) % 23
         return a
     }
+    
 }
 //console.log("номер твоего ревьюера:", getReviewerNumber(21,2))
-
+//console.log("номер твоего ревьюера:", getReviewerNumber(24,2))
+//console.log("номерooooooooœ твоего ревьюера:", getReviewerNumber(23,1))
 
 
 
@@ -138,6 +145,7 @@ function calculateArea(figure, ...params) {
                 
             }
 
+
         case "triangle":
             if (params.length === 3){
                 const [a, b, c] = params
@@ -159,7 +167,8 @@ function calculateArea(figure, ...params) {
     }
 
 }
-//console.log("площадь:", calculateArea("triangle", 1, 2, 3))
+//console.log("площадЗЗЗЗЗЗЗЗЗЗЗь:", calculateArea("circle", 2))
+
 
 // 2.5 Стрелочные функции
 const reverseString = (str) => {
@@ -272,7 +281,12 @@ function processArrays() {
 
     // 3. Используйте filter для получения активных пользователей
     /*const activeUsers =  ваш код */
-    const activeUsers = users.filter(user => user.isActive)
+    const t = user => user.isActive;
+    const t2 = user => {
+        user.isActive;
+    }
+
+    const activeUsers = users.filter(t)
     console.log(activeUsers)
 
     // 4. Используйте find для поиска пользователя с именем "Виктория"
@@ -463,18 +477,23 @@ function runTests() {
     console.log("=== ТЕСТИРОВАНИЕ ===");
     
     // Тест 1: getReviewerNumber
-    console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
+    
 
     //тест 2.1 
-    console.assert(getReviewerNumber(5,1) === 6, "тест исчисления номера ревьюера провален")
-    console.assert(getReviewerNumber(21,2) === 23, "тест исчисления номера ревьюера провален")
+    console.assert(getReviewerNumber(5,1) === 6, "тест исчисления номера ревьюера провален1")
+    console.assert(getReviewerNumber(21,2) === 23, "тест исчисления номера ревьюера провален2")
     console.assert(getReviewerNumber(21,"i") === "неправильный тип данных", "тест исчисления номера ревьюера провален, неправильный тип данных")
+    console.assert(getReviewerNumber("i",2) === "неправильный тип данных", "тест исчисления номера ревьюера провален, неправильный тип данных")
+    console.assert(getReviewerNumber(25, 2) === "неправильное количество людей", "теест проверки номера ревьюера провален, неправильно количество людей")
+    console.assert(getReviewerNumber(23, 1) === 1, "тест исчисления номера ревьюера провален3")
+
 
     //тест 2.2
     console.assert(getVariant(23,23) === 23, "тест исчисления номера варианта провален, числа одинаковые" )
     console.assert(getVariant(25,23) === 2, "тест исчисления номера варианта провален, номер больше варианта" )
     console.assert(getVariant(23,25) === 23, "тест исчисления номера варианта провален, номер меньше варианта" )
     console.assert(getVariant(23,"p") === "неправильный тип данных", "тест исчисления номера варианта провален, неверный тип данных" )
+    console.assert(getVariant("p", 23) === "неправильный тип данных", "тест исчисления номера варианта провален, неверный тип данных" )
 
     // Тест 2: calculate
     console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора провален");
@@ -504,6 +523,9 @@ function runTests() {
     console.assert(calculateArea("triangle", 1, 0, 1) === " сторона треугольника не может быть меньше 1", "тест площади фигур провален, сторона треугольника не может быть меньше 0")
     console.assert(calculateArea("triangle", 1, 1, 0) === " сторона треугольника не может быть меньше 1", "тест площади фигур провален, сторона треугольника не может быть меньше 0")
     console.assert(calculateArea("triangle", 0, 1) === "у трегольника должно быть 3 параметра ", "тест площади фигур провален, у трегольника должно быть 3 параметра ")
+    console.assert(calculateArea("circle", 2) === "12.57" , "тест вычисления площади круга провален")
+    console.assert(calculateArea("rectangle", 4, 5) === 20 , "тест вычисления площади ПРЯМОУГОЛЬНИКА провален")
+    console.assert(calculateArea("triangle", 3, 4, 5) === 6, "тест вычисления площади ТРЕУГОЛЬНИКА провален")
 
     //тест 2.5
     console.assert(reverseString("asdf") === "fdsa", "тест в стрелочной функции провален, неверная перевернутая строка")
@@ -542,7 +564,7 @@ function runTests() {
     console.assert(validateEmail("a+@b.cd") === true , "Тест валидации email адреса провален, спецсимвол")
     console.assert(validateEmail("@b.cd") === false , "Тест валидации email адреса провален, до доменной части нет символов")
     console.assert(validateEmail("a ь@b.cd") === false , "Тест валидации email адреса провален, пробел ")
-    console.assert(validateEmail("a@b..cd") === true , "Тест валидации email адреса провален, две точки подряд")
+    console.assert(validateEmail("a@b..cd") === false , "Тест валидации email адреса провален, две точки подряд")
 
     console.log("Все тесты пройдены! ✅");
 }
