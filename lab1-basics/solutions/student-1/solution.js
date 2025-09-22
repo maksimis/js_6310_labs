@@ -14,6 +14,8 @@ function simpleTask() {
 function getReviewerNumber(number, lab) {
     // 2.1 Номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
     return ((number + lab - 1) % 23) + 1;
+    //проверка на тип данных введеных аргументов
+    //пограничные значения 23 1
 }
 
 function getVariant(number, variants) {
@@ -36,6 +38,9 @@ function calculate(a, b, operation) {
 function calculateArea(figure, ...params) {
     // 2.4 Площадь фигур 'circle', 'rectangle', 'triangle' (switch)
     function isValidNumber(num) {
+        if (num === 'number' && num >= 0 && !Number.isNaN(num))
+            return true;
+        else return false;
         return typeof num === 'number' && num >= 0 && !Number.isNaN(num);
     }
     switch (figure) {
@@ -261,9 +266,23 @@ function runTests() {
 
     // Тест 1: getReviewerNumber
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber("qwe", 1) === "Первый аргумент не соответствует требованиям типов данных", "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(5, "qwe") === "Второй аргумент не соответствует требованиям типов данных", "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber("qwe", "qwe") === "Аргументы не соответствуют требованиям типов данных", "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(22, 1) === 23, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(23, 1) === 1, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(24, 1) === "Количество человек в группе не превышает 23", "Тест получения ревьюера провален");
+    
+
 
     //Тест задания 2.2
     console.assert(getVariant(5, 5) === 5, "Тест задания 2.2 провален");
+    console.assert(getVariant(7, 3) === 1, "Тест задания 2.2 провален");
+    console.assert(getVariant(3, 8) === 3, "Тест задания 2.2 провален");
+    console.assert(getVariant("qwe", 5) === "Первый аргумент не соответствует требованиям типов данных", "Тест задания 2.2 провален");
+    console.assert(getVariant(5, "qwe") === "Второй аргумент не соответствует требованиям типов данных", "Тест задания 2.2 провален");
+    console.assert(getVariant("qwe", "qwe") === "Аргументы не соответствуют требованиям типов данных", "Тест задания 2.2 провален");
+
 
 
     // Тест 2: calculate
