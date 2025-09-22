@@ -361,11 +361,11 @@ function runTests() {
     console.assert(getReviewerNumber(22, 1) === 23, 'Тест получения ревьюера (граничный случай) провален');
 
     // Тест 2: getVariant
-    console.assert(getReviewerNumber('9', '1') === 'Неправильный ввод данных', 'Тест получения ревьюера провален(не число)');
-    console.assert(getReviewerNumber(4, NaN) === 'Неправильный ввод данных', 'Тест получения ревьюера провален(не число)');
-    console.assert(getReviewerNumber(undefined, 10) === 'Неправильный ввод данных', 'Тест получения ревьюера провален(не число)');
-    console.assert(getReviewerNumber([1, 2], 4) === 'Неправильный ввод данных', 'Тест получения ревьюера провален(не число)');
-    console.assert(getReviewerNumber(4, { k: 'ad' }) === 'Неправильный ввод данных', 'Тест получения ревьюера провален(не число)');
+    console.assert(getVariant('9', '1') === 'Неправильный ввод данных', 'Тест получения ревьюера провален(не число)');
+    console.assert(getVariant(4, NaN) === 'Неправильный ввод данных', 'Тест получения ревьюера провален(не число)');
+    console.assert(getVariant(undefined, 10) === 'Неправильный ввод данных', 'Тест получения ревьюера провален(не число)');
+    console.assert(getVariant([1, 2], 4) === 'Неправильный ввод данных', 'Тест получения ревьюера провален(не число)');
+    console.assert(getVariant(4, { k: 'ad' }) === 'Неправильный ввод данных', 'Тест получения ревьюера провален(не число)');
     console.assert(getVariant(9, 4) === 1, 'Тест getVariant провален');
     console.assert(getVariant(8, 4) === 4, 'Тест getVariant (граничный случай) провален');
 
