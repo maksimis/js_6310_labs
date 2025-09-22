@@ -358,11 +358,19 @@ function runTests() {
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
     console.assert(getReviewerNumber(23, 1) === 1, "Тест получения ревьювера провален");
     console.assert(getReviewerNumber(1, "2") === "Аргументы должны быть числами", "Тест получения ревьювера провален")
+    console.assert(getReviewerNumber("2", "2") === "Аргументы должны быть числами", "Тест получения ревьювера провален")
+    console.assert(getReviewerNumber("2", 2) === "Аргументы должны быть числами", "Тест получения ревьювера провален")
+    console.assert(getReviewerNumber("1") === "Аргументы должны быть числами", "Тест получения ревьювера провален")
+    console.assert(getReviewerNumber(1) === "Аргументы должны быть числами", "Тест получения ревьювера провален")
     
     // Тест 2: getVariant
     console.assert(getVariant(22, 4) === 2, "Тест getVariant провален")
     console.assert(getVariant(21, 21) === 21, "Тест getVariant провален")
     console.assert(getVariant(1, "3") === "Аргументы должны быть числами", "Тест getVariant провален")
+    console.assert(getVariant("1", "3") === "Аргументы должны быть числами", "Тест getVariant провален")
+    console.assert(getVariant("1", 3) === "Аргументы должны быть числами", "Тест getVariant провален")
+    console.assert(getVariant(1) === "Аргументы должны быть числами", "Тест getVariant провален")
+    console.assert(getVariant("1") === "Аргументы должны быть числами", "Тест getVariant провален")
 
     // Тест 3: calculate
     console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора провален");
