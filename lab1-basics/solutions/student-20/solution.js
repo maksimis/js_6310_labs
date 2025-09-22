@@ -1,3 +1,20 @@
+// мои вспомогательные функции для заданий
+// проверка на то, что передано положительное число
+function isPositiveNumber(param) {
+    return typeof param === "number" && param > 0;
+}
+
+// проверка на то, что передано число
+function isNumber(param) {
+    return typeof param === "number";
+}
+
+// проверка строка ли передана
+function isString(param) {
+    return typeof param === "string";
+}
+
+
 // ===== ЗАДАНИЕ 1: Базовые операции =====
 function simpleTask() {
     // 1.1 Объявите переменные разных типов (не менее 5)
@@ -25,23 +42,23 @@ function simpleTask() {
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
-    if (typeof number !== 'number' || typeof lab !== 'number') {
-        return "Ошибка ввода: входные параметры должны быть числами!";
+    if (!isPositiveNumber(number) || !isPositiveNumber(lab) || number > 23) {
+        return "Ошибка ввода: входные параметры должны быть положительными числами строго до 23!";
     }
     return (number + lab - 1) % 23 + 1;
 }
 
 function getVariant(number, variants) {
     // 2.2 Функция определяющая номер варианта, исходя из количества вариантов
-    if (typeof number !== 'number' || typeof variants != 'number') {
-        return "Ошибка ввода: входные параметры должны быть числами!";
+    if (!isPositiveNumber(number) || !isPositiveNumber(variants)) {
+        return "Ошибка ввода: входные параметры должны быть положительными числами!";
     }
-    return number % variants || variants;
+    return (number - 1) % variants + 1;
 }
 
 function calculate(a, b, operation) {
     // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
-    if (typeof a !== 'number' || typeof b !== 'number') {
+    if (!isNumber(a) || !isNumber(b)) {
         return 'Ошибка ввода! Входные параметры должны быть числами!';
     }
   
@@ -62,11 +79,7 @@ function calculate(a, b, operation) {
 function calculateArea(figure, ...params) {
     // 2.4 Напишите функцию для определения площади фигур 'circle', 'rectangle', 'triangle'
     // Используйте switch.
-    // вспомогательная функция
-    function isValid(param) {
-        return typeof param === "number" && param > 0 && !isNaN(param);
-    }
-    if (!params.every(isValid)) return "Невалидные параметры.";
+    if (!params.every(isPositiveNumber)) return "Невалидные параметры.";
 
     switch (figure) {
         case 'circle':
@@ -92,7 +105,7 @@ function calculateArea(figure, ...params) {
 // 2.5 Стрелочные функции
 const reverseString = (str) => {
     // Функция возвращает перевернутую строку
-    if (typeof str !== 'string') {
+    if (!isString(str)) {
         return "Ошибка: входной параметр должен быть строкой.";
     }
     return str.split('').reverse().join('')
@@ -100,7 +113,7 @@ const reverseString = (str) => {
 
 const getRandomNumber = (min, max) => {
     // Функция возвращает случайное число между min и max
-    if (typeof min !== 'number' || typeof max !== 'number' || min > max) {
+    if (!isNumber(min) || !isNumber(max) || min > max) {
         return "Ошибка: некорректные параметры. Требуется два числа, где min <= max.";
     }
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -134,23 +147,30 @@ const student = {
     age: 20,
     course: 2,
     grades: {
-        math: 90,
-        programming: 95,
-        history: 85
+        // math: 90,
+        // programming: 95,
+        // history: 85
     },
     
     // Метод для расчета среднего балла
     getAverageGrade() {
         // Ваш код здесь
-        let amount = Object.keys(this.grades).length;
+        let amount = Object.values(this.grades).length;
         let sum = Object.values(this.grades).reduce((accumulator, value) => accumulator + value, 0);
+        if (amount === 0) {
+            return "Объект grades пустой!"
+        }
         return sum / amount;
     },
     
     // Метод для добавления новой оценки
     addGrade(subject, grade) {
         // Ваш код здесь
+        if (!isString(subject) || !isNumber(grade) || !(0 <= grade && grade <= 100)) {
+            return "Невалидные параметры!"
+        }
         this.grades[subject] = grade;
+        return `Новая оценка ${grade} по предмету ${subject} успешно добавлена!`
     }
 };
 
@@ -218,38 +238,44 @@ function processArrays() {
 
 // ===== ЗАДАНИЕ 5: Менеджер задач =====
 const taskManager = {
-    nextID: 4,
     tasks: [
-        { id: 1, title: "Изучить JavaScript", completed: false, priority: "high" },
-        { id: 2, title: "Сделать лабораторную работу", completed: true, priority: "high" },
-        { id: 3, title: "Прочитать книгу", completed: false, priority: "medium" }
+        // { id: 1, title: "Изучить JavaScript", completed: false, priority: "high" },
+        // { id: 2, title: "Сделать лабораторную работу", completed: true, priority: "high" },
+        // { id: 3, title: "Прочитать книгу", completed: false, priority: "medium" }
     ],
     
     addTask(title, priority = "medium") {
         // 5.1 Добавление задачи
+        availableStatuses = ['high', 'medium', 'low'];
+        if (!isString(title) || !(availableStatuses.includes(priority))) {
+            return "Невалидные параметры! Предполагаемый формат ввода: заголовок и приоритет - строки, приоритет - 'high', 'medium' или 'low'";
+        }
+
         const newTask = {
-            id: this.nextID++,
+            id: this.tasks.length > 0 ? Math.max(...this.tasks.map(task => task.id)) + 1 : 1,
             title: title,
             completed: false,
             priority: priority
         };
         this.tasks.push(newTask);
-        return newTask;
+        return "Новая задача успешно добавлена!";
     },
     
     completeTask(taskId) {
         // 5.2 Отметка выполнения
+        if (!isPositiveNumber(taskId)) return "Невалидный параметр taskID, надо положительное число!";
         const task = this.tasks.find(task => task.id === taskId);
         if (task) {
             task.completed = true;
-            return true;
+            return "Отметка выполнения выставлена!";
         }      
-        return false;
+        return `Задание с ID = ${taskId} не найдено...`;
     },
 
     // Удаление задачи
     deleteTask(taskId) {
         // 5.3 Ваш код здесь
+        if (!isPositiveNumber(taskId)) return "Невалидный параметр taskID, надо положительное число!";
         const initialLength = this.tasks.length;
         this.tasks = this.tasks.filter(task => task.id !== taskId);    
         return this.tasks.length < initialLength;     
@@ -258,7 +284,8 @@ const taskManager = {
     // Получение списка задач по статусу
     getTasksByStatus(completed) {
         // 5.4 Ваш код здесь
-        return this.tasks.filter(task => task.completed == completed);
+        if (typeof completed !== 'boolean') return "Невалидный параметр! Может быть только true или false.";
+        return this.tasks.filter(task => task.completed === completed);
     },
     
     getStats() {
@@ -271,7 +298,7 @@ const taskManager = {
         const total = this.tasks.length;
         const completed = this.tasks.filter(task => task.completed == true).length;
         const pending = this.tasks.filter(task => task.completed == false).length;
-        const completionRate = total === 0 ? '100%': `${(completed / total * 100).toFixed(1)}%`;
+        const completionRate = total === 0 ? '100%': `${(completed / total * 100).toFixed(2)}%`;
        
         const stat = {
             total: total,
@@ -279,7 +306,7 @@ const taskManager = {
             pending: pending,
             completionRate: completionRate
         }
-       return stat;
+        return stat;
     }
 };
 
@@ -300,46 +327,6 @@ Learn Regex - https://github.com/ziishaned/learn-regex - учебник по reg
 Вычисление своего варианта:
 Номер варианта = Ваш номер % Общее количество вариантов
  */
-
-/**
- * Вариант 1: Валидация email адреса
- * Правила:
- * - Латиница, цифры, спецсимволы: ._%+-
- * - Обязательный символ @
- * - Доменная часть: латиница, цифры, точка
- * - Минимальная длина 5 символов
- */
-function validateEmail(email) {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-}
-
-/**
- * Вариант 2: Валидация пароля
- * Правила:
- * - Минимум 8 символов
- * - Хотя бы одна заглавная буква
- * - Хотя бы одна строчная буква  
- * - Хотя бы одна цифра
- * - Хотя бы один специальный символ: !@#$%^&*()
- */
-function validatePassword(password) {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()])[A-Za-z\d!@#$%^&*()]{8,}$/;
-    return passwordRegex.test(password);
-}
-
-/**
- * Вариант 3: Валидация номера телефона (российский формат)
- * Поддерживает форматы:
- * - +7 (999) 123-45-67
- * - 8 (999) 123-45-67  
- * - 89991234567
- * - +7(999)123-45-67
- */
-function validatePhone(phone) {
-    const phoneRegex = /^(\+7|8)[\s(-]?\d{3}[\s)-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}$/;
-    return phoneRegex.test(phone);
-}
 
 /**
  * Вариант 4: Валидация даты в формате DD.MM.YYYY
@@ -363,48 +350,61 @@ function validateDate(date) {
 
 // ===== ТЕСТИРОВАНИЕ =====
 function runTests() {
-    console.log("=== ТЕСТИРОВАНИЕ ===");
+    console.log("=== ТЕСТИРОВАНИЕ ===\n");
 
-    // Добавьте остальные тесты...
+    // 1 задание
+    console.log("=== начало 1 задания ===");
+    simpleTask(); // никакого ввода нет, всё круто
+    console.log("=== конец 1 задания ===\n");
 
-    console.log("=== ЗАДАНИЕ 1 ===");
-    simpleTask();
 
-    console.log("=== ЗАДАНИЕ 2 ===");
+    // 2 задание
+    console.log("=== начало 2 задания ===");
     // 2.1 getReviewerNumber
-    console.assert(getReviewerNumber(22, 1) === 23, "Тест getReviewerNumber провален.");
-    console.assert(getReviewerNumber(20, 8) === 5, "Тест getReviewerNumber провален.");
-    console.assert(getReviewerNumber('a', 1) === "Ошибка ввода: входные параметры должны быть числами!", "Тест getReviewerNumber 3 провален");
-    console.assert(getReviewerNumber(1, 'a') === "Ошибка ввода: входные параметры должны быть числами!", "Тест getReviewerNumber 3 провален");
+    console.assert(getReviewerNumber(1, 2) === 3, "Тест getReviewerNumber (стандартная ситуация): провален.");
+    console.assert(getReviewerNumber(22, 1) === 23, "Тест getReviewerNumber (граничные значения): провален.");
+    console.assert(getReviewerNumber(20, 4) === 1, "Тест getReviewerNumber (перескок через границы): провален.");
+    console.assert(getReviewerNumber(30, 8) === "Ошибка ввода: входные параметры должны быть положительными числами строго до 23!", "Тест getReviewerNumber (введён номер, больший чем студентов в группе): провален.");
+    console.assert(getReviewerNumber('asker', 8) === "Ошибка ввода: входные параметры должны быть положительными числами строго до 23!", "Тест getReviewerNumber (первый параметр - не число): провален.");
+    console.assert(getReviewerNumber(4, 'asker') === "Ошибка ввода: входные параметры должны быть положительными числами строго до 23!", "Тест getReviewerNumber (второй параметр - не число): провален.");
+    console.assert(getReviewerNumber(-4, 5) === "Ошибка ввода: входные параметры должны быть положительными числами строго до 23!", "Тест getReviewerNumber (первый параматр - отрицательное число): провален.");
+    console.assert(getReviewerNumber(4, -5) === "Ошибка ввода: входные параметры должны быть положительными числами строго до 23!", "Тест getReviewerNumber (второй параматр - отрицательное число): провален.");
 
     // 2.2 getVariant
-    console.assert(getVariant(20, 4) === 4, "Тест getVariant провален");
-    console.assert(getVariant(1, 4) === 1, "Тест getVariant провален");
-    console.assert(getVariant(11, 10) === 1, "Тест getVariant провален.");
-    console.assert(getVariant(10, 10) === 10, "Тест getVariant провален.");
-    console.assert(getVariant('a', 10) === "Ошибка ввода: входные параметры должны быть числами!", "Тест getVariant провален.");
-    console.assert(getVariant(10, 'a') === "Ошибка ввода: входные параметры должны быть числами!", "Тест getVariant провален.");
-
+    console.assert(getVariant(1, 2) === 1, "Тест getVariant (стандартная ситуация): провален.");
+    console.assert(getVariant(10, 10) === 10, "Тест getVariant (граничные значения): провален.");
+    console.assert(getVariant(20, 4) === 4, "Тест getVariant (перескок через границы): провален.");
+    console.assert(getVariant('asker', 8) === "Ошибка ввода: входные параметры должны быть положительными числами!", "Тест getVariant (первый параметр - не число): провален.");
+    console.assert(getVariant(4, 'asker') === "Ошибка ввода: входные параметры должны быть положительными числами!", "Тест getVariant (второй параметр - не число): провален.");
+    console.assert(getVariant(-4, 8) === "Ошибка ввода: входные параметры должны быть положительными числами!", "Тест getVariant (первый параметр - отрицательное число): провален.");
+    console.assert(getVariant(4, -4) === "Ошибка ввода: входные параметры должны быть положительными числами!", "Тест getVariant (второй параметр - отрицательное число): провален.");
 
     // 2.3 calculate
-    console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора (сложение) провален");
-    console.assert(calculate(10, 5, '-') === 5, "Тест калькулятора (вычитание) провален");
-    console.assert(calculate(10, 5, '*') === 50, "Тест калькулятора (умножение) провален");
-    console.assert(calculate(10, 5, '/') === 2, "Тест калькулятора (деление) провален");
-    console.assert(calculate(10, 0, '/') === 'Ошибка: деление на ноль!', "Тест калькулятора (деление на ноль) провален");
-    console.assert(calculate(10, 5, '%') === 'Ошибка ввода! Допустимые операторы: +, -, *, /', "Тест калькулятора (неверный оператор) провален");
-    console.assert(calculate('10', 5, '+') === 'Ошибка ввода! Входные параметры должны быть числами!', "Тест калькулятора (нечисловой ввод) провален");
-    console.assert(calculate(5, 'a', '+') === 'Ошибка ввода! Входные параметры должны быть числами!', "Тест калькулятора (нечисловой ввод) провален");
+    console.assert(calculate(50, 2, '+') === 52, "Тест calculate (сложение): провален");
+    console.assert(calculate(50, -2, '-') === 52, "Тест calculate (вычитание): провален");
+    console.assert(calculate(2, 26, '*') === 52, "Тест calculate (умножение): провален");
+    console.assert(calculate(104, 2, '/') === 52, "Тест calculate (деление): провален");
+    console.assert(calculate(52, 0, '/') === 'Ошибка: деление на ноль!', "Тест calculate (деление на ноль): провален");
+    console.assert(calculate(52, 52, '%') === 'Ошибка ввода! Допустимые операторы: +, -, *, /', "Тест calculate (неверный оператор): провален");
+    console.assert(calculate('asker', 5, '+') === 'Ошибка ввода! Входные параметры должны быть числами!', "Тест calculate (первый параметр не число): провален");
+    console.assert(calculate(5, 'asker', '+') === 'Ошибка ввода! Входные параметры должны быть числами!', "Тест calculate (второй параметр не число): провален");
 
     // 2.4 calculateArea
+    // круг
     console.assert(Math.abs(calculateArea('circle', 6) - 113.09733) < 0.001, "Тест площади круга провален");
-    console.assert(calculateArea('circle', 6, 2) === "Параметр должен быть один (радиус).", "Тест площади круга (неверное число параметров) провален");
-    console.assert(calculateArea('circle', -5) === "Невалидные параметры.", "Тест отрицательного радиуса провален");
-    console.assert(calculateArea('circle', 0) === "Невалидные параметры.", "Тест нулевого радуиса");
+    console.assert(calculateArea('circle', 0) === "Невалидные параметры.", "Тест площади круга (введено неположительное число) провален"); // для прямоугольника и треугольника это не надо
+    console.assert(calculateArea('circle', 'asker') === "Невалидные параметры.", "Тест площади круга (введено не число) провален"); // для прямоугольника и треугольника это не надо
+    console.assert(calculateArea('circle', 52, 52) === "Параметр должен быть один (радиус).", "Тест площади круга (введён не один параметр) провален");
+    // прямоугольник
     console.assert(calculateArea('rectangle', 2, 26) === 52, "Тест площади прямоугольника провален");
-    console.assert(calculateArea('rectangle', 2, 0) === "Невалидные параметры.", "Тест площади прямоугольника (нулевой параметр) провален");
+    console.assert(calculateArea('rectangle', 52) === "Параметров должно быть два (ширина и высота).", "Тест площади прямоугольника провален");
+    console.assert(calculateArea('rectangle', 52, 52, 52) === "Параметров должно быть два (ширина и высота).", "Тест площади прямоугольника провален");
+    // треугольник
     console.assert(calculateArea('triangle', 6, 8, 10) === 24, "Тест площади треугольника провален");
+    console.assert(calculateArea('triangle', 52) === "Параметров должно быть три (стороны треугольника).", "Тест площади треугольника провален (введено меньше трёх параметров).");
+    console.assert(calculateArea('triangle', 52, 52, 52, 52) === "Параметров должно быть три (стороны треугольника).", "Тест площади треугольника провален (введено больше трёх параметров).");
     console.assert(calculateArea('triangle', 1, 2, 4) === "Неравенство треугольника не выполняется.", "Тест неравенства треугольника провален");
+    // неизвестная калькулятору фигура
     console.assert(calculateArea('square', 4) === "Неизвестная фигура.", "Тест неизвестной фигуры провален");
 
     // 2.5 стрелочные функции
@@ -413,68 +413,104 @@ function runTests() {
     console.assert(reverseString("") === '', "Тест reverseString (пустая строка) провален");
     console.assert(reverseString(12345) === "Ошибка: входной параметр должен быть строкой.", "Тест reverseString (не строка) провален");
     // getRandomNumber
-    const randNum = getRandomNumber(1, 10);
-    console.assert(randNum >= 1 && randNum <= 10, "Ошибка: некорректные параметры. Требуется два числа, где min <= max.");
-    console.assert(getRandomNumber(5, 5) === 5, "Тест min == max");
+    const num1 = getRandomNumber(1, 10);
+    const num2 = getRandomNumber(-10, 10);
+    const num3 = getRandomNumber(-15, -10);
+    console.assert(1 <= num1 && num1 <= 10, "Тест getRandomNumber (стандарт): провален");
+    console.assert(-10 <= num2 && num2 <= 10, "Тест getRandomNumber (одно из чисел отрицательное): провален");
+    console.assert(-15 <= num3 && num3 <= -10, "Тест getRandomNumber (оба числа отрицательные): провален");
+    console.assert(getRandomNumber(52, 52) === 52, "Тест getRandomNumber (min == max): провален");
+    console.assert(getRandomNumber('asker', 52) === "Ошибка: некорректные параметры. Требуется два числа, где min <= max.", "Тест getRandomNumber (первый параметр - строка): провален");
+    console.assert(getRandomNumber(52, 'asker') === "Ошибка: некорректные параметры. Требуется два числа, где min <= max.", "Тест getRandomNumber (второй параметр - строка): провален");
     console.assert(getRandomNumber(10, 1) === "Ошибка: некорректные параметры. Требуется два числа, где min <= max.", "Тест getRandomNumber (min > max) провален");
-    console.assert(getRandomNumber('a', 1) === "Ошибка: некорректные параметры. Требуется два числа, где min <= max.", "Тест getRandomNumber (min > max) провален");
-    console.assert(getRandomNumber(10, 'a') === "Ошибка: некорректные параметры. Требуется два числа, где min <= max.", "Тест getRandomNumber (min > max) провален");
+    console.log("=== конец 2 задания ===\n");
+    
 
-    console.log("=== ЗАДАНИЕ 3 ===");   
+    // 3 задание  
+    console.log("=== начало 2 задания ===");
     // 3.1 book object
-    console.assert(book.getInfo() === 'Унесённые ветром, Маргарет Митчелл, 1936г., 1468стр.', "Тест getInfo провален");
+    // getInfo
+    console.assert(book.getInfo() === `${book.title}, ${book.author}, ${book.year}г., ${book.sheets}стр.`, "Тест метода getInfo объекта book: провален");
+    // toggleAvailability
     const currentAvailable = book.isAvailable;
     console.assert(book.toggleAvailability() !== currentAvailable, "Тест toggleAvailability провален");
     book.toggleAvailability(); // по приколу вернём начальное, могли не менять
 
     // 3.2 student object
-    console.assert(student.getAverageGrade() === 90, "Тест getAverageGrade провален");
-    student.addGrade('physics', 100);
-    console.assert(student.grades.physics === 100, "Тест addGrade провален");
-    console.assert(student.getAverageGrade() === 92.5, "Тест среднего балла после добавления провален");
+    // getAverageGrade
+    console.assert(student.getAverageGrade() === "Объект grades пустой!", "Тест getAverageGrade (оценок нет): провален");
+    // addGrade
+    console.assert(student.addGrade('math', 90) === `Новая оценка 90 по предмету math успешно добавлена!`, "Тест getAverageGrade (добавили корректную инфу): провален"); // здесь заполняем изначальный список
+    console.assert(student.addGrade('programming', 95) === `Новая оценка 95 по предмету programming успешно добавлена!`, "Тест getAverageGrade (добавили корректную инфу): провален"); // здесь тоже заполняем изначальный список
+    console.assert(student.addGrade('history', 85) === `Новая оценка 85 по предмету history успешно добавлена!`, "Тест getAverageGrade (добавили корректную инфу): провален"); // здесь на удивление тоже 
+    // теперь проверки на некорректность
+    console.assert(student.addGrade(52, 52) === "Невалидные параметры!", "Тест getAverageGrade (subject - не строка): провален");
+    console.assert(student.addGrade('asker', 'asker') === "Невалидные параметры!", "Тест getAverageGrade (grade - не число): провален");
+    console.assert(student.addGrade('asker', -10) === "Невалидные параметры!", "Тест getAverageGrade (grade - отрицательный): провален");
+    console.assert(student.addGrade('asker', 101) === "Невалидные параметры!", "Тест getAverageGrade (grade - больше ста): провален");
+    // снова проверяем getAverageGrade
+    console.assert(student.getAverageGrade() === 90, "Тест getAverageGrade (стандрат, идеал): провален");
+    console.log("=== конец 3 задания ===\n");
 
 
-    console.log("=== ЗАДАНИЕ 4 ==="); 
-    // 4. processArrays
-    processArrays()
+    // 4 задание
+    console.log("=== начало 4 задания ===");
+    processArrays();
+    console.log("=== конец 4 задания ===\n");
 
 
-    console.log("=== ЗАДАНИЕ 5 ==="); 
-    // 5.1 addTask
-    const initialTaskCount = taskManager.tasks.length;
-    taskManager.addTask("Поспать", "low");
-    console.assert(taskManager.tasks.length === initialTaskCount + 1, "Тест addTask провален");
-    console.assert(taskManager.tasks[taskManager.tasks.length - 1].title === "Поспать", "Тест addTask (содержимое) провален");
+    // 5 задание
+    console.log("=== начало 5 задания ===");
+    // getStats если нет задач
+    console.log(taskManager.getStats());
+    // addTask (создаём изначальный tasks) 
+    console.assert(taskManager.addTask("Изучить JavaScript", "high") === "Новая задача успешно добавлена!" && taskManager.tasks[0].id === 1, "Тест addTask (нет тасков изначально): провален");
+    console.assert(taskManager.addTask("Сделать лабораторную работу", "high") === "Новая задача успешно добавлена!", "Тест addTask (стандарт): провален");
+    console.assert(taskManager.addTask("Прочитать книгу") === "Новая задача успешно добавлена!", "Тест addTask (дефолт приоритет): провален");
+    // ну и дальше воркаем
+    console.assert(taskManager.addTask(52, "high") === "Невалидные параметры! Предполагаемый формат ввода: заголовок и приоритет - строки, приоритет - 'high', 'medium' или 'low'", "Тест addTask (заголовок - не строка): провален");
+    console.assert(taskManager.addTask('asker', 52) === "Невалидные параметры! Предполагаемый формат ввода: заголовок и приоритет - строки, приоритет - 'high', 'medium' или 'low'", "Тест addTask (приоритет неправильного формата): провален");
+    console.log(taskManager.tasks);
+    // getStats когда все задачи есть, но ни одна не выполнена
+    console.log(taskManager.getStats());
+    console.assert(taskManager.completeTask(2) === "Отметка выполнения выставлена!", "Тест completeTask (стандарт ожидаемый): провален");
+    console.assert(taskManager.completeTask(52) === "Задание с ID = 52 не найдено...", "Тест completeTask (несуществующий айдишник): провален");
+    console.assert(taskManager.completeTask(-52) === "Невалидный параметр taskID, надо положительное число!", "Тест completeTask (отрицательное число): провален");
+    console.assert(taskManager.completeTask('asker') === "Невалидный параметр taskID, надо положительное число!", "Тест completeTask (не число): провален");
+    // getStats когда все задачи есть, только одна выполнена
+    console.log(taskManager.getStats());
+    // deleteTask
+    console.assert(taskManager.deleteTask(3) === true, "Тест deleteTask (корректное): провален");
+    console.assert(taskManager.deleteTask('asker') === "Невалидный параметр taskID, надо положительное число!", "Тест deleteTask (айдишник не число): провален");
+    console.assert(taskManager.deleteTask(-52) === "Невалидный параметр taskID, надо положительное число!", "Тест deleteTask (): провален");
+    console.assert(taskManager.deleteTask(3) === false, "Тест deleteTask (несуществующий айдишник): провален");
+    // getTasksByStatus
+    console.assert(taskManager.getTasksByStatus(true).length === taskManager.getStats().completed, "Тест getTasksByStatus (валидный ввод): провален");
+    console.assert(taskManager.getTasksByStatus('asker') === "Невалидный параметр! Может быть только true или false.", "Тест getTasksByStatus (не валидный ввод): провален");
+    console.log("=== конец 5 задания ===\n");
 
-    // 5.2 completeTask
-    console.assert(taskManager.completeTask(1) === true, "Тест completeTask провален");
-    console.assert(taskManager.completeTask(999) === false, "Тест completeTask (несуществующий id) провален");
 
-    // 5.3 deleteTask
-    console.assert(taskManager.deleteTask(2) === true, "Тест deleteTask провален");
-    console.assert(taskManager.deleteTask(999) === false, "Тест deleteTask (несуществующий id) провален");
-
-    // 5.4 getTasksByStatus
-    const completedTasks = taskManager.getTasksByStatus(true);
-    console.assert(completedTasks.length === 1 && completedTasks[0].id === 1, "Тест getTasksByStatus провален");
-
-    // 5.5 getStats
-    const stats = taskManager.getStats();
-    console.assert(stats.total === 3 && stats.completed === 1 && stats.pending === 2, "Тест getStats провален");
-
-
-    console.log("=== ЗАДАНИЕ 6 ==="); 
-    // 6. validateDate
-    console.assert(validateDate("21.08.2023") === true, "Тест validateDate (корректный) провален");
-    console.assert(validateDate("29.02.2024") === true, "Тест validateDate (високосный год) провален");
-    console.assert(validateDate("32.01.2023") === false, "Тест validateDate (несуществующий день) провален");
-    console.assert(validateDate("31.04.2023") === false, "Тест validateDate (31 апреля) провален");
-    console.assert(validateDate("29.02.2023") === false, "Тест validateDate (невисокосный год) провален");
-    console.assert(validateDate("2023-08-21") === false, "Тест validateDate (неверный формат) провален");
-    console.assert(validateDate("1.1.2000") === false, "Тест validateDate без ведущих нулей провален");
+    // 6 задание 
+    console.log("=== начало 6 задания ===");
+    console.assert(validateDate("01.01.1900") === true, "Тест validateDate (нижняя граница): провален");
+    console.assert(validateDate("31.12.2099") === true, "Тест validateDate (верхняя граница): провален");
+    console.assert(validateDate("07.04.2005") === true, "Тест validateDate (серединное рандомное): провален");
     console.assert(validateDate("") === false, "Тест validateDate с пустой строкой провален");
+    console.assert(validateDate(52) === false, "Тест validateDate с не строкой провален");
+    console.assert(validateDate("29.02.2025") === false, "Тест validateDate (невисокосный год) провален");
+    console.assert(validateDate("29.02.2024") === true, "Тест validateDate (високосный год) провален");
+    console.assert(validateDate("31.04.2023") === false, "Тест validateDate (несуществующая дата) провален");
+    console.assert(validateDate("32.01.2023") === false, "Тест validateDate (несуществующий день) провален");
+    console.assert(validateDate("1.1.2000") === false, "Тест validateDate без ведущих нулей провален");
+    console.assert(validateDate("00.00.2000") === false, "Тест validateDate (куча нулей) провален");
+    console.assert(validateDate("07 04 2005") === false, "Тест validateDate (неверный формат) провален");
+    console.assert(validateDate("07/04/2005") === false, "Тест validateDate (неверный формат) провален");
+    console.assert(validateDate("2005-04-07") === false, "Тест validateDate (неверный формат) провален");
+    console.assert(validateDate("07.19.2005") === false, "Тест validateDate (неверный формат) провален");
+    console.assert(validateDate("31.01.2023") === true, "Тест validateDate (граничное значение месяца) провален");
+    console.log("=== конец 6 задания ===\n");
 
-    
+
     console.log("Все тесты пройдены! ✅");
 }
 
