@@ -27,12 +27,14 @@ function simpleTask() {
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
-    let rev = (number + lab) % 23;
-    return rev;
+    if (typeof(number)  !== "number" ||typeof(lab)  !== "number") return "аргументы должны быть числами"
+    if (number >23 ) return "Число более 23"
+    return ((number + lab) % 23);
 };
 
 function getVariant(number, variants) {
     // 2.2 Функция определяющая номер варианта, исходя из количества вариантов
+    if (typeof(number) !== "number"|| typeof(variants ) !== "number") return "аргументы должны быть числами"
     if (number % variants === 0) {
         return variants;
     } else {
@@ -53,7 +55,7 @@ function calculate(a, b, operation) {
     } else if (operation === "*"){
         return a*b;
     } else if (operation === "/"){
-        if (b=== 0){
+        if (b=== 0 ){
             return "не определено";
         }
         return a/b;
@@ -68,13 +70,13 @@ function calculateArea(figure, ...params) {
     // Используйте switch.
     switch(figure){
         case "circle":
-            if (params.length !== 1 || typeof(params[0]) !== "number") return "некорректные входные данные";
+            if (params.length !== 1 || typeof(params[0]) !== "number" ||  params[0] <= 0 ) return "некорректные входные данные";
             return (Math.PI*params[0]*params[0]);
         case "rectangle":
-            if (params.length !== 2 || typeof(params[0]) !== "number" || typeof(params[1]) !== "number") return "некорректные входные данные";
+            if (params.length !== 2 || typeof(params[0]) !== "number" || typeof(params[1]) !== "number"|| params[0] <= 0 || params[1] <= 0) return "некорректные входные данные";
             return params[0]* params[1];
         case "triangle":
-            if (params.length !== 2 || typeof(params[0]) !== "number" || typeof(params[1]) !== "number") return "некорректные входные данные";
+            if (params.length !== 2 || typeof(params[0]) !== "number" || typeof(params[1]) !== "number" || params[0] <= 0 || params[1] <= 0 ) return "некорректные входные данные";
             return 0.5* params[0]*params[1]
         default:
             return "неизвестная фигура";
@@ -89,11 +91,10 @@ const reverseString = (str) => {
 };
 
 const getRandomNumber = (min, max) => {
-    if (min > max) [min, max] = [max, min];
     return Math.floor(Math.random()*(max-min+1))+ min
     // 2.6 Функция возвращает случайное число между min и max
 };
-
+// +min — сдвиг в нужный интервал
 
 // ===== ЗАДАНИЕ 3: Объекты =====
 const book = {
@@ -163,7 +164,7 @@ function processArrays() {
     ];
     
     // 1. Используйте forEach (сделать что-то с каждым элементом)для вывода всех чисел больше 50 
-    console.log();
+
     console.log("Задание 4.1");
     console.log("Числа больше 50:");
 
@@ -174,11 +175,9 @@ function processArrays() {
     });
 
     // 2. Используйте map для создания массива квадратов чисел
-    const squares = numbers.map(num =>{
-        return num* num;
-    } );
+    const squares = numbers.map(num => num * num);
     console.log("Задание 4.2");
-    console.log("массив квадратов чисел");
+    console.log("массив квадратов чиселя:");
     console.log(squares);
 
     // 3. Используйте filter для получения активных пользователей
@@ -222,9 +221,8 @@ function processArrays() {
     const activeUserNames = users.filter(users => users.isActive).map(users => users.name).sort((a,b)=> a.localeCompare(b));
     console.log(activeUserNames);
 }
- processArrays();
 
-// ===== ЗАДАНИЕ 5: Менеджер задач =====
+// ===== ЗАДАНИЕ 5: Менеджер задач ===== тест не нужен
 
 const taskManager = {
     tasks: [
@@ -244,6 +242,7 @@ const taskManager = {
             priority:priority
         };
         this.tasks.push(Newtask);
+        return Newtask;
     },
 
     
@@ -252,7 +251,9 @@ const taskManager = {
         const dela = this.tasks.find(task =>task.id === taskId);
         if (dela ){
             dela.completed = true;
+            return true;// получилось выполнить 
         };
+        return false;// не получилось выполнить
     },
 
     // 5.3 Удаление задачи
@@ -321,12 +322,23 @@ function runTests() {
     // Тест 1: getReviewerNumber
     console.log("Тест 1: getReviewerNumber ✅");
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(23, 1) === 1, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber("5", 1) ==="аргументы должны быть числами", "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(5, "1") === "аргументы должны быть числами", "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber("5", "1") === "аргументы должны быть числами", "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(100, 1) === "Число более 23", "Тест получения ревьюера провален");
+
+
 
 
     //Тест задания 2.2
-    console.log("Тест 2.2 getVarian ✅");
+    console.log("Тест 2.2 getVariant ✅");
     console.assert(getVariant(22,3) === 1, "Тест задания 2.2 провален");
     console.assert(getVariant(23,3) === 2, "Тест задания 2.2 провален");
+    console.assert(getVariant(1, "3") === "аргументы должны быть числами", "Тест getVariant провален")
+    console.assert(getVariant("1", "3") === "аргументы должны быть числами", "Тест getVariant провален")
+    console.assert(getVariant("1", 3) === "аргументы должны быть числами", "Тест getVariant провален")
+
 
 
     // Тест 2.3: calculate
@@ -334,17 +346,25 @@ function runTests() {
     console.assert(calculate(1, 1, '+') === 2, "Тест калькулятора провален");
     console.assert(calculate(10, 2, '-') === 8, "Тест вычитания провален");
     console.assert(calculate(10, 2, '*') === 20, "Тест умножения провален");
+    console.assert(calculate(-10, -5, '*') === 50, "Тест калькулятора 2.3 провален (умножение отрицательных)");
     console.assert(calculate(10, 2, '/') === 5, "Тест деления провален");
     console.assert(calculate(10, 0, '/') === "не определено", "Тест деления на ноль провален");
+    console.assert(calculate(0, 10, '/') === 0, "Тест деления на ноль провален");
+    console.assert(calculate(1, 5, '/') == 0.2, "Тест калькулятора 2.3 провален (деление с дробным результатом)");
     console.assert(calculate('b', 2, '+') === "Ошибка:введите число", "Тест на проверку аргумента-нечисла провален");
     console.assert(calculate(10, 'а', '+') === "Ошибка:введите число", "Тест проверки типов провален");
+    console.assert(calculate("10", 'а', '+') === "Ошибка:введите число", "Тест проверки типов провален");
     console.assert(calculate(10, 2, '%') === "введите что-то другое", "Тест калькулятора провален");
+    console.assert(calculate(-5, 3, "+") === -2, "Сложение отрицательных чисел");
 
     console.log("Дополнительная проверка 2.3 на переполнение:✅")
-    console.assert(calculate(Number.MAX_VALUE, 1, "+") === Number.MAX_VALUE + 1,"Тест провален:Переполнение при сложении");
-    console.assert(calculate(Number.MAX_VALUE, 1, "-") === Number.MAX_VALUE - 1,"Тест провален: Вычитание из максимального значения");
-    console.assert(calculate(Number.MAX_VALUE, 1, "*") === Number.MAX_VALUE," Тест провален:Умножение на 1");
-    console.assert(calculate(Number.MAX_VALUE, 10, "/") === Number.MAX_VALUE / 10, "Тест провален:Деление на 10");
+    console.assert(calculate(Number.MAX_VALUE, 1, '+') === Number.MAX_VALUE + 1, "Переполнение при сложении");
+    console.assert(calculate(Number.MAX_VALUE, Number.MAX_VALUE, '+') === Infinity, "Переполнение при сложении двух больших чисел");
+    console.assert(calculate(Number.MAX_VALUE, 2, '-') === Number.MAX_VALUE - 2, "Вычитание из максимального значения");
+    console.assert(calculate(Number.MAX_VALUE, 1, '*') === Number.MAX_VALUE, "Умножение на 1");
+    console.assert(calculate(1, Number.MAX_VALUE, '*') === Number.MAX_VALUE, "Умножение на 1 (обратное)");
+    console.assert(calculate(Number.MAX_VALUE, 10, "*") === Infinity, "Переполнение при умножении");
+    console.assert(calculate(Number.MAX_VALUE, 2, '/') === Number.MAX_VALUE / 2, "Деление максимального значения");
     
     // Тест 2.4: calculateArea
     console.log("Тест 2.4 calculateArea ✅");
@@ -355,8 +375,11 @@ function runTests() {
     console.assert(calculateArea("rectangle", "a", 'b') === "некорректные входные данные", "Тест 2.4 провален не числа");
     console.assert(calculateArea("rectangle", 5) === "некорректные входные данные", "Тест calculateArea провален (недостаточно параметров)");
     console.assert(calculateArea("circle", 1, 2, 3) === "некорректные входные данные", "Тест calculateArea провален - слишком много параметров");
-    console.assert(calculateArea("circle") === "некорректные входные данные", "Тест 2.4 провален (нет параметров для круга)")
-
+    console.assert(calculateArea("circle") === "некорректные входные данные", "Тест 2.4 провален (нет параметров для круга)");
+    console.assert(calculateArea("circle", 0) === "некорректные входные данные", "Круг с радиусом 0");
+    console.assert(calculateArea("rectangle", 0, 10) === "некорректные входные данные", "Прямоугольник со стороной 0");
+    console.assert(calculateArea("circle", -2) === "некорректные входные данные", "Круг с отрицательным радиусом");
+    console.assert(calculateArea("triangle", -2, -4) === "некорректные входные данные", "Треугольник с отрицательной высотой и стороной");
     
     //Тест задания 2.5 - reverseString
     console.log("Тест 2.5 reverseString ✅");
@@ -369,33 +392,33 @@ function runTests() {
     console.log("Тест 2.6 getRandomNumber ✅");
     console.assert(getRandomNumber(1, 10) >= 1 && getRandomNumber(1, 10) < 10, "Тест 2.6 провален");
     console.assert(getRandomNumber(12, 100) >= 12  && getRandomNumber(12, 100) < 100, "Тест 2.6 провален");
-    
+    const r = getRandomNumber(10, 100);
+    console.assert(typeof r === "number", "Результат не число");
+
+
 
     console.log("Тест 3 ✅");
-    
     console.log("Проверка задания №3.1 :Создание объект книга с полями для хранения заголовка, автора, "); 
     console.log(book.getInfo());
     console.assert(
     book.getInfo() === "Название: искупление, автор:Канаэ,год:2020,страницы 209","Тест 1 провален: getInfo возвращает неверную информацию");
     console.log("метод toggleAvailability - который меняет значение доступности и возвращает его ");
     console.log(book.toggleAvailability()); 
-    console.log("Обьект книга после функции");
-    console.log(book);
+    console.log(book.toggleAvailability()); 
 
     console.log();
+
     console.log("Проверка задания №3.2"); 
-
     console.assert(student.getAverageGrade() === (90 + 95 + 85) / 3, "Средний балл вычислен неверно");
-
     console.log("Расчета среднего балла:",student.getAverageGrade());
     student.addGrade("qyw",29);
-    console.assert(
-    student.grades.qyw === 29,
-    "Тест 6 провален: новая оценка не добавлена в объект grades"
-);
+    console.assert(student.grades.qyw === 29,"Тест 6 провален: новая оценка не добавлена в объект grades");
     console.log("После добавления новой оценки",student.grades);
+    
+    // Тест задания 4
+    processArrays();
 
-
+    // Тест задания 5
     console.log();
     console.log("Задание №5.1");
     taskManager.addTask("погулять с собакой");
