@@ -27,11 +27,14 @@ simpleTask();
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
     if ((typeof number === "number") && (typeof lab === "number")) {
-        if ((number + lab) % 23 === 0) {
+        if (number <= 23){
+            if ((number + lab) % 23 === 0) {
             return 23
-        } 
-        const reviewer = (number + lab) % 23
-        return reviewer
+            } 
+            const reviewer = (number + lab) % 23
+            return reviewer
+        }
+        return "В нашей группе 23 человека"
     }
     return "Оба аргумента должны быть числами"
 }
@@ -217,7 +220,8 @@ function processArrays() {
     console.log('Квадраты чисел:', squares);
 
     // 3. Используйте filter для получения активных пользователей
-    const activeUsers = users.filter(user => user.isActive);
+    const f = user => user.isActive;
+    const activeUsers = users.filter(f);
     console.log('Активные юзеры:', activeUsers)
     
     // 4. Используйте find для поиска пользователя с именем "Виктория"
@@ -420,6 +424,8 @@ function runTests() {
     console.assert(getReviewerNumber('ff', 1) === "Оба аргумента должны быть числами", "Тест получения ревьюера провален");
     console.assert(getReviewerNumber(4, 'frf') === "Оба аргумента должны быть числами", "Тест получения ревьюера провален");
     console.assert(getReviewerNumber('jjj', 'frf') === "Оба аргумента должны быть числами", "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(23, 1) === 1, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(24, 1)) === "В нашей группе 23 человека", "Тест получения ревьюера провален";
 
     //Тест 2: getVariant
     console.assert(getVariant(2, 2) === 2, "Тест получения варианта провален");
@@ -437,7 +443,10 @@ function runTests() {
     console.assert(calculate(3,9,")") === "Не тот символ операции", "Тест калькулятора провален");
     console.assert(calculate(3e5675,6e7,"*") === "Результат слишком большой", "Тест калькулятора провален");
     console.assert(calculate(3,'df',"/") === "Оба параметра должны быть числами", "Тест калькулятора провален");
+    console.assert(calculate('df',3,"/") === "Оба параметра должны быть числами", "Тест калькулятора провален");
     console.assert(calculate(Infinity,1,"+") === "Результат слишком большой", "Тест калькулятора провален");
+    console.assert(calculate(-6, 3, '+') === -3, "Тест калькулятора провален");
+    console.assert(calculate(3, 0.5, '+') === 3.5, "Тест калькулятора провален");
 
     // Тест 4: calculateArea
     console.assert(calculateArea('circle', 5) === '78.54', "Тест калькулятора площади провален");
@@ -451,9 +460,12 @@ function runTests() {
     console.assert(calculateArea('triangle', 3, 4, 5) === 6, "Тест калькулятора площади провален");
     console.assert(calculateArea('triangle', 0, -3, 5) === "Стороны треугольника должны быть > 0", "Тест калькулятора площади провален");
     console.assert(calculateArea('triangle', 1, 2, 3) === "Cтороны не удовлетворяют неравенству треугольника", "Тест калькулятора площади провален");
-    
+    console.assert(calculateArea('triangle', 3, 5) === "Для треугольника нужно 3 параметра", "Тест калькулятора площади провален");
+
     console.assert(calculateArea('tribangle', 3, 4, 5) === "Неверное название фигуры", "Тест калькулятора площади провален");
-    console.assert(calculateArea('tribangle', 'f', 4, 5) === "Параметры фигуры должны быть числами", "Тест калькулятора площади провален");
+    console.assert(calculateArea('triangle', 'f', 4, 5) === "Параметры фигуры должны быть числами", "Тест калькулятора площади провален");
+    console.assert(calculateArea('triangle', 8, 'f', 5) === "Параметры фигуры должны быть числами", "Тест калькулятора площади провален");
+    console.assert(calculateArea('triangle', 2, 4, 'f') === "Параметры фигуры должны быть числами", "Тест калькулятора площади провален");
     console.assert(calculateArea(6, 6, 4, 5) === "Аргумент для фигуры должен быть типа 'string'", "Тест калькулятора площади провален");
 
     // Тест 4: reverseString
@@ -463,6 +475,7 @@ function runTests() {
     // Тест 5: getRandomNumber
     console.assert(getRandomNumber(3, 5) === 3 || 4 || 5, "Тест на случайное число между min и max провален")
     console.assert(getRandomNumber('i', 5) === "Неверный тип данных", "Тест на случайное число между min и max провален")
+    console.assert(getRandomNumber(5, 'i') === "Неверный тип данных", "Тест на случайное число между min и max провален")
 
     // Тест 6: getinfo, toggleAvailability
     console.assert(book.getinfo(), "Мастер и Маргарита - М.А.Булгаков, 1967, 384", "Тест объекта книга пройден");
