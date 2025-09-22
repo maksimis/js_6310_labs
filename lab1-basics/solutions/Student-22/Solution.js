@@ -16,13 +16,17 @@ function simpleTask() {
 
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
-    return (number + lab) % 23;
+    if (typeof(number) !== "number" || typeof(lab) !==  "number")
+        return "Аргументы должны быть числами"
+    else return (number + lab) % 23;
 
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
 }
 
 function getVariant(number, variants) {
-    return ((number - 1) % variants) + 1;
+    if (typeof(number) !== "number" || typeof(variants) !==  "number")
+        return "Аргументы должны быть числами"
+    else return ((number - 1) % variants) + 1;
 
     // 2.2 Функция определяющая номер варианта, исходя из количества вариантов
 }
@@ -353,10 +357,12 @@ function runTests() {
     // Тест 1: getReviewerNumber
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
     console.assert(getReviewerNumber(23, 1) === 1, "Тест получения ревьювера провален");
+    console.assert(getReviewerNumber(1, "2") === "Аргументы должны быть числами", "Тест получения ревьювера провален")
     
     // Тест 2: getVariant
     console.assert(getVariant(22, 4) === 2, "Тест getVariant провален")
     console.assert(getVariant(21, 21) === 21, "Тест getVariant провален")
+    console.assert(getVariant(1, "3") === "Аргументы должны быть числами", "Тест getVariant провален")
 
     // Тест 3: calculate
     console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора провален");
