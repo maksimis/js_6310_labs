@@ -28,7 +28,7 @@ function getReviewerNumber(number, lab) {
     if (typeof number !== 'number' || typeof lab !== 'number') {
         return "Ошибка ввода: входные параметры должны быть числами!";
     }
-    return (number + lab) % 23;
+    return (number + lab - 1) % 23 + 1;
 }
 
 function getVariant(number, variants) {
@@ -62,20 +62,23 @@ function calculate(a, b, operation) {
 function calculateArea(figure, ...params) {
     // 2.4 Напишите функцию для определения площади фигур 'circle', 'rectangle', 'triangle'
     // Используйте switch.
+    // вспомогательная функция
+    function isValid(param) {
+        return typeof param === "number" && param > 0 && !isNaN(param);
+    }
+    if (!params.every(isValid)) return "Невалидные параметры.";
+
     switch (figure) {
         case 'circle':
             if (params.length !== 1) return "Параметр должен быть один (радиус).";
-            if (!isValid(params[0])) return "Невалидный параметр.";
             return Math.PI * params[0] ** 2;
 
         case 'rectangle':
             if (params.length !== 2) return "Параметров должно быть два (ширина и высота).";
-            if (!params.every(isValid)) return "Невалидные параметры.";
             return params[0] * params[1];
 
         case 'triangle':
             if (params.length !== 3) return "Параметров должно быть три (стороны треугольника).";
-            if (!params.every(isValid)) return "Невалидные параметры.";
             const [a, b, c] = params;
             if ((a >= b + c) || (b >= a + c) || (c >= a + b)) return "Неравенство треугольника не выполняется.";
             const p = (a + b + c) / 2;
@@ -83,11 +86,6 @@ function calculateArea(figure, ...params) {
 
         default:
             return 'Неизвестная фигура.';
-    }
-    
-    // вспомогательная функция
-    function isValid(param) {
-        return typeof param === "number" && param > 0 && !isNaN(param);
     }
 }
 
@@ -177,7 +175,7 @@ function processArrays() {
     });
 
     // 2. Используйте map для создания массива квадратов чисел
-    /*const squares =  ваш код */5
+    /*const squares =  ваш код */
     const squares = numbers.map(number => number ** 2);
     console.log(`Квадраты чисел исходного массива: ${squares}.`);
 
@@ -220,6 +218,7 @@ function processArrays() {
 
 // ===== ЗАДАНИЕ 5: Менеджер задач =====
 const taskManager = {
+    nextID: 4,
     tasks: [
         { id: 1, title: "Изучить JavaScript", completed: false, priority: "high" },
         { id: 2, title: "Сделать лабораторную работу", completed: true, priority: "high" },
@@ -229,7 +228,7 @@ const taskManager = {
     addTask(title, priority = "medium") {
         // 5.1 Добавление задачи
         const newTask = {
-            id: this.tasks.length + 1,
+            id: this.nextID++,
             title: title,
             completed: false,
             priority: priority
@@ -252,7 +251,7 @@ const taskManager = {
     deleteTask(taskId) {
         // 5.3 Ваш код здесь
         const initialLength = this.tasks.length;
-        this.tasks = this.tasks.filter(task => task.id != taskId);    
+        this.tasks = this.tasks.filter(task => task.id !== taskId);    
         return this.tasks.length < initialLength;     
     },
 
@@ -373,15 +372,19 @@ function runTests() {
 
     console.log("=== ЗАДАНИЕ 2 ===");
     // 2.1 getReviewerNumber
-    console.assert(getReviewerNumber(20, 1) === 21, "Тест getReviewerNumber провален.");
+    console.assert(getReviewerNumber(22, 1) === 23, "Тест getReviewerNumber провален.");
     console.assert(getReviewerNumber(20, 8) === 5, "Тест getReviewerNumber провален.");
     console.assert(getReviewerNumber('a', 1) === "Ошибка ввода: входные параметры должны быть числами!", "Тест getReviewerNumber 3 провален");
+    console.assert(getReviewerNumber(1, 'a') === "Ошибка ввода: входные параметры должны быть числами!", "Тест getReviewerNumber 3 провален");
 
     // 2.2 getVariant
     console.assert(getVariant(20, 4) === 4, "Тест getVariant провален");
     console.assert(getVariant(1, 4) === 1, "Тест getVariant провален");
     console.assert(getVariant(11, 10) === 1, "Тест getVariant провален.");
     console.assert(getVariant(10, 10) === 10, "Тест getVariant провален.");
+    console.assert(getVariant('a', 10) === "Ошибка ввода: входные параметры должны быть числами!", "Тест getVariant провален.");
+    console.assert(getVariant(10, 'a') === "Ошибка ввода: входные параметры должны быть числами!", "Тест getVariant провален.");
+
 
     // 2.3 calculate
     console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора (сложение) провален");
@@ -391,11 +394,13 @@ function runTests() {
     console.assert(calculate(10, 0, '/') === 'Ошибка: деление на ноль!', "Тест калькулятора (деление на ноль) провален");
     console.assert(calculate(10, 5, '%') === 'Ошибка ввода! Допустимые операторы: +, -, *, /', "Тест калькулятора (неверный оператор) провален");
     console.assert(calculate('10', 5, '+') === 'Ошибка ввода! Входные параметры должны быть числами!', "Тест калькулятора (нечисловой ввод) провален");
+    console.assert(calculate(5, 'a', '+') === 'Ошибка ввода! Входные параметры должны быть числами!', "Тест калькулятора (нечисловой ввод) провален");
 
     // 2.4 calculateArea
     console.assert(Math.abs(calculateArea('circle', 6) - 113.09733) < 0.001, "Тест площади круга провален");
     console.assert(calculateArea('circle', 6, 2) === "Параметр должен быть один (радиус).", "Тест площади круга (неверное число параметров) провален");
-    console.assert(calculateArea('circle', -5) === "Невалидный параметр.", "Тест площади круга (отрицательный радиус) провален");
+    console.assert(calculateArea('circle', -5) === "Невалидные параметры.", "Тест отрицательного радиуса провален");
+    console.assert(calculateArea('circle', 0) === "Невалидные параметры.", "Тест нулевого радуиса");
     console.assert(calculateArea('rectangle', 2, 26) === 52, "Тест площади прямоугольника провален");
     console.assert(calculateArea('rectangle', 2, 0) === "Невалидные параметры.", "Тест площади прямоугольника (нулевой параметр) провален");
     console.assert(calculateArea('triangle', 6, 8, 10) === 24, "Тест площади треугольника провален");
@@ -410,14 +415,17 @@ function runTests() {
     // getRandomNumber
     const randNum = getRandomNumber(1, 10);
     console.assert(randNum >= 1 && randNum <= 10, "Ошибка: некорректные параметры. Требуется два числа, где min <= max.");
+    console.assert(getRandomNumber(5, 5) === 5, "Тест min == max");
     console.assert(getRandomNumber(10, 1) === "Ошибка: некорректные параметры. Требуется два числа, где min <= max.", "Тест getRandomNumber (min > max) провален");
+    console.assert(getRandomNumber('a', 1) === "Ошибка: некорректные параметры. Требуется два числа, где min <= max.", "Тест getRandomNumber (min > max) провален");
+    console.assert(getRandomNumber(10, 'a') === "Ошибка: некорректные параметры. Требуется два числа, где min <= max.", "Тест getRandomNumber (min > max) провален");
 
     console.log("=== ЗАДАНИЕ 3 ===");   
     // 3.1 book object
     console.assert(book.getInfo() === 'Унесённые ветром, Маргарет Митчелл, 1936г., 1468стр.', "Тест getInfo провален");
     const currentAvailable = book.isAvailable;
     console.assert(book.toggleAvailability() !== currentAvailable, "Тест toggleAvailability провален");
-    book.toggleAvailability();
+    book.toggleAvailability(); // по приколу вернём начальное, могли не менять
 
     // 3.2 student object
     console.assert(student.getAverageGrade() === 90, "Тест getAverageGrade провален");
