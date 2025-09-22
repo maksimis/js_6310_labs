@@ -495,6 +495,7 @@ function runTests() {
     console.assert(validatePassword('password1!') === false, "Тест validatePassword без заглавных букв провален");
     console.assert(validatePassword('PassWorddd1') === false, "Тест validatePassword без спец символов провален");
     console.assert(validatePassword('423523523532') === false, "Тест validatePassword с паролем из цифр провален");
+    console.assert(validatePassword('EfdaRrRARWsD') === false, "Тест validatePassword с паролем из букв провален");
     console.assert(validatePassword('!!!!!!!!!!!!!!') === false, "Тест validatePassword с паролем из спец знаков провален");
     console.assert(validatePassword(21321) === false, "Тест validatePassword с числом вместо строки провален");
     console.assert(validatePassword('Pass Word1!') === false, "Тест validatePassword с пробелом провален");
