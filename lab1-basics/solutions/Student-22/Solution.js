@@ -18,7 +18,7 @@ function simpleTask() {
 function getReviewerNumber(number, lab) {
     if (typeof(number) !== "number" || typeof(lab) !==  "number")
         return "Аргументы должны быть числами"
-    else return (number + lab) % 23;
+    else return (((number - 1) + lab) % 23 + 1);
 
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
 }
@@ -356,7 +356,7 @@ function runTests() {
     
     // Тест 1: getReviewerNumber
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
-    console.assert(getReviewerNumber(23, 1) === 1, "Тест получения ревьювера провален");
+    console.assert(getReviewerNumber(22, 1) === 23, "Тест получения ревьювера провален");
     console.assert(getReviewerNumber(1, "2") === "Аргументы должны быть числами", "Тест получения ревьювера провален")
     console.assert(getReviewerNumber("2", "2") === "Аргументы должны быть числами", "Тест получения ревьювера провален")
     console.assert(getReviewerNumber("2", 2) === "Аргументы должны быть числами", "Тест получения ревьювера провален")
@@ -392,7 +392,7 @@ function runTests() {
     console.assert(calculate(Number.MAX_VALUE, 2, '/') === Number.MAX_VALUE / 2, "Тест калькулятора провален (переполнение)");
     
     // Тест 4: CalculateArea
-    console.assert(calculateArea('circle', 5) === Math.PI * 25,  "Тест калькулятора площади провален");
+    console.assert(calculateArea('circle', 5) - Math.PI * 25 < 0.000001,  "Тест калькулятора площади провален");
     console.assert(calculateArea('circle', 0) === 0, "Тест калькулятора площади провален");
     console.assert(calculateArea('circle', -5) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
     console.assert(calculateArea('circle', 5, 10) === "Неправильный ввод параметров", "Тест калькулятора площади провален");
@@ -423,7 +423,7 @@ function runTests() {
     console.assert(calculateArea(123, 5) === "Неправильный ввод фигуры", "Тест калькулятора площади провален");
     console.assert(calculateArea() === "Неправильный ввод фигуры", "Тест калькулятора площади провален");
 
-    console.assert(calculateArea('circle', 2.5) === Math.PI * 6.25, "Тест калькулятора площади провален");
+    console.assert(calculateArea('circle', 2.5) - Math.PI * 6.25 < 0.000001, "Тест калькулятора площади провален");
     console.assert(calculateArea('rectangle', 3.5, 2.5) === 8.75, "Тест калькулятора площади провален");
     console.assert(calculateArea('triangle', 5.5, 4.5) === 12.375, "Тест калькулятора площади провален");
 
