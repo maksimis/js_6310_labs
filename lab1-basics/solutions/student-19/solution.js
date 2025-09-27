@@ -399,14 +399,34 @@ function validatePhone(phone) {
 }
 
 
-console.assert(validatePhone("89991234567") === true, "Тест 1 провален: 89991234567");
-console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 2 провален: +7(999)123-45-67");
-console.assert(validatePhone("8(999)1234567") === true, "Тест 3 провален: 8(999)1234567");
-console.assert(validatePhone("+7(999)1234567") === true, "Тест 4 провален: +7(999)1234567");
-console.assert(validatePhone('+7 (999) 123-45-67') === true, 
-    '+7 (999) 123-45-67 должен быть валидным');
-console.assert(validatePhone('8 (999) 123-45-67') === true, 
-    '8 (999) 123-45-67 должен быть валидным');
+console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 1: +7(999)123-45-67");
+
+// Тесты из условия: 8 (999) 123-45-67  
+console.assert(validatePhone("8(999)123-45-67") === true, "Тест 2: 8(999)123-45-67");
+
+// Тесты из условия: 89991234567  
+console.assert(validatePhone("89991234567") === true, "Тест 3: 89991234567");
+
+// Тесты из условия: +7(999)123-45-67
+console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 4: +7(999)123-45-67");
+
+// Дополнительные вариации с пробелами и дефисами
+console.assert(validatePhone("+7 999 123 45 67") === true, "Тест 5: +7 999 123 45 67");
+console.assert(validatePhone("8-999-123-45-67") === true, "Тест 6: 8-999-123-45-67");
+console.assert(validatePhone("+7-999-123-45-67") === true, "Тест 7: +7-999-123-45-67");
+console.assert(validatePhone("8 999 123 45 67") === true, "Тест 8: 8 999 123 45 67");
+
+// Некорректные номера (должны вернуть false)
+console.assert(validatePhone("+9 (999) 123-45-67") === false, "Тест 9: +9 (999) 123-45-67");
+console.assert(validatePhone("7 (999) 123-45-67") === false, "Тест 10: 7 (999) 123-45-67");
+console.assert(validatePhone("+7 (99) 123-45-67") === false, "Тест 11: +7 (99) 123-45-67");
+console.assert(validatePhone("+7 (999) 123-456") === false, "Тест 12: +7 (999) 123-456");
+console.assert(validatePhone("+7 (999) 123-45-6") === false, "Тест 13: +7 (999) 123-45-6");
+console.assert(validatePhone("8999123456") === false, "Тест 14: 8999123456");
+console.assert(validatePhone("899912345678") === false, "Тест 15: 899912345678");
+console.assert(validatePhone("+7 (999) 123-45-6a") === false, "Тест 16: +7 (999) 123-45-6a");
+console.assert(validatePhone("abc") === false, "Тест 17: abc");
+console.assert(validatePhone("") === false, "Тест 18: пустая строка");
 
 /**
  * Вариант 4: Валидация даты в формате DD.MM.YYYY
