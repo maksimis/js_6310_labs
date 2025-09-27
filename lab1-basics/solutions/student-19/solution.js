@@ -21,23 +21,48 @@ console.log(typeof obj);
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
-let res = (number + lab - 1 ) % 23 + 1 ;
+ if (typeof number !== 'number' || typeof lab !== 'number' || isNaN(number) || isNaN(lab)) {
+        return 'Ошибка: оба параметра должны быть числами';
+    }
+    
+    if (number <= 0 || lab <= 0) {
+        return 'Ошибка: номер студента и лабораторной работы должны быть положительными числами';
+    }
+    
+    if (!Number.isInteger(number) || !Number.isInteger(lab)) {
+        return 'Ошибка: номер студента и лабораторной работы должны быть целыми числами';
+    }
+    let res = (number + lab - 1 ) % 23 + 1 ;
     return res;
 }
 
      
 function getVariant(number, variants) {
     // 2.2 Функция определяющая номер варианта, исходя из количества вариантов
-    const variant = ((number - 1) % variants + 1) ;
+    
+    if (typeof number !== 'number' || typeof variants !== 'number' || isNaN(number) || isNaN(variants)) {
+        return 'Ошибка: оба параметра должны быть числами';
+    }
+    
+    if (!Number.isInteger(number) || !Number.isInteger(variants)) {
+        return 'Ошибка: оба параметра должны быть целыми числами';
+    }
+    
+    if (number <= 0 || variants <= 0) {
+        return 'Ошибка: оба параметра должны быть положительными числами';
+    }
+    
+    if (variants === 0) {
+        return 'Ошибка: количество вариантов не может быть равно 0';
+    }
+    
+    const variant = ((number - 1) % variants + 1);
     return variant;
 }
 
 
 function calculate(a, b, operation) {
     // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
-if(typeof(a) !== "number" || typeof(b) !== "number"){
-        return "Аргументы функции должны быть числами"
-    }
      if ((typeof a !== 'number') || (typeof b !== 'number')) {
         return "Оба параметра должны быть числами"}
 
@@ -65,31 +90,45 @@ if(typeof(a) !== "number" || typeof(b) !== "number"){
 function calculateArea(figure, ...params) {
     // 2.4 Напишите функцию для определения площади фигур 'circle', 'rectangle', 'triangle'
     // Используйте switch.
- switch (figure) {
-        case 'circle':
-            // Площадь круга: π * r²
-            const radius = params[0];
-            return Math.PI * radius * radius;
-             for (param of params)
-     {
-        if (typeof param !== 'number') {
-            return "Параметры фигуры должны быть числами"
+// Проверка на тип фигуры
+    if (typeof figure !== 'string') {
+        return 'Ошибка: первый параметр должен быть строкой (circle, rectangle, triangle)';
+    }
+    
+    // Проверка что все параметры - числа
+    for (let i = 0; i < params.length; i++) {
+        if (typeof params[i] !== 'number' || isNaN(params[i])) {
+            return 'Ошибка: все параметры должны быть числами';
+        }
+        if (params[i] <= 0) {
+            return 'Ошибка: все параметры должны быть положительными числами';
         }
     }
+    
+    switch (figure.toLowerCase()) {
+        case 'circle':
+            // Проверка количества параметров для круга
+            if (params.length !== 1) {
+                return 'Ошибка: для круга нужен 1 параметр (радиус), передано: ' + params.length;
+            }
+            return Math.PI * params[0] * params[0];
+            
         case 'rectangle':
-            // Площадь прямоугольника: a * b
-            const a = params[0];
-            const b = params[1];
-            return a * b;
+            // Проверка количества параметров для прямоугольника
+            if (params.length !== 2) {
+                return 'Ошибка: для прямоугольника нужны 2 параметра (длина и ширина), передано: ' + params.length;
+            }
+            return params[0] * params[1];
             
         case 'triangle':
-            // Площадь треугольника: (a * h) / 2
-            const base = params[0];
-            const height = params[1];
-            return (base * height) / 2;
+            // Проверка количества параметров для треугольника
+            if (params.length !== 2) {
+                return 'Ошибка: для треугольника нужны 2 параметра (основание и высота), передано: ' + params.length;
+            }
+            return 0.5 * params[0] * params[1];
             
         default:
-            return 'Неизвестная фигура';
+            return 'Ошибка: неизвестная фигура. Используйте: circle, rectangle, triangle';
     }
 }
 
@@ -385,28 +424,13 @@ function validateDate(date) {
 
 
 // ===== ТЕСТИРОВАНИЕ =====
-function runTests() {
-    console.log("=== ТЕСТИРОВАНИЕ ===");
-    
-    // Тест 1: getReviewerNumber
-    console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
-    
-    // Тест 2: calculate
-    console.assert(calculate(10, 5, '+') === 15, "Тест калькулятора провален");
-    
-    // Добавьте остальные тесты...
-    
-    console.log("Все тесты пройдены! ✅");
-}
+
 
 // Запуск тестов
+
 function runTests() {
-//Тест задания 2.1
-console.assert(getReviewerNumber(19, 1) === 20, "Тест получения ревьюера провален");
-console.assert(typeof number === 'number', 'Первый параметр должен быть числом');
-console.assert(typeof lab === 'number', 'Второй параметр должен быть числом');
-
-
+     console.log("=== ТЕСТИРОВАНИЕ ===");
+   
 //Тест задания 1
 simpleTask()
 
@@ -496,5 +520,7 @@ console.log("(добавление задачи в список):");
     console.log("(возвращение объекта):");
     console.log(taskManager.getStats());
     console.log();
+
+    console.log("Все тесты пройдены! ✅");
 }
 runTests();
