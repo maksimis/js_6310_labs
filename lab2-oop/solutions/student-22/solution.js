@@ -186,27 +186,33 @@ function runTests() {
     // Расширьте тесты для полного покрытия задания.
     
     // Проверка наследования
-    const vehicle = new Vehicle('Toyota', 'Camry', 2015);
+    const vehicle = new Vehicle('Toyota', 'Camry', 2015); // 1 транспорт
     vehicle.displayInfo();
     console.log(`Возраст: ${vehicle.age} лет`);
 
-    const car = new Car('Honda', 'Civic', 2018, 4);
+    const car = new Car('Honda', 'Civic', 2018, 4); // 2 транспорт
     car.displayInfo();
     car.honk();
 
-    const electricCar = new ElectricCar('Tesla', 'Model 3', 2020, 4, 75);
+    const electricCar = new ElectricCar('Tesla', 'Model 3', 2020, 4, 75); // 3 транспорт
     electricCar.displayInfo();
     console.log(`Запас хода: ${electricCar.calculateRange()} км`);
     console.assert(electricCar.calculateRange() === 450, 'Тест вычисления запаса хода провален')
 
     // Проверка возраста
-    const testVehicle = new Vehicle('Test', 'Model', 2010);
+    const testVehicle = new Vehicle('Test', 'Model', 2010); // 4 транспорт
     console.assert(testVehicle.age === (new Date().getFullYear() - 2010), 'Тест возраста провален');
     
     // Проверка сеттера года
     const currentYear = new Date().getFullYear();
     testVehicle.year = currentYear - 1;
     console.assert(testVehicle.year === currentYear - 1, 'Тест сеттера года провален');
+    testVehicle.displayInfo()
+
+    // Проверка установки граничных годов у машины
+    testVehicle.year = 1886;
+    testVehicle.displayInfo()
+    testVehicle.year = currentYear;
     testVehicle.displayInfo()
     
     // Проверка сеттера года у подкласса
@@ -223,18 +229,25 @@ function runTests() {
     testVehicle.displayInfo();
 
     // Проверка сравнения возраста
-    const vehicle1 = new Vehicle('1', '2', 2000)
-    const vehicle2 = new Car('3', '4', 2010, 4)
+    const vehicle1 = new Vehicle('1', '2', 2000) // 5 транспорт
+    const vehicle2 = new Car('3', '4', 2010, 4) // 6 транспорт
     const ageDiff = Vehicle.compareAge(vehicle1, vehicle2);
     console.assert(ageDiff === 10, 'Тест сравнения возраста провален')
 
     // Проверка каррирования
     const createCarFactory = createVehicleFactory(Car);
-    const myNewCar = createCarFactory('BMW', 'X5', 2022, 4);
+    const myNewCar = createCarFactory('BMW', 'X5', 2022, 4); // 7 транспорт
     console.log('Создан новый автомобиль:');
     myNewCar.displayInfo();
     console.assert(myNewCar instanceof Car, 'Тест каррирования провален')
     console.assert(myNewCar.make === 'BMW', 'Тест каррирования провален')
+
+    const createElectricFactory = createVehicleFactory(ElectricCar);
+    const myNewElectric = createElectricFactory('Evolut', 'Super', 2024, 4, 300) // 8 транспорт
+    console.log('Создан новый электромобиль:');
+    myNewElectric.displayInfo()
+    console.assert(myNewElectric.calculateRange() === 1800, 'Тест каррирования провален')
+    console.assert(myNewElectric instanceof ElectricCar, 'Тест каррирования провален')
 
     // Проверки на неправильный ввод параметров в классе Vehicle. Каждая ошибка выводится в консоль
     const wrongTests = [
@@ -296,7 +309,7 @@ function runTests() {
 
     // Проверка счётчика транспортных средств
     console.log('Всего создано транспортных средств:', Vehicle.getTotalVehicles());
-    console.assert(Vehicle.getTotalVehicles() === 7, "Тест счетчика провален")
+    console.assert(Vehicle.getTotalVehicles() === 8, "Тест счетчика провален")
     
     
     console.log('Все тесты пройдены! ✅');
