@@ -27,8 +27,8 @@ class Vehicle {
     constructor(make, model, year) {
         if (!isNonEmptyString(make) || !isNonEmptyString(model)) {
             throw new Error("Невалидные параметры для класса Vehicle: марка и модель - не пустые строки");
-        } else if (!isPositiveNumber(year) || year > new Date().getFullYear() || !Number.isInteger(year)) {
-            throw new Error("Невалидные параметры для класса Vehicle: год выпуска - положительное целое число не из будущего");
+        } else if (!isPositiveNumber(year) || year > new Date().getFullYear() || !Number.isInteger(year) || year < 1886) {
+            throw new Error("Невалидные параметры для класса Vehicle: год выпуска - положительное целое число не из будущего и после создания первого автомобиля (1886 г.)");
         }
 
         this.make = make;
@@ -51,7 +51,7 @@ class Vehicle {
 
     // Добавьте сеттер для года выпуска с проверкой: год не может быть больше текущего.
     set year(newYear) {
-        if (!isPositiveNumber(newYear) || newYear > new Date().getFullYear() || !Number.isInteger(newYear)) {
+        if (!isPositiveNumber(newYear) || newYear > new Date().getFullYear() || !Number.isInteger(newYear) || newYear < 1886) {
             throw new Error("Невалидные параметры для класса Vehicle: год выпуска - положительное целое число не из будущего");
         }
         this._year = newYear;
@@ -77,7 +77,7 @@ class Car extends Vehicle {
     // Добавьте новое свойство numDoors (количество дверей).
     constructor(make, model, year, numDoors) {
         if (!isPositiveNumber(numDoors) || !Number.isInteger(numDoors)) {
-            throw new Error("Количество дверей должно быть положительным целым числом");
+            throw new Error("Количество дверей должно быть положительным целым числом.");
         }
         super(make, model, year);
         this.numDoors = numDoors;
@@ -160,7 +160,7 @@ function runTests() {
     // constructor
     console.log("   === корректный ввод:");
     try {
-        const vehicle_1 = new Vehicle("Koenigsegg", "Agera", 2010);
+        const vehicle_1 = new Vehicle("Koenigsegg", "Agera", 2010); // СОЗДАЛИ МАШИНУ
         console.log("Транспорное средство успешно создано!");
         
         // displayInfo
@@ -180,7 +180,12 @@ function runTests() {
             console.log(`Произошла ошибка изменения свойста year: ${error.message}`)
         }
         console.log("       === пытаемся изменить свойство year (негативный опыт)")
-        // четыре нагативных
+        // пять нагативных
+        try { // до 1886
+            vehicle_1.year = 1885;
+        } catch (error) {
+            console.log(`\tПроизошла ошибка изменения свойста year: ${error.message}`)
+        }
         try { // отрицательное
             vehicle_1.year = -2018;
         } catch (error) {
@@ -210,7 +215,7 @@ function runTests() {
 
 
         console.log("Создадим второй vehicle_2 и wrong_object для проверки compareAge");
-        const vehicle_2 = new Vehicle("Koenigsegg", "Regera", 2017);
+        const vehicle_2 = new Vehicle("Koenigsegg", "Regera", 2017); // СОЗДАЛИ МАШИНУ
         console.log(`Информация о vehicle_2: ${vehicle_2.displayInfo()}`);
         const wrong_object = 52;
 
@@ -270,7 +275,14 @@ function runTests() {
         console.log(`Произошла ошибка: ${error.message}\n`);
     }
 
-    console.log("   === некорректный ввод года (четыре случая)");
+    console.log("   === некорректный ввод года (пять случаев)");
+    try { // до 1886
+        const vehicle_wrong = new Vehicle("Koenigsegg", "Agera", 1885);
+        console.log("Транспорное средство успешно создано!");
+    } catch (error) {
+        console.log(`Произошла ошибка: ${error.message}`);
+    }
+
     try { // не число
         const vehicle_wrong = new Vehicle("Koenigsegg", "Agera", "Koenigsegg");
         console.log("Транспорное средство успешно создано!");
@@ -298,12 +310,13 @@ function runTests() {
     } catch (error) {
         console.log(`Произошла ошибка: ${error.message}\n\n`);
     }
-
+    
+    
     console.log("        ===== 2 задание: тестируем класс Car =====        ");
     // проверяем constructor, но только валидность numDoors (остальные проверены в родительском классе Vehicle)
     console.log("   === корректный ввод:");
     try { // валидный
-        const car_1 = new Car("Koenigsegg", "Agera", 2010, 2);
+        const car_1 = new Car("Koenigsegg", "Agera", 2010, 2); // СОЗДАЛИ МАШИНУ
         console.log("Машина успешно создана!");
 
         // displayInfo
@@ -316,7 +329,14 @@ function runTests() {
         console.log(`Произошла ошибка: ${error.message}`);
     }
     
-    console.log("\n   === некорректный ввод числа дверей (три случая):");
+    console.log("\n   === некорректный ввод числа дверей (четыре случая):");
+    try { // ноль дверей
+        const car_wrong = new Car("Koenigsegg", "Agera", 2010, 0);
+        console.log("Машина успешно создана!");
+    } catch (error) {
+        console.log(`Произошла ошибка: ${error.message}`);
+    }
+
     try { // отрицательное количество дверей
         const car_wrong = new Car("Koenigsegg", "Agera", 2010, -2);
         console.log("Машина успешно создана!");
@@ -338,12 +358,12 @@ function runTests() {
         console.log(`Произошла ошибка: ${error.message}\n\n`);
     }
 
-
+    
     console.log("        ===== 3 задание: тестируем класс ElectricCar =====        ");
     // проверяем constructor, но только валидность batteryCapacity (остальные проверены в родительском классе Car)
     console.log("   === корректный ввод:");
     try { // валидный
-        const electricCar_1 = new ElectricCar("Москвич", "3е", 2022, 5, 65.7);
+        const electricCar_1 = new ElectricCar("Москвич", "3е", 2022, 5, 65.7); // СОЗДАЛИ МАШИНУ
         console.log("Электрокар успешно создан!");
 
         // displayInfo
@@ -355,8 +375,8 @@ function runTests() {
     } catch (error) {
         console.log(`Произошла ошибка: ${error.message}`);
     }
-    
-    console.log("\n   === некорректный ввод числа дверей (два случая):");
+
+    console.log("\n   === некорректный ввод ёмкости батареи (два случая):");
     try { // отрицательная ёмкость батареи
         const electricCar_wrong = new ElectricCar("Москвич", "3е", 2022, 5, -65.7);
         console.log("Машина успешно создана!");
@@ -372,11 +392,11 @@ function runTests() {
         console.log(`Произошла ошибка: ${error.message}\n\n`);
     }
 
-
+    
     console.log("        ===== 4 задание: тестируем createVehicleFactory =====        ");
     console.log("   === позитивные тесты (корректное использование):");
     try { // Создание Vehicle через фабрику
-        const vehicleFact = createVehicleFactory(Vehicle)("Koenigsegg")("Jesko")(2019)();
+        const vehicleFact = createVehicleFactory(Vehicle)("Koenigsegg")("Jesko")(2019)(); // СОЗДАЛИ МАШИНУ
         console.log("Объект vehicleFact успешно создан через фабрику");
         console.log(`Информация о vehicleFact: ${vehicleFact.displayInfo()}`);
     } catch (error) {
@@ -384,7 +404,7 @@ function runTests() {
     }
 
     try { // Создание Car через фабрику с дополнительным параметром
-        const carFact = createVehicleFactory(Car)("Koenigsegg")("Jesko")(2019)(2);
+        const carFact = createVehicleFactory(Car)("Koenigsegg")("Jesko")(2019)(2); // СОЗДАЛИ МАШИНУ
         console.log("\nОбъект carFact успешно создан через фабрику");
         console.log(`Информация о carFact: ${carFact.displayInfo()}`);
         carFact.honk()
@@ -393,7 +413,7 @@ function runTests() {
     }
 
     try { // Создание ElectricCar через фабрику с двумя дополнительными параметрами
-        const electricCarFact = createVehicleFactory(ElectricCar)("Tesla")("Model 3")(2022)(4, 75);
+        const electricCarFact = createVehicleFactory(ElectricCar)("Tesla")("Model 3")(2022)(4, 75); // СОЗДАЛИ МАШИНУ
         console.log("\nОбъект electricCarFact успешно создан через фабрику");
         console.log(`Информация о electricCarFact: ${electricCarFact.displayInfo()}`);
         console.log(`Запас хода: ${electricCarFact.calculateRange()}км`);
@@ -402,7 +422,7 @@ function runTests() {
     }
     
     try { // Частичное применение (каррирование)
-        const teslaFactory = createVehicleFactory(ElectricCar)("Tesla");
+        const teslaFactory = createVehicleFactory(ElectricCar)("Tesla"); // СОЗДАЛИ МАШИНУ
         const modelSFactory = teslaFactory("Model S");
         const model2023Factory = modelSFactory(2023);
         const finalCar = model2023Factory(4, 100);
@@ -433,8 +453,12 @@ function runTests() {
 
     // напоследок проверяем getTotalVehicles
     console.log("\n\n        ===== 5 задание: тестируем статическое свойство vehicleCount и метод getTotalVehicles() из класса Vehicle =====        ");
-    console.log(`Значение vehicleCount после всех предыдущих тестов: ${Vehicle.vehicleCount}`)
+    console.log(`Значение vehicleCount после всех предыдущих тестов: ${Vehicle.vehicleCount}`);
     console.log(`Вывод getTotalVehicles(): ${Vehicle.getTotalVehicles()}`);
+
+    // дополнительная проверка через ручной пересчёт
+    console.log("За время тестирования должно было успешно создаться 8 транспортных средств (в комменариях каждая такая отмечена \"// СОЗДАЛИ МАШИНУ\")");
+    console.assert(Vehicle.vehicleCount === 8, "Тест vehicleCount провален.")
 }
 
 runTests();
