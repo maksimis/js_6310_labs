@@ -227,8 +227,10 @@ function runTests() {
     //compare
     let vehicle_1
     let vehicle_2
-    let vehicle_3
+    let vehicle_car1
+    let vehicle_car2
     let a
+
     try {
         vehicle_1 = new Vehicle('Porsche', '911', 2022)
     } catch (error) {
@@ -239,8 +241,14 @@ function runTests() {
     } catch (error) {
         console.assert(error.message === 'Некорректно введены параметры автомобиля', 'Тест создания транcпорта провален')
     }
+
     try {
-        vehicle_3 = new Car('MINI Cooper', 'R59', 2012)
+        vehicle_car1 = new Car('MINI Cooper', 'R59', 2012)
+    } catch (error) {
+        console.assert(error.message === 'Некорректно введены параметры автомобиля', 'Тест создания транcпорта 2 провален')
+    }
+    try {
+        vehicle_car2 = new Car('MINI Cooper', 'R59', 2012)
     } catch (error) {
         console.assert(error.message === 'Некорректно введены параметры автомобиля', 'Тест создания транcпорта 2 провален')
     }
@@ -253,9 +261,15 @@ function runTests() {
 
     //if (vehicle_1 && vehicle_2) {
     console.assert(Vehicle.compareAge(vehicle_1, vehicle_2) === 10, 'Тест разницы в возрасте провален')
-    console.assert(Vehicle.compareAge(vehicle_1, vehicle_3) === 'Ошибка создания транспортного средства для класса Vehicle', 'Тест разницы в возрасте провален')
+
+    console.assert(Vehicle.compareAge(vehicle_1, vehicle_car2) === 'Ошибка создания транспортного средства для класса Vehicle', 'Тест разницы в возрасте провален')
+    console.assert(Vehicle.compareAge(vehicle_car1, vehicle_2) === 'Ошибка создания транспортного средства для класса Vehicle', 'Тест разницы в возрасте провален')
+    console.assert(Vehicle.compareAge(vehicle_car1, vehicle_car2) === 'Ошибка создания транспортного средства для класса Vehicle', 'Тест разницы в возрасте провален')
     console.assert(Vehicle.compareAge(a, vehicle_1) === 'Ошибка создания транспортного средства для класса Vehicle', 'Тест разницы в возрасте провален')
+    
     console.assert(Vehicle.compareAge(3, 4) === 'Параметры не являются экземплярами класса Vehicle', 'Тест разницы в возрасте провален')
+    console.assert(Vehicle.compareAge(vehicle_1, 4) === 'Параметры не являются экземплярами класса Vehicle', 'Тест разницы в возрасте провален')
+    console.assert(Vehicle.compareAge(3, vehicle_2) === 'Параметры не являются экземплярами класса Vehicle', 'Тест разницы в возрасте провален')
 
     console.log(`Разница в возрасте "${vehicle_1.make}" и "${vehicle_2.make}":`, Vehicle.compareAge(vehicle_1, vehicle_2))
 
