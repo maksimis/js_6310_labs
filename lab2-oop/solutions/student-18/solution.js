@@ -68,11 +68,10 @@ class Car extends Vehicle {
     // Создайте дочерний класс Car, который наследуется от Vehicle.
     // Добавьте новое свойство numDoors (количество дверей).
     constructor(make, model, year, numDoors) {
-        super(make, model, year)
         if (typeof numDoors !== 'number' || numDoors < 1) {
-            Vehicle.vehicleCount--
             throw new Error ('Некорректно введены параметры автомобиля')
         }
+        super(make, model, year)
         this.numDoors = numDoors
     }
 
@@ -94,11 +93,10 @@ class ElectricCar extends Car {
     // Создайте дочерний класс ElectricCar, который наследуется от Car.
     // Добавьте новое свойство batteryCapacity (емкость батареи в кВт·ч).
     constructor(make, model, year, numDoors, batteryCapacity) {
-        super(make, model, year, numDoors)
         if (typeof batteryCapacity !== 'number' || batteryCapacity < 1) {
-            Vehicle.vehicleCount--
             throw new Error('Некорректно введены параметры автомобиля (батарея)')
         }
+        super(make, model, year, numDoors)
         this.batteryCapacity = batteryCapacity
     }
 
