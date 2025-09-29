@@ -38,7 +38,12 @@ function getReviewerNumber(number, lab) {
     }
 
     let numberrev = (number + lab) % 23;
-    return numberrev;
+    if (numberrev == 0) {
+        return number + lab
+    } 
+    else {
+        return numberrev;
+    }
 };
 
 function getVariant(number, variants) {
@@ -294,9 +299,9 @@ function processArrays() {
         { id: 4, name: "Григорий", age: 35, isActive: true },
         { id: 5, name: "Дарья", age: 28, isActive: false }
     ];
-    
+
     // 1. Используйте forEach для вывода всех чисел больше 50
-    numbers.forEach(number => { if (number > 50) console.log(number) });
+    numbers.forEach(number => {if (number > 50) console.log(number) });
    
     // 2. Используйте map для создания массива квадратов чисел
     console.log("Квадраты чисел:");
@@ -498,7 +503,8 @@ function runTests() {
 
     // Тест 1: getReviewerNumber
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
-    console.assert(getReviewerNumber(22, 2) === 1, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(22, 1) === 23, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(45, 1) === 46, "Тест получения ревьюера провален");
     console.assert(getReviewerNumber() === "Ошибка: функция требует два аргумента", "Тест получения ревьюера провален");
     console.assert(getReviewerNumber("q", 12) === "Ошибка: оба аргумента должны быть числами", "Тест получения ревьюера провален");
     console.assert(getReviewerNumber(-1, 12) === "Ошибка: оба аргумента должны быть положительными числами", "Тест получения ревьюера провален");
@@ -592,3 +598,61 @@ function runTests() {
 
 // Запуск тестов
 runTests();
+
+
+////////////////////////////////////////////////////////////////////////
+
+
+
+
+const s = function bla() {
+    console.log(123);
+}
+s(); // 123
+// bla(); так вызвать функцию невозможно, необходимо обращаться к переменной (которой присвоена функция)
+
+const f = a => (a + 2);
+console.log(f(1));    // 3
+
+const f0 = a => (a === 1); // является условием, но при его выполнение (без прописывании return) возвращаются значения, попадающие под условие
+console.log(f0(1));
+console.log(f0(2));
+
+const f2 = (a,b) => {
+    if (a > 0 && b > 0) return a + b;        //блок в функции (т.е тело функции состоит не из одного выражения), следовательно требуется return, иначе вернет undefined
+}
+console.log(f2(1,2)); // 3
+console.log(f2(0,2)); // вернет undefinded, поскольку условие не выполняется, а вариант при невыполнении не прописан
+
+
+
+console.log("\n")
+const numbers = [12, 45, 23, 67, 34, 89, 56, 91, 27, 14];
+const users = [
+        { id: 1, name: "Анна", age: 25, isActive: true },
+        { id: 2, name: "Борис", age: 30, isActive: false },
+        { id: 3, name: "Виктория", age: 22, isActive: true },
+        { id: 4, name: "Григорий", age: 35, isActive: true },
+        { id: 5, name: "Дарья", age: 28, isActive: false }
+    ];
+
+// 1. Используйте forEach для вывода всех чисел больше 50
+const a = number => {
+     if (number > 50) console.log(number)
+}
+numbers.forEach(a);
+   
+
+// 2. Используйте map для создания массива квадратов чисел
+console.log("Квадраты чисел:");
+const sq = number => (number ** 2);
+console.log(sq(5));
+const squares = numbers.map(sq);
+console.log(squares);
+
+
+const t = user => user.isActive === true;
+const b = t({ isActive: true });
+console.log(b);
+const activeUsers = users.filter(t);
+console.log(activeUsers);
