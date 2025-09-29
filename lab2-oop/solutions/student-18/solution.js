@@ -53,8 +53,10 @@ class Vehicle {
         if (!vehicle1 || !vehicle2) {
             return 'Ошибка создания транспортного средства для класса Vehicle'
         }
+        if (!(vehicle1 instanceof Vehicle) || !(vehicle2 instanceof Vehicle)) {
+            return 'Параметры не являются экземплярами класса Vehicle'
+        }
         return Math.abs(vehicle1.age - vehicle2.age)
-
 
     }
 
@@ -63,12 +65,13 @@ class Vehicle {
     }
 }
 
+
 // ===== ЗАДАНИЕ 2: Класс Car (наследуется от Vehicle) =====
 class Car extends Vehicle {
     // Создайте дочерний класс Car, который наследуется от Vehicle.
     // Добавьте новое свойство numDoors (количество дверей).
     constructor(make, model, year, numDoors) {
-        if (typeof numDoors !== 'number' || numDoors < 1) {
+        if (typeof numDoors !== 'number' || numDoors < 1 || !Number.isInteger(numDoors)) {
             throw new Error ('Некорректно введены параметры автомобиля')
         }
         super(make, model, year)
@@ -225,7 +228,7 @@ function runTests() {
     let vehicle_1
     let vehicle_2
     let vehicle_3
-
+    let a
     try {
         vehicle_1 = new Vehicle('Porsche', '911', 2022)
     } catch (error) {
@@ -241,14 +244,20 @@ function runTests() {
     } catch (error) {
         console.assert(error.message === 'Некорректно введены параметры автомобиля', 'Тест создания транcпорта 2 провален')
     }
+    try {
+        a = new Vehicle(2)
+    } catch (error) {
+        console.assert(error.message === 'Некорректно введены параметры автомобиля', 'Тест создания транcпорта 2 провален')
+    }
+
+
     //if (vehicle_1 && vehicle_2) {
     console.assert(Vehicle.compareAge(vehicle_1, vehicle_2) === 10, 'Тест разницы в возрасте провален')
     console.assert(Vehicle.compareAge(vehicle_1, vehicle_3) === 'Ошибка создания транспортного средства для класса Vehicle', 'Тест разницы в возрасте провален')
+    console.assert(Vehicle.compareAge(a, vehicle_1) === 'Ошибка создания транспортного средства для класса Vehicle', 'Тест разницы в возрасте провален')
+    console.assert(Vehicle.compareAge(3, 4) === 'Параметры не являются экземплярами класса Vehicle', 'Тест разницы в возрасте провален')
 
     console.log(`Разница в возрасте "${vehicle_1.make}" и "${vehicle_2.make}":`, Vehicle.compareAge(vehicle_1, vehicle_2))
-   // } else {
-    //    console.log('В классе')
-   // }
 
     // ЗАДАНИЕ 2
     console.log('ЗАДАНИЕ 2');
@@ -256,6 +265,8 @@ function runTests() {
     const car = new Car('Honda', 'Civic', 2018, 4);
     let cartest1
     let cartest2
+    let cartest3
+
     try {
         cartest1 = new Car('Honda', 'Civic', 2018, -4)
     } catch (error) {
@@ -263,6 +274,11 @@ function runTests() {
     }
     try {
         cartest2 = new Car('Honda', 'Civic', 2018, '4')
+    } catch (error) {
+        console.assert(error.message === 'Некорректно введены параметры автомобиля', "Тест добавления машины провален")
+    }
+    try {
+        cartest3 = new Car('Honda', 'Civic', 2018, 4.5)
     } catch (error) {
         console.assert(error.message === 'Некорректно введены параметры автомобиля', "Тест добавления машины провален")
     }
@@ -329,6 +345,7 @@ function runTests() {
     console.log('ЗАДАНИЕ 5')
     
     console.log('Всего создано транспортных средств:', Vehicle.getTotalVehicles());
+    console.assert(Vehicle.getTotalVehicles() === 9, 'Тест подсчета количества созданных ТС провален')
     
     console.log('Все тесты пройдены! ✅');
 }
