@@ -26,6 +26,13 @@ class Vehicle {
         if (new Date().getFullYear() < year){
             throw new Error("Неправильный год машины")
         }
+        
+        if (year <1886){
+            throw new Error ("год выпуска не может быть меньше 1886")
+        }
+        if (!Number.isInteger(year)){
+            throw new Error ("год выпуска должен быть целым числом")
+        }
         this.year = year;
         Vehicle.vehicleCount += 1
     }
@@ -53,11 +60,17 @@ class Vehicle {
             throw new Error("Неправильный тип данных года машины")
         }
 
-        if (newYear <= new Date().getFullYear()){
-            this._year = newYear
-        } else {
+        if (newYear >= new Date().getFullYear()){
             throw new Error (" дата выпуска машины должна быть меньше текущей даты")
         }
+
+        if (newYear <1886){
+            throw new Error ("новый год выпуска не может быть меньше 1886")
+        }
+        if (!Number.isInteger(newYear)){
+            throw new Error ("год выпуска должен быть целым числом")
+        }
+        this._year = newYear
     }
 
     get year() {
@@ -68,8 +81,12 @@ class Vehicle {
     // который возвращает разницу в возрасте между двумя транспортными средствами.
     static compareAge(vehicle1, vehicle2) {
         // ..
+        if (!(vehicle1 instanceof Vehicle) || !(vehicle2 instanceof Vehicle)) {
+            return 'Ошибка: ТС должен быть в классе Vehicle'
+        }
         return Math.abs(vehicle1.age - vehicle2.age)
     }
+    
     static getTotalVehicles(){
         return Vehicle.vehicleCount 
     }
@@ -89,16 +106,16 @@ class Car extends Vehicle {
     // Добавьте новое свойство numDoors (количество дверей).
     constructor(make, model, year, numDoors) {
         // ..
-        super(make, model, year)
         if (typeof numDoors !== 'number'){
-            Vehicle.vehicleCount -= 1
             throw new Error("Неправильный тип данных для количества дверей")
         }
         if (numDoors <= 0 ){
-            Vehicle.vehicleCount -= 1
             throw new Error("количество дверей не может быть меньше или равно нулю")
         }
-        
+        if (!Number.isInteger(numDoors)){
+            throw new Error("количество дверей не может быть дробным числом")
+        }
+        super(make, model, year)       
         this.numDoors = numDoors
     }
 
@@ -126,15 +143,13 @@ class ElectricCar extends Car {
     // Добавьте новое свойство batteryCapacity (емкость батареи в кВт·ч).
     constructor(make, model, year, numDoors, batteryCapacity) {
         // ..
-        super(make, model, year, numDoors)
         if (typeof batteryCapacity !== 'number'){
-            Vehicle.vehicleCount -= 1
             throw new Error("Неправильный тип данных для кВт")
         }
         if (batteryCapacity <= 0 ){
-            Vehicle.vehicleCount -= 1
             throw new Error("кВт не может быть меньше или равно нулю")
         }
+        super(make, model, year, numDoors)
         this.batteryCapacity = batteryCapacity
     }
 
@@ -194,14 +209,18 @@ function runTests() {
     // Расширьте тесты для полного покрытия задания.
     
     // Проверка наследования
+
+    //задание 1
     const vehicle = new Vehicle('Toyota', 'Camry', 2015);
     vehicle.displayInfo();
     console.log(`Возраст: ${vehicle.age} лет`);
 
     let vehicle1
-    let vehicle2 
-    let vehicle3 
+    let vehicle2
+    let vehicle3
     let vehicle4
+    let vehicle5
+    let vehicle6
     
     
     try{
@@ -227,6 +246,18 @@ function runTests() {
     } catch(error){
         console.assert(error.message === "Неправильный год машины", "тест года машины провален1")
     }
+
+    try{
+        vehicle5 = new Vehicle("Toyota", "Prado", 1833)
+    } catch(error){
+        console.assert(error.message === "год выпуска не может быть меньше 1886", "тест года машины провален1")
+    }
+
+    try{
+        vehicle6 = new Vehicle("Toyota", "Prado", 2000.1)
+    } catch(error){
+        console.assert(error.message === "год выпуска должен быть целым числом", "тест года машины провален1")
+    }
     
     vehicle.year = 2023;
     console.log(`новый год машины: ${vehicle.year}`)
@@ -242,14 +273,49 @@ function runTests() {
     } catch(error){
         console.assert(error.message === " дата выпуска машины должна быть меньше текущей даты", "тест нового года машины провален, год больше текущего")
     }
+    ///
+    try{
+        vehicle.year = (1833)
+    } catch(error){
+        console.assert(error.message === "новый год выпуска не может быть меньше 1886", "тест нового года машины провален, должен быть больше 1866")
+    }
+
+    try {
+        vehicle.year = 2000.8 
+    } catch (error) {
+        console.assert('год выпуска должен быть целым числом', 'тест нового года машины провален, должен быть целым числом')
+    }
 
 
     const vehicl1 = new Vehicle('Toyota', 'Camry', 2010);
     const vehicl2 = new Vehicle('Toyota', 'Camry', 2019);
+    let testcar1
+    let testcar2
+
+    try {
+        testcar1 = new Car('Audi', 'TT', 2020)
+    } catch (error) {
+        console.assert(error.message === "Неправильный тип данных для количества дверей" || "количество дверей не может быть меньше или равно нулю", 'Тест создания машины провален')
+    }
+    try {
+        testcar2 = new Car('Audi', 'TT', 2022)
+    } catch (error) {
+        console.assert(error.message === "Неправильный тип данных для количества дверей" || "количество дверей не может быть меньше или равно нулю", 'Тест создания машины провален')
+    } 
+
+    console.assert(Vehicle.compareAge(8, 9) === 'Ошибка: ТС должен быть в классе Vehicle', 'Тест сравнения возраста провален')
+    console.assert(Vehicle.compareAge(vehicl2, 9) === 'Ошибка: ТС должен быть в классе Vehicle', 'Тест сравнения возраста провален')
+    console.assert(Vehicle.compareAge(8, vehicl2) === 'Ошибка: ТС должен быть в классе Vehicle', 'Тест сравнения возраста провален')
+
+
+    console.assert(Vehicle.compareAge(testcar1, testcar2) === 'Ошибка: ТС должен быть в классе Vehicle', 'Тест сравнения возраста провален')
+    console.assert(Vehicle.compareAge(vehicl1, testcar2) === 'Ошибка: ТС должен быть в классе Vehicle', 'Тест сравнения возраста провален')
+    console.assert(Vehicle.compareAge(testcar1, vehicl1) === 'Ошибка: ТС должен быть в классе Vehicle', 'Тест сравнения возраста провален')
+
     console.log("разница:" , Vehicle.compareAge(vehicl1, vehicl2))
+    console.assert(Vehicle.compareAge(vehicl1, vehicl2) === 9, 'Тест сравнения возраста провален')
 
-
-
+    // задание 2
     const car = new Car('Honda', 'Civic', 2018, 4);
     car.displayInfo();
     car.honk();
@@ -257,6 +323,8 @@ function runTests() {
 
     let car1
     let car2
+    let car3
+
     try{
        car1 = new Car ('Honda', 'Civic', 2018, "ttt")
     } catch(error){
@@ -267,6 +335,12 @@ function runTests() {
        car2 = new Car ('Honda', 'Civic', 2018, 0)
     } catch(error){
         console.assert(error.message === "количество дверей не может быть меньше или равно нулю", " тест количества дверей провален, неверное количество ")
+    }
+    
+    try{
+       car3 = new Car ('Honda', 'Civic', 2018, 0.5)
+    } catch(error){
+        console.assert(error.message === "количество дверей не может быть дробным числом", " тест количества дверей провален, неверное количество ")
     }
     
 
