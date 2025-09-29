@@ -16,7 +16,7 @@ console.log(typeof bool);
 console.log(typeof u);
 console.log(typeof obj);
 }
-
+ 
 
 // ===== ЗАДАНИЕ 2: Функции =====
 function getReviewerNumber(number, lab) {
@@ -51,11 +51,6 @@ function getVariant(number, variants) {
     if (number <= 0 || variants <= 0) {
         return 'Ошибка: оба параметра должны быть положительными числами';
     }
-    
-    if (variants === 0) {
-        return 'Ошибка: количество вариантов не может быть равно 0';
-    }
-    
     const variant = ((number - 1) % variants + 1);
     return variant;
 }
@@ -63,7 +58,7 @@ function getVariant(number, variants) {
 
 function calculate(a, b, operation) {
     // 2.3 Напишите функцию калькулятор, калькулятор обрабатывает следующие операции: +, -, *, /
-     if ((typeof a !== 'number') || (typeof b !== 'number')) {
+     if ((typeof a !== 'number') || (typeof b !== 'number' || isNaN(a) || isNaN(b))) {
         return "Оба параметра должны быть числами"}
 
     if(operation == "+"){
@@ -77,7 +72,7 @@ function calculate(a, b, operation) {
     }
     else if(operation == "/"){
         if(b == 0){
-            return NaN;
+            return "Делить на ноль нельзя";
         }
         return a / b;
     }
@@ -136,10 +131,14 @@ function calculateArea(figure, ...params) {
 const reverseString = (str) => {
     // Функция возвращает перевернутую строку
 let reversed = '';
-    for (let i = str.length - 1; i >= 0; i--) {
+    if (typeof(str) === "string"){
+        for (let i = str.length - 1; i >= 0; i--) {
         reversed += str[i];
     }
-    return reversed;
+     return reversed;
+    }
+    return "Ошибка: можно передавать только строки";
+   
 };
 
 
@@ -188,6 +187,7 @@ const student = {
         // Ваш код здесь
          let sum = 0;
         let count = 0;
+        
         
         for (let subject in this.grades) {
             sum += this.grades[subject];
@@ -286,13 +286,13 @@ const taskManager = {
     
     addTask(title, priority = "medium") {
         // 5.1 Добавление задачи
-        const newTask = {
-            id: this.tasks.length + 1,
-            title: title,
-            completed: false,
-            priority: priority
-        };
-        this.tasks.push(newTask);
+         const newTask = {
+        id: Date.now(), // или использовать crypto.randomUUID() для настоящих UUID
+        title: title,
+        completed: false,
+        priority: priority
+    };
+    this.tasks.push(newTask);
         
     },
    
@@ -398,36 +398,6 @@ function validatePhone(phone) {
     
 }
 
-
-console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 1: +7(999)123-45-67");
-
-// Тесты из условия: 8 (999) 123-45-67  
-console.assert(validatePhone("8(999)123-45-67") === true, "Тест 2: 8(999)123-45-67");
-
-// Тесты из условия: 89991234567  
-console.assert(validatePhone("89991234567") === true, "Тест 3: 89991234567");
-
-// Тесты из условия: +7(999)123-45-67
-console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 4: +7(999)123-45-67");
-
-// Дополнительные вариации с пробелами и дефисами
-console.assert(validatePhone("+7 999 123 45 67") === true, "Тест 5: +7 999 123 45 67");
-console.assert(validatePhone("8-999-123-45-67") === true, "Тест 6: 8-999-123-45-67");
-console.assert(validatePhone("+7-999-123-45-67") === true, "Тест 7: +7-999-123-45-67");
-console.assert(validatePhone("8 999 123 45 67") === true, "Тест 8: 8 999 123 45 67");
-
-// Некорректные номера (должны вернуть false)
-console.assert(validatePhone("+9 (999) 123-45-67") === false, "Тест 9: +9 (999) 123-45-67");
-console.assert(validatePhone("7 (999) 123-45-67") === false, "Тест 10: 7 (999) 123-45-67");
-console.assert(validatePhone("+7 (99) 123-45-67") === false, "Тест 11: +7 (99) 123-45-67");
-console.assert(validatePhone("+7 (999) 123-456") === false, "Тест 12: +7 (999) 123-456");
-console.assert(validatePhone("+7 (999) 123-45-6") === false, "Тест 13: +7 (999) 123-45-6");
-console.assert(validatePhone("8999123456") === false, "Тест 14: 8999123456");
-console.assert(validatePhone("899912345678") === false, "Тест 15: 899912345678");
-console.assert(validatePhone("+7 (999) 123-45-6a") === false, "Тест 16: +7 (999) 123-45-6a");
-console.assert(validatePhone("abc") === false, "Тест 17: abc");
-console.assert(validatePhone("") === false, "Тест 18: пустая строка");
-
 /**
  * Вариант 4: Валидация даты в формате DD.MM.YYYY
  * Правила:
@@ -454,34 +424,86 @@ function runTests() {
 //Тест задания 1
 simpleTask()
 
-//Тест задания 2.2
-console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
-console.assert(getReviewerNumber(22, 1) === 23, "Тест получения ревьюера провален");
-console.assert(getReviewerNumber('ff', 1) === "Оба аргумента должны быть числами", "Тест получения ревьюера провален");
-console.assert(getReviewerNumber(4, 'frf') === "Оба аргумента должны быть числами", "Тест получения ревьюера провален");
-console.assert(getReviewerNumber('jjj', 'frf') === "Оба аргумента должны быть числами", "Тест получения ревьюера провален");
-console.assert(getReviewerNumber(23, 1) === 1, "Тест получения ревьюера провален");
-console.assert(getReviewerNumber(24, 1)) === "В нашей группе 23 человека", "Тест получения ревьюера провален";
+//Тест задания 2.1
+console.assert(getReviewerNumber(5, 3) === 8, 'Тест 1: getReviewerNumber(5, 3) должно быть 8');
+console.assert(getReviewerNumber(22, 2) === 1, 'Тест 2: getReviewerNumber(22, 2) должно быть 1');
+console.assert(getReviewerNumber(1, 1) === 2, 'Тест 3: getReviewerNumber(1, 1) должно быть 2');
+console.assert(getReviewerNumber(50, 10) === 14, 'Тест 4: getReviewerNumber(50, 10) должно быть 14');
+console.assert(getReviewerNumber(-5, 3) === 'Ошибка: номер студента и лабораторной работы должны быть положительными числами', 'Тест 5: должна быть ошибка для отрицательных чисел');
+console.assert(getReviewerNumber("5", 3) === 'Ошибка: оба параметра должны быть числами', 'Тест 6: должна быть ошибка для нечисловых параметров');
+console.assert(getReviewerNumber(5.5, 3) === 'Ошибка: номер студента и лабораторной работы должны быть целыми числами', 'Тест 7: должна быть ошибка для дробных чисел');
+console.assert(getReviewerNumber(0, 3) === 'Ошибка: номер студента и лабораторной работы должны быть положительными числами', 'Тест 8: должна быть ошибка для нулевых значений');
+console.assert(getReviewerNumber(22, 1) === 23, 'Тест 9: getReviewerNumber(22, 1) должно быть 23');
+
+//Тест задания 2.2 
+console.log("=== Задание 2.2 ===");
+    console.assert(getVariant(8, "a") === "Аргументы функции должны быть числами", "Тест задания 2.2 провален (не числа)");
+    console.assert(getVariant("a", 4) === "Аргументы функции должны быть числами", "Тест задания 2.2 провален (не числа)");
+    console.assert(getVariant(8, 4) === 4, "Тест задания 2.2 провален");
+    console.assert(getVariant(7, 4) === 3, "Тест задания 2.2 провален");
+    console.assert(getVariant(6, 4) === 2, "Тест задания 2.2 провален");
+    console.assert(getVariant(5, 4) === 1, "Тест задания 2.2 провален");
+    console.assert(getVariant(4, 4) === 4, "Тест задания 2.2 провален");
+    console.assert(getVariant(3, 4) === 3, "Тест задания 2.2 провален");
+    console.assert(getVariant(2, 4) === 2, "Тест задания 2.2 провален");
+    console.assert(getVariant(1, 4) === 1, "Тест задания 2.2 провален");
+
+
 //Тест задания 2.3
-console.assert(calculate(10, 5, '+') === 15, "Тест провален: 10 + 5 = 15");
-console.assert(calculate(10, 5, '-') === 5, "Тест провален: 10 - 5 = 5");
-console.assert(calculate(10, 5, '*') === 50, "Тест провален: 10 * 5 = 50");
-console.assert(calculate(10, 5, '/') === 2, "Тест провален: 10 / 5 = 2");
-console.assert(calculate(100000006666666, 500000000, '/') === 200000.013333332, "Тест провален: деление больших чисел");
+console.assert(calculate(5, 3, "+") === 8, 
+    'Тест 1 провален: 5 + 3 должно быть 8');
+console.assert(calculate(10, 4, "-") === 6, 
+    'Тест 2 провален: 10 - 4 должно быть 6');
+console.assert(calculate(7, 3, "*") === 21, 
+    'Тест 3 провален: 7 * 3 должно быть 21');
+console.assert(calculate(15, 3, "/") === 5, 
+    'Тест 4 провален: 15 / 3 должно быть 5');
+console.assert(calculate(10, 0, "/") === "Делить на ноль нельзя", 
+    'Тест 5 провален: деление на ноль должно возвращать ошибку');
+console.assert(calculate(5, 3, "%") === "Неизвестная операция", 
+    'Тест 6 провален: неизвестная операция должна возвращать ошибку');
+console.assert(calculate("5", 3, "+") === "Оба параметра должны быть числами", 
+    'Тест 7 провален: нечисловые параметры должны возвращать ошибку');
+console.assert(calculate(-5, -3, "+") === -8, 
+    'Тест 8 провален: -5 + (-3) должно быть -8');
+console.assert(calculate(2.5, 1.5, "*") === 3.75, 
+    'Тест 9 провален: 2.5 * 1.5 должно быть 3.75');
+console.assert(calculate(0, 5, "+") === 5, 
+    'Тест 10 провален: 0 + 5 должно быть 5');
+console.assert(calculate(8, 0, "-") === 8, 
+    'Тест 11 провален: 8 - 0 должно быть 8');
+console.assert(calculate(0, 7, "*") === 0, 
+    'Тест 12 провален: 0 * 7 должно быть 0');
+console.assert(calculate(0, 5, "/") === 0, 
+    'Тест 13 провален: 0 / 5 должно быть 0');
+console.assert(calculate(NaN, 5, "+") === "Оба параметра должны быть числами", 
+    'Тест 14 провален: NaN должен возвращать ошибку');
+
 //Тест задания 2.4
-const circleArea = calculateArea('circle', 5);
-console.assert(Math.abs(circleArea - 78.53981633974483) < 0.0001, "Тест провален: площадь круга с радиусом 5");
-const rectangleArea = calculateArea('rectangle', 3, 4);
-console.assert(rectangleArea === 12, "Тест провален: площадь прямоугольника 3x4 = 12");
-const triangleArea = calculateArea('triangle', 6, 8);
-console.assert(triangleArea === 24, "Тест провален: площадь треугольника с основанием 6 и высотой 8 = 24");
-const unknownArea = calculateArea('hexagon', 5);
-console.assert(unknownArea === 'Неизвестная фигура', "Тест провален: неизвестная фигура должна возвращать сообщение об ошибке");
-console.assert(calculateArea('circle', 10) === Math.PI * 100, "Тест провален: площадь круга с радиусом 10");
-console.assert(calculateArea('rectangle', 10, 5) === 50, "Тест провален: площадь прямоугольника 10x5 = 50");
-console.assert(calculateArea('triangle', 10, 5) === 25, "Тест провален: площадь треугольника с основанием 10 и высотой 5 = 25");
-console.assert(calculateArea('circle', 0) === 0, "Тест провален: площадь круга с радиусом 0 = 0");
-console.assert(calculateArea('rectangle', 0, 5) === 0, "Тест провален: площадь прямоугольника с нулевой стороной = 0");
+
+console.assert(calculateArea('circle', 5) === Math.PI * 25, 
+    'Тест 1 провален: площадь круга с радиусом 5');
+console.assert(calculateArea('rectangle', 4, 6) === 24, 
+    'Тест 2 провален: площадь прямоугольника 4x6 должна быть 24');
+console.assert(calculateArea('triangle', 4, 6) === 12, 
+    'Тест 3 провален: площадь треугольника с основанием 4 и высотой 6 должна быть 12');
+console.assert(calculateArea('circle', 5, 3) === 'Ошибка: для круга нужен 1 параметр (радиус), передано: 2', 
+    'Тест 4 провален: должна быть ошибка при 2 параметрах для круга');
+console.assert(calculateArea('rectangle', 4) === 'Ошибка: для прямоугольника нужны 2 параметра (длина и ширина), передано: 1', 
+    'Тест 5 провален: должна быть ошибка при 1 параметре для прямоугольника');
+console.assert(calculateArea('square', 5) === 'Ошибка: неизвестная фигура. Используйте: circle, rectangle, triangle', 
+    'Тест 6 провален: должна быть ошибка для неизвестной фигуры');
+console.assert(calculateArea('circle', -5) === 'Ошибка: все параметры должны быть положительными числами', 
+    'Тест 7 провален: должна быть ошибка для отрицательных параметров');
+console.assert(calculateArea('rectangle', '4', 6) === 'Ошибка: все параметры должны быть числами', 
+    'Тест 8 провален: должна быть ошибка для нечисловых параметров');
+console.assert(calculateArea(123, 5) === 'Ошибка: первый параметр должен быть строкой (circle, rectangle, triangle)', 
+    'Тест 9 провален: должна быть ошибка когда первый параметр не строка');
+console.assert(calculateArea('CIRCLE', 3) === Math.PI * 9, 
+    'Тест 10 провален: регистр не должен влиять на определение фигуры');
+console.assert(calculateArea('rectangle', 0, 5) === 'Ошибка: все параметры должны быть положительными числами');
+console.assert(calculateArea('triangle', 10, 5)) === 25, 'Тест 12 провален: площадь треугольника с основанием 10 и высотой 5 должна быть 25';
+
 //Тест задания 2.5
 console.assert(reverseString("hello") === "olleh", "Тест провален: 'hello' -> 'olleh'");
 console.assert(reverseString("12345") === "54321", "Тест провален: '12345' -> '54321'");
@@ -490,7 +512,7 @@ console.assert(reverseString("!@#$") === "$#@!", "Тест провален: '!@
 console.assert(reverseString("") === "", "Тест провален: пустая строка -> пустая строка");
 console.assert(reverseString("a") === "a", "Тест провален: 'a' -> 'a'");
 console.assert(reverseString("ab") === "ba", "Тест провален: 'ab' -> 'ba'");
-console.assert(reverseString("привет") === "тевирп", "Тест провален: 'привет' -> 'тевирп'");
+console.assert(reverseString(123) === "Ошибка: можно передавать только строки", "Тест провален: 123 -> 321");
 //Тест задания 2.6
 console.assert(typeof(getRandomNumber(10, 20)) === "number", "Тест провален (результат не число");
 console.assert(getRandomNumber(10, 20) >= 10 && getRandomNumber(10, 20) < 20, "Тест провален(результат не в границах");
@@ -542,5 +564,35 @@ console.log("(добавление задачи в список):");
     console.log();
 
     console.log("Все тесты пройдены! ✅");
+    //Тесты задания 6
+    console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 1: +7(999)123-45-67");
+
+// Тесты из условия: 8 (999) 123-45-67  
+console.assert(validatePhone("8(999)123-45-67") === true, "Тест 2: 8(999)123-45-67");
+
+// Тесты из условия: 89991234567  
+console.assert(validatePhone("89991234567") === true, "Тест 3: 89991234567");
+
+// Тесты из условия: +7(999)123-45-67
+console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 4: +7(999)123-45-67");
+
+// Дополнительные вариации с пробелами и дефисами
+console.assert(validatePhone("+7 999 123 45 67") === true, "Тест 5: +7 999 123 45 67");
+console.assert(validatePhone("8-999-123-45-67") === true, "Тест 6: 8-999-123-45-67");
+console.assert(validatePhone("+7-999-123-45-67") === true, "Тест 7: +7-999-123-45-67");
+console.assert(validatePhone("8 999 123 45 67") === true, "Тест 8: 8 999 123 45 67");
+
+// Некорректные номера (должны вернуть false)
+console.assert(validatePhone("+9 (999) 123-45-67") === false, "Тест 9: +9 (999) 123-45-67");
+console.assert(validatePhone("7 (999) 123-45-67") === false, "Тест 10: 7 (999) 123-45-67");
+console.assert(validatePhone("+7 (99) 123-45-67") === false, "Тест 11: +7 (99) 123-45-67");
+console.assert(validatePhone("+7 (999) 123-456") === false, "Тест 12: +7 (999) 123-456");
+console.assert(validatePhone("+7 (999) 123-45-6") === false, "Тест 13: +7 (999) 123-45-6");
+console.assert(validatePhone("8999123456") === false, "Тест 14: 8999123456");
+console.assert(validatePhone("899912345678") === false, "Тест 15: 899912345678");
+console.assert(validatePhone("+7 (999) 123-45-6a") === false, "Тест 16: +7 (999) 123-45-6a");
+console.assert(validatePhone("abc") === false, "Тест 17: abc");
+console.assert(validatePhone("") === false, "Тест 18: пустая строка");
+
 }
 runTests();
