@@ -19,10 +19,11 @@ class Vehicle {
             throw new Error('Год должен быть числом после 1884');
         }
 
-        Vehicle.vehicleCount++;
+        
         this.make = make;
         this.model = model;
         this.year = year;
+        Vehicle.vehicleCount++;
     }
 
     // Добавьте метод displayInfo(), который выводит в консоль информацию 
