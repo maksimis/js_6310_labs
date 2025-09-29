@@ -28,7 +28,13 @@ function simpleTask() {
 function getReviewerNumber(number, lab) {
     // 2.1 Функция определяющая номер ревьюера для вашей группы по вашему номеру и номеру лабораторной работы
     if (typeof(number)  !== "number" ||typeof(lab)  !== "number") return "аргументы должны быть числами"
-    if (number >23 ) return "Число более 23"
+    if (number === 22){
+        return 23
+    }
+    if (number >23 ){
+        return "Число более 23"
+    }
+
     return ((number + lab) % 23);
 };
 
@@ -181,9 +187,7 @@ function processArrays() {
     console.log(squares);
 
     // 3. Используйте filter для получения активных пользователей
-    const activeUsers = users.filter(user =>{
-        return user.isActive === true;
-    });
+    const activeUsers = users.filter(user => user.isActive);
     console.log("Задание 4.3");
     console.log("получение активных пользователей");
     console.log(activeUsers)
@@ -323,6 +327,8 @@ function runTests() {
     console.log("Тест 1: getReviewerNumber ✅");
     console.assert(getReviewerNumber(5, 1) === 6, "Тест получения ревьюера провален");
     console.assert(getReviewerNumber(23, 1) === 1, "Тест получения ревьюера провален");
+    console.assert(getReviewerNumber(22, 1) === 23, "Тест получения ревьюера провален");
+
     console.assert(getReviewerNumber("5", 1) ==="аргументы должны быть числами", "Тест получения ревьюера провален");
     console.assert(getReviewerNumber(5, "1") === "аргументы должны быть числами", "Тест получения ревьюера провален");
     console.assert(getReviewerNumber("5", "1") === "аргументы должны быть числами", "Тест получения ревьюера провален");
