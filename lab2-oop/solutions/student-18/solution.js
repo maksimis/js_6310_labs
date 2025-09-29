@@ -151,11 +151,8 @@ const createVehicleFactory = (vehicleType) => (make, model, year, numDoors, batt
 // Автоматические тесты
 function runTests() {
     console.log('Запуск тестов...');
-    Vehicle.vehicleCount = 0;
 
     // Расширьте тесты для полного покрытия задания.
-    
-    // Проверка наследования
     // ЗАДАНИЕ 1
     //конструктор
     console.log('ЗАДАНИЕ 1');
@@ -207,7 +204,7 @@ function runTests() {
         console.assert(error.message === 'Новый год выпуска должен быть целым числом не меньше 1886', "1Тест установления нового года выпуска провален")
     }
     try {
-        vehicle.year = 1400.4;
+        vehicle.year = 1900.4;
     } catch (error) {
         console.assert(error.message === 'Новый год выпуска должен быть целым числом не меньше 1886', "1Тест установления нового года выпуска провален")
     }
@@ -258,8 +255,6 @@ function runTests() {
         console.assert(error.message === 'Некорректно введены параметры автомобиля', 'Тест создания транcпорта 2 провален')
     }
 
-
-    //if (vehicle_1 && vehicle_2) {
     console.assert(Vehicle.compareAge(vehicle_1, vehicle_2) === 10, 'Тест разницы в возрасте провален')
 
     console.assert(Vehicle.compareAge(vehicle_1, vehicle_car2) === 'Ошибка создания транспортного средства для класса Vehicle', 'Тест разницы в возрасте провален')
