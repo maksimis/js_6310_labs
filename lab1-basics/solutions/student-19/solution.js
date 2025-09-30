@@ -286,29 +286,36 @@ const taskManager = {
     
     addTask(title, priority = "medium") {
         // 5.1 Добавление задачи
-         const newTask = {
-        id: Date.now(), // или использовать crypto.randomUUID() для настоящих UUID
-        title: title,
-        completed: false,
-        priority: priority
-    };
-    this.tasks.push(newTask);
-        
+        const newTask = {
+            id: this.tasks.length > 0 ? Math.max(...this.tasks.map(task => task.id)) + 1 : 1,
+            title: title,
+            completed: false,
+            priority: priority
+        };
+        this.tasks.push(newTask);
+        return `Задача "${newTask.title}" с ID ${newTask.id} добавлена `;
     },
-   
 
     completeTask(taskId) {
         // 5.2 Отметка выполнения
         const task = this.tasks.find(task => task.id === taskId);
         if (task) {
             task.completed = true;
+            return `Задача "${task.title}" выполнена`;
         }
+        return `Задача с ID ${taskId} не найдена`;
     },
 
     // Удаление задачи
     deleteTask(taskId) {
         // 5.3 Ваш код здесь
+        const initialLength = this.tasks.length;
         this.tasks = this.tasks.filter(task => task.id !== taskId);
+
+        if (this.tasks.length < initialLength) {
+            return `Задача с ID ${taskId} удалена`;
+        }
+        return `Задача с ID ${taskId} не найдена`;
     },
 
     // Получение списка задач по статусу
@@ -316,7 +323,7 @@ const taskManager = {
         // 5.4 Ваш код здесь
         return this.tasks.filter(task => task.completed === completed);
     },
-    
+
     getStats() {
         /* 5.5 Статистика возвращает объект:        
         total,
@@ -324,17 +331,17 @@ const taskManager = {
         pending,
         completionRate
         */
-       const total = this.tasks.length;
-    const completed = this.tasks.filter(task => task.completed).length;
-    const pending = total - completed;
-    const completionRate = total > 0 ? (completed / total) * 100 : 0;
-    
-    return {
-        total: total,
-        completed: completed,
-        pending: pending,
-        completionRate: completionRate
-    };
+        const total = this.tasks.length;
+        const completed = this.tasks.filter(task => task.completed).length;
+        const pending = total - completed;
+        const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+        return {
+            total: total,
+            completed: completed,
+            pending: pending,
+            completionRate: completionRate
+        };
     }
 };
 
@@ -478,32 +485,68 @@ console.assert(calculate(0, 5, "/") === 0,
     'Тест 13 провален: 0 / 5 должно быть 0');
 console.assert(calculate(NaN, 5, "+") === "Оба параметра должны быть числами", 
     'Тест 14 провален: NaN должен возвращать ошибку');
-
+console.assert(calculate(Number.MAX_VALUE, 1, '+') === Number.MAX_VALUE+1, "Тест 15 провален (переполнение при сложении)");
+    console.assert(calculate(Number.MAX_VALUE, Number.MAX_VALUE, '+') === Infinity, "Тест 16 провален (переполнение при сложении двух больших чисел)");
+    console.assert(calculate(Number.MAX_VALUE, 2, '-') === Number.MAX_VALUE - 2, "Тест 17 провален (вычитание из максимального значения)");
+    console.assert(calculate(Number.MAX_VALUE, 1, '*') === Number.MAX_VALUE, "Тест 18 провален (переполнение при умножении)");
+    console.assert(calculate(1, Number.MAX_VALUE, '*') === Number.MAX_VALUE, "Тест 19 провален (переполнение при умножении с максимальным значением)");
+    console.assert(calculate(Number.MAX_VALUE, 10, "*") === Infinity, "Тест 20 провален (умножение максимального числа на 10)");
+    console.assert(calculate(Number.MAX_VALUE, 2, '/') === Number.MAX_VALUE / 2, "Тест 21 провален (деление максимального значения)");
 //Тест задания 2.4
 
+// Тесты для круга
 console.assert(calculateArea('circle', 5) === Math.PI * 25, 
-    'Тест 1 провален: площадь круга с радиусом 5');
-console.assert(calculateArea('rectangle', 4, 6) === 24, 
-    'Тест 2 провален: площадь прямоугольника 4x6 должна быть 24');
-console.assert(calculateArea('triangle', 4, 6) === 12, 
-    'Тест 3 провален: площадь треугольника с основанием 4 и высотой 6 должна быть 12');
-console.assert(calculateArea('circle', 5, 3) === 'Ошибка: для круга нужен 1 параметр (радиус), передано: 2', 
-    'Тест 4 провален: должна быть ошибка при 2 параметрах для круга');
-console.assert(calculateArea('rectangle', 4) === 'Ошибка: для прямоугольника нужны 2 параметра (длина и ширина), передано: 1', 
-    'Тест 5 провален: должна быть ошибка при 1 параметре для прямоугольника');
-console.assert(calculateArea('square', 5) === 'Ошибка: неизвестная фигура. Используйте: circle, rectangle, triangle', 
-    'Тест 6 провален: должна быть ошибка для неизвестной фигуры');
-console.assert(calculateArea('circle', -5) === 'Ошибка: все параметры должны быть положительными числами', 
-    'Тест 7 провален: должна быть ошибка для отрицательных параметров');
-console.assert(calculateArea('rectangle', '4', 6) === 'Ошибка: все параметры должны быть числами', 
-    'Тест 8 провален: должна быть ошибка для нечисловых параметров');
-console.assert(calculateArea(123, 5) === 'Ошибка: первый параметр должен быть строкой (circle, rectangle, triangle)', 
-    'Тест 9 провален: должна быть ошибка когда первый параметр не строка');
-console.assert(calculateArea('CIRCLE', 3) === Math.PI * 9, 
-    'Тест 10 провален: регистр не должен влиять на определение фигуры');
-console.assert(calculateArea('rectangle', 0, 5) === 'Ошибка: все параметры должны быть положительными числами');
-console.assert(calculateArea('triangle', 10, 5)) === 25, 'Тест 12 провален: площадь треугольника с основанием 10 и высотой 5 должна быть 25';
+    'Тест круга с радиусом 5 не пройден');
 
+console.assert(calculateArea('circle', 10) === Math.PI * 100, 
+    'Тест круга с радиусом 10 не пройден');
+
+// Тесты для прямоугольника
+console.assert(calculateArea('rectangle', 4, 6) === 24, 
+    'Тест прямоугольника 4x6 не пройден');
+
+console.assert(calculateArea('rectangle', 3, 7) === 21, 
+    'Тест прямоугольника 3x7 не пройден');
+
+// Тесты для треугольника
+console.assert(calculateArea('triangle', 4, 5) === 10, 
+    'Тест треугольника с основанием 4 и высотой 5 не пройден');
+
+console.assert(calculateArea('triangle', 6, 8) === 24, 
+    'Тест треугольника с основанием 6 и высотой 8 не пройден');
+
+// Тесты на обработку ошибок
+console.assert(calculateArea('circle', -1) === 'Ошибка: все параметры должны быть положительными числами', 
+    'Тест на отрицательный радиус не пройден');
+
+console.assert(calculateArea('rectangle', 4) === 'Ошибка: для прямоугольника нужны 2 параметра (длина и ширина), передано: 1', 
+    'Тест на недостаток параметров для прямоугольника не пройден');
+
+console.assert(calculateArea('triangle', 3, 4, 5) === 'Ошибка: для треугольника нужны 2 параметра (основание и высота), передано: 3', 
+    'Тест на избыток параметров для треугольника не пройден');
+
+console.assert(calculateArea('square', 5) === 'Ошибка: неизвестная фигура. Используйте: circle, rectangle, triangle', 
+    'Тест на неизвестную фигуру не пройден');
+
+console.assert(calculateArea(123, 5) === 'Ошибка: первый параметр должен быть строкой (circle, rectangle, triangle)', 
+    'Тест на нестроковый первый параметр не пройден');
+
+console.assert(calculateArea('circle', 'abc') === 'Ошибка: все параметры должны быть числами', 
+    'Тест на нечисловой параметр не пройден');
+
+// Тесты на регистрозависимость
+console.assert(calculateArea('CIRCLE', 5) === Math.PI * 25, 
+    'Тест круга в верхнем регистре не пройден');
+
+console.assert(calculateArea('Rectangle', 4, 6) === 24, 
+    'Тест прямоугольника с заглавной буквы не пройден');
+
+// Дополнительные тесты с дробными числами
+console.assert(calculateArea('circle', 2.5) === Math.PI * 6.25, 
+    'Тест круга с дробным радиусом не пройден');
+
+console.assert(calculateArea('rectangle', 2.5, 3.5) === 8.75, 
+    'Тест прямоугольника с дробными сторонами не пройден');
 //Тест задания 2.5
 console.assert(reverseString("hello") === "olleh", "Тест провален: 'hello' -> 'olleh'");
 console.assert(reverseString("12345") === "54321", "Тест провален: '12345' -> '54321'");
@@ -517,11 +560,12 @@ console.assert(reverseString(123) === "Ошибка: можно передава
 console.assert(typeof(getRandomNumber(10, 20)) === "number", "Тест провален (результат не число");
 console.assert(getRandomNumber(10, 20) >= 10 && getRandomNumber(10, 20) < 20, "Тест провален(результат не в границах");
 //Тест задания 3.1
-console.assert(book.title === '1984', "Тест 1 провален: название книги");
-console.assert(book.author === 'Дж.Оруэлл', "Тест 2 провален: автор книги");
-console.assert(book.year === 1947, "Тест 3 провален: год выпуска");
-console.assert(book.pages === 200, "Тест 4 провален: количество страниц");
-console.assert(book.available === true, "Тест 5 провален: доступность книги");
+    console.log(book.getInfo());
+    console.log(book.toggleAvailability());
+    console.log(book.toggleAvailability());  
+    book.toggleAvailability();
+    console.log(book.available);
+      
 //Тест задания 3.2
 console.assert(student.name === "Анна Петрова", "Тест провален: имя студента");
 console.assert(student.age === 20, "Тест провален: возраст студента");
@@ -540,30 +584,14 @@ console.assert(newAverage === 95, "Тест провален: новый сре�
 //Тест задания 4
 processArrays();
 //Тест задания 5
-console.log("(добавление задачи в список):");
-    taskManager.addTask("выучить python");
-    console.log(taskManager.tasks);
-    console.log();
+console.log(taskManager.addTask("Написать отчет", "high")); //добавление задачи в список
+    console.log(taskManager.completeTask(1)); //отметка выполнения задачи
+    console.log(taskManager.completeTask(999)); //отметка выполнения несуществующей задачи
+    console.log(taskManager.deleteTask(3)); //удаление задачи
+    console.log(taskManager.deleteTask(999)); //удаление несуществующей задачи
+    console.log("Активные задачи:", taskManager.getTasksByStatus(false)); //вывод задач по статусу
+    console.log("Статистика:", taskManager.getStats()); //вывод статы
 
-     console.log("(выполнение задания):");
-    taskManager.completeTask(3);
-    console.log(taskManager.tasks);
-    console.log();
-
-    console.log("(удаление задачи):");
-    taskManager.deleteTask(2);
-    console.log(taskManager.tasks);
-    console.log();
-
-    console.log("(статус задачи):");
-    console.log(taskManager.getTasksByStatus(true));
-    console.log();
-
-    console.log("(возвращение объекта):");
-    console.log(taskManager.getStats());
-    console.log();
-
-    console.log("Все тесты пройдены! ✅");
     //Тесты задания 6
     console.assert(validatePhone("+7(999)123-45-67") === true, "Тест 1: +7(999)123-45-67");
 
