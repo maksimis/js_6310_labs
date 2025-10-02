@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "KAI Spring Style",
+  "version": "1.0",
+  "description": "Изменяет стиль сайта kai.ru на весеннюю тему",
+  "permissions": ["storage"],
+  "host_permissions": ["https://kai.ru/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://kai.ru/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
