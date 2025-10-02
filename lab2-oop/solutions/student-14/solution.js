@@ -45,7 +45,7 @@ class Vehicle {
             return("Ошибка: год выпуска должен быть целым положительным числом")
         }
         if (newYear < 1886) {
-            return(`Ошибка: год выпуска не может быть раньше 1886 года и позже ${new Date.getFullYear()}`);        }
+            return(`Ошибка: год выпуска не может быть раньше 1886 года и позже ${new Date().getFullYear()}`);        }
 
         const currentyear = new Date().getFullYear();
         if (newYear > currentyear) {
