@@ -1,6 +1,3 @@
-console.log("🎨 KAI Spring Style loaded");
-
-// Функция для применения стилей
 function applySpringStyles() {
     const style = document.createElement('style');
     style.id = 'spring-styles';
@@ -57,23 +54,27 @@ function applySpringStyles() {
         footer, .footer {
             background-color: #e8f5e9 !important;
         }
+        
+        /* Дополнительные стили для навигации */
+        nav, .navigation, .menu {
+            background-color: #f1f8e9 !important;
+            border-radius: 8px !important;
+            padding: 10px !important;
+        }
     `;
     document.head.appendChild(style);
 }
 
-// Функция для удаления стилей
 function removeSpringStyles() {
     const style = document.getElementById('spring-styles');
     if (style) style.remove();
 }
 
-// Создаем кнопку переключения
 function createToggleButton() {
     const button = document.createElement('button');
     button.id = 'spring-toggle';
     button.innerHTML = '🌱 Включить весенний стиль';
     
-    // Стили кнопки
     Object.assign(button.style, {
         position: 'fixed',
         top: '15px',
@@ -86,10 +87,10 @@ function createToggleButton() {
         padding: '10px 16px',
         fontSize: '14px',
         cursor: 'pointer',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+        transition: 'all 0.2s ease'
     });
     
-    // Обработчик клика
     button.onclick = function() {
         const isEnabled = localStorage.getItem('springStyle') === 'true';
         
@@ -109,43 +110,55 @@ function createToggleButton() {
     document.body.appendChild(button);
 }
 
-// Демонстрация DOM методов
-function showDOMUsage() {
+function demonstrateDOMUsage() {
+    console.log("🔧 Demonstrating DOM methods:");
+    
     // getElementById
     const header = document.getElementById('header');
+    if (header) {
+        console.log("✅ getElementById: header found");
+    }
     
-    // querySelector с сложным селектором
+    // querySelector с сложным селектором (два класса)
     const mainContent = document.querySelector('main.container');
+    if (mainContent) {
+        console.log("✅ querySelector (complex): main.container found");
+        
+        // parentElement
+        const parent = mainContent.parentElement;
+        if (parent) {
+            console.log("✅ parentElement: parent found");
+        }
+        
+        // children
+        const children = mainContent.children;
+        console.log(`✅ children: ${children.length} child elements found`);
+    }
     
     // querySelectorAll
     const links = document.querySelectorAll('a');
-    
-    // parentElement
-    if (mainContent) {
-        const parent = mainContent.parentElement;
-    }
-    
-    // children
-    if (header) {
-        const headerChildren = header.children;
-    }
+    console.log(`✅ querySelectorAll: ${links.length} links found`);
 }
 
-// Запуск
+// Основная функция инициализации
 function init() {
-    createToggleButton();
-    showDOMUsage();
+    console.log("🚀 Initializing KAI Spring Style extension");
     
-    // Включаем стили если были активны
-    if (localStorage.getItem('springStyle') === 'true') {
+    createToggleButton();
+    demonstrateDOMUsage();
+    
+    // Применяем стили если они были включены
+    const isEnabled = localStorage.getItem('springStyle') === 'true';
+    if (isEnabled) {
         applySpringStyles();
         const btn = document.getElementById('spring-toggle');
         btn.innerHTML = '🍃 Выключить стиль';
         btn.style.background = '#757575';
     }
+    
+    console.log("✅ Extension initialization complete");
 }
 
-// Запускаем когда страница загружена
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
 } else {
