@@ -144,8 +144,31 @@ let reversed = '';
 
 
 const getRandomNumber = (min, max) => {
-    // Функция возвращает случайное число между min и max
-    return Math.random() * (max - min + 1) + min;
+    // Проверка на количество аргументов
+    if (arguments.length < 2) {
+        throw new Error('Функция требует два аргумента: min и max');
+    }
+    
+    // Проверка на тип данных (числа)
+    if (typeof min !== 'number' || typeof max !== 'number') {
+        throw new TypeError('Оба параметра должны быть числами');
+    }
+    
+    // min не должен быть больше max
+    if (min > max) {
+        throw new Error('Минимальное значение не может быть больше максимального');
+    }
+    
+    // Проверка на конечные числа (исключаем Infinity, NaN)
+    if (!isFinite(min) || !isFinite(max)) {
+        throw new Error('Параметры должны быть конечными числами');
+    }
+    
+    // Функция возвращает случайное число между min и max (включительно)
+    // Math.random() возвращает число от 0 (включительно) до 1 (исключительно)
+    // Умножаем на (max - min + 1) чтобы покрыть весь диапазон
+    // Добавляем min для смещения в нужный диапазон
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 };
    
 
@@ -155,14 +178,14 @@ const book = {
     // года выпуска, количества страниц, и доступности
     // объект должен иметь два метода getInfo возвращает одной строкой информацию о названии книги, аторе, годе выпуска, количестве страниц
     // метод toggleAvailability - который меняет значение доступности и возвращает его
-title: '1984',
+    title: '1984',
     author: 'Дж.Оруэлл',
     year: 1947,
     pages: 200,
     available: true,
 
     getInfo: function() { 
-        return `${this.title}, {this.author}, {this.year}, {this.pages}`;
+        return `${this.title}, ${this.author}, ${this.year}, ${this.pages}`;
     },
 
     toggleAvailability: function() {
@@ -185,14 +208,13 @@ const student = {
     // Метод для расчета среднего балла
     getAverageGrade() {
         // Ваш код здесь
-         let sum = 0;
+        let sum = 0;
         let count = 0;
-        
-        
-        for (let subject in this.grades) {
-            sum += this.grades[subject];
-            count++;
+        for (let subject in this.grades){
+            sum+= this.grades[subject];
+            count ++;
         }
+      
         
         return sum / count;
     },
@@ -200,6 +222,7 @@ const student = {
     // Метод для добавления новой оценки
     addGrade(subject, grade) {
         // Ваш код здесь
+      
         this.grades[subject] = grade;
     
     }
