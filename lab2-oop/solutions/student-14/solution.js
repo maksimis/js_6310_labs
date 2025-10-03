@@ -9,16 +9,16 @@ class Vehicle {
     constructor(make, model, year) {                                        // к нему необходимо обращаться через имя класса
         Vehicle.vehicleCount++;
         if (!make || !model || year === undefined){
-            return("Ошибка: make, model, year обязательные параметры");
+            throw new Error("Ошибка: make, model, year обязательные параметры");
         }
         if (typeof make !== "string" || typeof model !== "string") {
-            return("Ошибка: марка и модель должны быть непустыми строками");
+            throw new Error("Ошибка: марка и модель должны быть непустыми строками");
         }
         if (typeof year !== "number" || !Number.isInteger(year)) {
-            return("Ошибка: год выпуска должен быть целым числом");
+            throw new Error("Ошибка: год выпуска должен быть целым числом");
         }
         if (year < 1886) {
-            return("Ошибка: год выпуска не может быть раньше 1886 года");
+            throw new Error("Ошибка: год выпуска не может быть раньше 1886 года");
         }
 
         this.make = make;
@@ -42,14 +42,14 @@ class Vehicle {
     // Добавьте сеттер для года выпуска с проверкой: год не может быть больше текущего.
     set year(newYear) {                                                                        // метод set присваивает значение свойству
         if (typeof newYear !== "number" || !Number.isInteger(newYear)) {
-            return("Ошибка: год выпуска должен быть целым положительным числом")
+            throw new Error("Ошибка: год выпуска должен быть целым положительным числом")
         }
         if (newYear < 1886) {
-            return(`Ошибка: год выпуска не может быть раньше 1886 года и позже ${new Date().getFullYear()}`);        }
+            throw new Error(`Ошибка: год выпуска не может быть раньше 1886 года и позже ${new Date().getFullYear()}`);        }
 
         const currentyear = new Date().getFullYear();
         if (newYear > currentyear) {
-            return("Ошибка: год выпуска не может быть больше текущего года")
+            throw new Error("Ошибка: год выпуска не может быть больше текущего года")
         }
         this.years = newYear;
     }
@@ -76,11 +76,10 @@ class Car extends Vehicle {                                                     
     // Создайте дочерний класс Car, который наследуется от Vehicle.
     // Добавьте новое свойство numDoors (количество дверей).
     constructor(make, model, year, numDoors = 4) {
-        super(make, model, year);
         if (typeof numDoors !== "number" || !Number.isInteger(numDoors) || numDoors <= 0 || numDoors >= 7) {
-            Vehicle.vehicleCount--;
-            return("Ошибка: количество дверей должно быть целым положительным числом от 1 до 7");
+            throw new Error("Ошибка: количество дверей должно быть целым положительным числом от 1 до 7");
         }
+        super(make, model, year);
         this.numDoors = numDoors;
     }
 
@@ -103,14 +102,11 @@ class ElectricCar extends Car {
     // Добавьте новое свойство batteryCapacity (емкость батареи в кВт·ч).
     constructor(make, model, year, numDoors = 4, batteryCapacity) {
         if (batteryCapacity === undefined) {
-            Vehicle.vehicleCount--;
-            return("Ошибка: емкость батареи обязательный параметр");
-        }
-        if (typeof batteryCapacity !== "number" || !Number.isInteger(batteryCapacity) || batteryCapacity <= 0) {
-            Vehicle.vehicleCount--;
-            return("Ошибка: емкость батареи автомобиля должна быть целым положительным числом");
+            throw new Error("Ошибка: емкость батареи должна быть указана");
         } 
-
+        if (typeof batteryCapacity !== "number" || !Number.isInteger(batteryCapacity) || batteryCapacity <= 0) {
+            throw new Error("Ошибка: емкость батареи автомобиля должна быть целым положительным числом");
+        } 
         super(make, model, year, numDoors);
         this.batteryCapacity = batteryCapacity;
     }
@@ -138,7 +134,7 @@ const createVehicleFactory = (vehicleType) => (...args) => {
         return new vehicleType(...args); // Замените {} на варажение
     }
     catch(error){
-        return(`Ошибка создания ${vehicleType.name}: ${error.message}`);
+        throw new Error("Ошибка создания ${vehicleType.name}: ${error.message}");
     }
 };
 
@@ -162,6 +158,12 @@ function runTests() {
     // Тест Vehicle
     const vehicleToyota = new Vehicle('Toyota', 'Camry', 2015);
     console.log(vehicleToyota.displayInfo());
+    try{
+        const vehicleError = new Vehicle(Toyota, 'Camry', 2015)
+    }
+    catch{
+        console.error("Ошибка: марка и модель должны быть непустыми строками");
+    }
     console.assert(vehicleToyota.make === 'Toyota', "Тест make провален");
     console.assert(vehicleToyota.model === 'Camry', "Тест model провален");
     console.assert(vehicleToyota.year === 2015, "Тест year провален");
@@ -170,13 +172,23 @@ function runTests() {
     console.assert(vehicleToyota.age === new Date().getFullYear() - 2015, "Тест возраста провален");
     
     // Тест сеттера
+    try{
     const nextyear = new Date().getFullYear() + 1;
     vehicleToyota.year = nextyear;
-    console.assert(vehicleToyota.year === 2015, "Тест сеттера провален");
+    }
+    catch{
+        console.error("Ошибка: год выпуска не может быть больше текущего года");
+    }
     
     // Тест Car
     const carHonda = new Car('Honda', 'Civic', 2018, 4);
     console.log(carHonda.displayInfo());
+    try{
+        const carError = new Car('Honda', 'Civic', 2018, 8);
+    }
+    catch{
+        console.error("Ошибка: количество дверей должно быть целым положительным числом от 1 до 7");
+    }
     console.assert(carHonda instanceof Vehicle, "Тест наследования провален");
     console.assert(carHonda.numDoors === 4, "Тест количества дверей провален");
     console.assert(carHonda.honk() === "Beep beep!", "Тест honk провален");
@@ -187,6 +199,12 @@ function runTests() {
     // Тест ElectricCar
     const electricTesla = new ElectricCar('Tesla', 'Model 3', 2020, 4, 75);
     console.log(electricTesla.displayInfo());
+    try{
+        const electricError = new ElectricCar('Tesla', 'Model 3', 2020, 4, undefined);
+    }
+    catch{
+        console.error("Ошибка: емкость батареи должна быть указана");
+    }
     console.assert(electricTesla.batteryCapacity === 75, "Тест емкости батареи провален");
     console.assert(electricTesla.calculateRange() == 450, "Тест calculateRange провален");
 
